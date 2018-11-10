@@ -1,0 +1,9 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+    {% if title %}{{ title }}{% else %}BTC 2 QBO{% endif %}
+{% endblock %}
+
+{% block content %}
+    {% block app_content %}{% endblock %}
+{% endblock %}
