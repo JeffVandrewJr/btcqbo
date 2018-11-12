@@ -1,5 +1,5 @@
 import os
-from flask import render_template
+from flask import render_template, redirect, request
 from app import app
 from quickbooks import Oauth2SessionManager 
 
@@ -13,11 +13,18 @@ def auth():
         base_url = callback_url,
     )
     authorize_url = session_manager.get_authorize_url(callback_url)
-    session_manager.get_access_tokens(request.GET['code'])
-    access_token = session_manager.access_token
-    refresh_token = session_manager.refresh_token
+    return redirect(authorize_url)
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return "Hello World"
+    session_manager = Oauth2SessionManager(
+        client_id = os.environ['QUICKBOOKS_CLIENT_ID'],
+        client_secret = os.environ['QUICKBOOKS_CLIENT_SECRET'],
+        base_url = callback_url,
+    )
+    code = request.args.get('code') #this is a flask thing for pulling query string arguments from the URL route
+    session_manager.get_access_tokens(code)
+    access_token = session_manager.access_token
+    refresh_token = session_manager.refresh_token
+    return str(access_token) + "  |  " + str(refresh_token)
