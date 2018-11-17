@@ -3,6 +3,7 @@ import os
 from flask import render_template, redirect, request
 from app import app
 from quickbooks import Oauth2SessionManager, QuickBooks
+from quickbooks.helpers import qb_date_format
 from quickbooks.objects.customer import Customer
 from quickbooks.objects.invoice import Invoice
 from quickbooks.objects.payment import Payment, PaymentLine
@@ -27,14 +28,17 @@ def index():
         company_id=realm_id
     )
     QuickBooks.enable_global()
-    invoice = Invoice.filter(DocNumber=1036, qb=client)
-    linked_invoice = invoice.to_linked_txn()
+    invoice_list = Invoice.filter(DocNumber="1036", qb=client)
+    linked_invoice = invoice_list[0].to_linked_txn()
     payment_line = PaymentLine()
-    payment_line.Amount = 477.50
-    payment_line.LinkedTxn = linked_invoice
+    payment_line.Amount = 477.5
+    payment_line.LinkedTxn.append(linked_invoice)
     payment = Payment()
-    payment.Line[0] = payment_line
+    payment.TotalAmt = 477.5
+    payment.CustomerRef = invoice_list[0].CustomerRef 
+    payment.Line.append(payment_line)
     payment.save(qb=client)
+    return str(payment)
 
 @app.route('/authqbo')
 def authqbo():
