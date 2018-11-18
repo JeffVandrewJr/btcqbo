@@ -8,6 +8,7 @@ from quickbooks.objects.payment import Payment, PaymentLine
 callback_url = 'http://localhost:5000/qbologged'
 
 def post_payment():
+    data = shelve.open('data')
     invoice_list = Invoice.filter(DocNumber="1036", qb=data['qbclient'])
     linked_invoice = invoice_list[0].to_linked_txn()
     payment_line = PaymentLine()
@@ -18,6 +19,7 @@ def post_payment():
     payment.CustomerRef = invoice_list[0].CustomerRef 
     payment.Line.append(payment_line)
     payment.save(qb=data['qbclient'])
+    data.close()
     return str(payment)
 
 def get_auth_url():
@@ -50,7 +52,7 @@ def set_global_vars(realmid, code):
         company_id=realm_id
     )
     QuickBooks.enable_global()
-    with shelve.open('data', -c) as data:
+    with shelve.open('data', 'c') as data:
         data['realm_id'] = realm_id
         data['access_token'] = access_token
         data['refresh_token'] = refresh_token
