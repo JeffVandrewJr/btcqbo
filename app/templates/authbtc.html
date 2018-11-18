@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Enter Your Pairing Code</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.code(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p?
+    </form>
+{% endblock %}
