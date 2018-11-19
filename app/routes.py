@@ -1,5 +1,7 @@
 import shelve
 import os
+from copy import deepcopy
+from rq import get_current_job
 from flask import render_template, redirect, request
 from app import app
 import app.qbo as qbo
@@ -24,9 +26,7 @@ def qbologged():
         realmid=request.args.get('realmId'),
         code=request.args.get('code'),
     )
-    data = shelve.open('data')
-    return str(data['access_token']) + "  |  " + str(data['refresh_token'])
-    data.close()
+    return "Logged"
 
 @app.route('/authbtc', methods=['GET', 'POST'])
 def authbtc():
@@ -41,3 +41,14 @@ def authbtc():
 @app.route('/postpayment')
 def postpayment():
     return qbo.post_payment()
+
+@app.route('/refresh')
+def test_refresh():
+    data = shelve.open('data')
+    old_token = deepcopy(data['access_token'])
+    data.close()
+    qbo.refresh_stored_tokens()
+    data = shelve.open('data')
+    new_token = data['access_token']
+    data.close()
+    return 'done'

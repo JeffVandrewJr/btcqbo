@@ -1,5 +1,8 @@
+from app import app
 import os
 import shelve
+from rq import get_current_job
+import app.tasks as tasks
 from quickbooks import Oauth2SessionManager, QuickBooks
 from quickbooks.objects.customer import Customer
 from quickbooks.objects.invoice import Invoice
@@ -56,5 +59,18 @@ def set_global_vars(realmid, code):
         data['realm_id'] = realm_id
         data['access_token'] = access_token
         data['refresh_token'] = refresh_token
+        data['session_manager'] = session_manager
         data['qbclient'] = qbclient
-    
+    job = app.task_queue.fetch_job('1') 
+    if job == None:
+        app.task_queue.enqueue_call(func=tasks.repeat_refresh, timeout='365d', job_id='1')
+        
+def refresh_stored_tokens():
+    data = shelve.open('data')
+    session_manager = data['session_manager']
+    session_manager.refresh_access_tokens()
+    data['access_token'] = session_manager.access_token
+    data['refresh_token'] = session_manager.refresh_token
+    data['session_manager'] = session_manager
+    data.close()
+
