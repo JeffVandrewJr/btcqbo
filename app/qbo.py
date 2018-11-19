@@ -61,9 +61,8 @@ def set_global_vars(realmid, code):
         data['refresh_token'] = refresh_token
         data['session_manager'] = session_manager
         data['qbclient'] = qbclient
-    job = app.task_queue.fetch_job('1') 
-    if job == None:
-        app.task_queue.enqueue_call(func=tasks.repeat_refresh, timeout='365d', job_id='1')
+    if '1' not in app.task_queue.job_ids:
+        app.task_queue.enqueue_call(func=tasks.repeat_refresh, timeout=-1, job_id='1')
         
 def refresh_stored_tokens():
     data = shelve.open('data')
