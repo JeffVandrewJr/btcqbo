@@ -31,12 +31,9 @@ def qbologged():
 @app.route('/authbtc', methods=['GET', 'POST'])
 def authbtc():
     form = BTCCodeForm()
-    data = shelve.open('data')
     if form.validate_on_submit():
-        btcp.pairing('qcAAZjZ')
-        output = str(data['btc_token'])
-        data.close()
-        return output
+        btcp.pairing(str(form.code.data))
+        return render_template('success.html', output="success")
     return render_template('authbtc.html', title='Enter Code', form=form)    
 @app.route('/postpayment')
 def postpayment():
@@ -52,3 +49,12 @@ def test_refresh():
     new_token = data['access_token']
     data.close()
     return 'done'
+
+@app.route('/testinvoice')
+def test_invoice():
+    data = shelve.open('data')
+    btc_client = data['btc_client']
+    data.close()
+    invoice = btc_client.create_invoice({"price": 477.5, "currency": "USD", "orderId": 1065, "buyer.email": "jeffvandrew@yahoo.com"})
+    return "class is" + invoice.__class__.__name__ + " and data is: " + str(invoice)
+    

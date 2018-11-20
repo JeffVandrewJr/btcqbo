@@ -1,7 +1,6 @@
 from app import app
 import os
 import shelve
-from rq import get_current_job
 import app.tasks as tasks
 from quickbooks import Oauth2SessionManager, QuickBooks
 from quickbooks.objects.customer import Customer
