@@ -9,15 +9,15 @@ from quickbooks.objects.payment import Payment, PaymentLine
 
 callback_url = os.getenv('CALLBACK_URL')
 
-def post_payment():
+def post_payment(doc_number="", amount=0):
     qb = fetch('qbclient')
-    invoice_list = Invoice.filter(DocNumber="1036", qb=qb)
+    invoice_list = Invoice.filter(DocNumber=doc_number, qb=qb)
     linked_invoice = invoice_list[0].to_linked_txn()
     payment_line = PaymentLine()
-    payment_line.Amount = 477.5
+    payment_line.Amount = amount
     payment_line.LinkedTxn.append(linked_invoice)
     payment = Payment()
-    payment.TotalAmt = 477.5
+    payment.TotalAmt = amount
     payment.CustomerRef = invoice_list[0].CustomerRef 
     payment.Line.append(payment_line)
     payment.save(qb=qb)
