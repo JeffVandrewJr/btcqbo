@@ -1,7 +1,7 @@
 from app import app
 import os
-import shelve
 import app.tasks as tasks
+from app.utils import save, fetch
 from quickbooks import Oauth2SessionManager, QuickBooks
 from quickbooks.objects.customer import Customer
 from quickbooks.objects.invoice import Invoice
@@ -10,8 +10,8 @@ from quickbooks.objects.payment import Payment, PaymentLine
 callback_url = 'http://localhost:5000/qbologged'
 
 def post_payment():
-    data = shelve.open('data')
-    invoice_list = Invoice.filter(DocNumber="1036", qb=data['qbclient'])
+    qb = fetch('qbclient')
+    invoice_list = Invoice.filter(DocNumber="1036", qb=qb)
     linked_invoice = invoice_list[0].to_linked_txn()
     payment_line = PaymentLine()
     payment_line.Amount = 477.5
@@ -20,8 +20,7 @@ def post_payment():
     payment.TotalAmt = 477.5
     payment.CustomerRef = invoice_list[0].CustomerRef 
     payment.Line.append(payment_line)
-    payment.save(qb=data['qbclient'])
-    data.close()
+    payment.save(qb=qb)
     return str(payment)
 
 def get_auth_url():
@@ -54,21 +53,18 @@ def set_global_vars(realmid, code):
         company_id=realm_id
     )
     QuickBooks.enable_global()
-    with shelve.open('data', 'c') as data:
-        data['realm_id'] = realm_id
-        data['access_token'] = access_token
-        data['refresh_token'] = refresh_token
-        data['session_manager'] = session_manager
-        data['qbclient'] = qbclient
+    save('realm_id', realm_id)
+    save('access_token', access_token)
+    save('refresh_token', refresh_token)
+    save('session_manager', session_manager)
+    save('qbclient', qbclient)
     if '1' not in app.task_queue.job_ids:
         app.task_queue.enqueue_call(func=tasks.repeat_refresh, timeout=-1, job_id='1')
         
 def refresh_stored_tokens():
-    data = shelve.open('data')
-    session_manager = data['session_manager']
+    session_manager = fetch('session_manager')
     session_manager.refresh_access_tokens()
-    data['access_token'] = session_manager.access_token
-    data['refresh_token'] = session_manager.refresh_token
-    data['session_manager'] = session_manager
-    data.close()
+    save('access_token', session_manager.access_token)
+    save('refresh_token', session_manager.refresh_token)
+    save('session_manager', session_manager)
 
