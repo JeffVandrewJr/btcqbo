@@ -9,7 +9,7 @@ from app.utils import save, fetch
 @app.route('/')
 @app.route('/index')
 def index():
-    if os.environ['AUTH_ACCESS'] == 'True':
+    if os.getenv('AUTH_ACCESS') == 'True':
         return render_template('index.html')
     else:
         return "Access Denied"
@@ -17,7 +17,7 @@ def index():
 @app.route('/authqbo')
 def authqbo():
     #calls fn to grab qbo auth url and then redirects there
-    if os.environ['AUTH_ACCESS'] == 'True':
+    if os.getenv('AUTH_ACCESS') == 'True':
         return redirect(qbo.get_auth_url())
     else:
         return "Access Denied"
@@ -26,7 +26,7 @@ def authqbo():
 def qbologged():
     #user is redirected here after qbo authorizes
     #sets the token values and real id globally using values passed in URL
-    if os.environ['AUTH_ACCESS'] == 'True':
+    if os.getenv('AUTH_ACCESS') == 'True':
         qbo.set_global_vars(
             realmid=request.args.get('realmId'),
             code=request.args.get('code'),
@@ -37,7 +37,7 @@ def qbologged():
 
 @app.route('/authbtc', methods=['GET', 'POST'])
 def authbtc():
-    if os.environ['AUTH_ACCESS'] == 'True':
+    if os.getenv('AUTH_ACCESS') == 'True':
         form = BTCCodeForm()
         if form.validate_on_submit():
             btcp.pairing(str(form.code.data))

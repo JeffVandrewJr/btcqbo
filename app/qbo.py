@@ -7,7 +7,7 @@ from quickbooks.objects.customer import Customer
 from quickbooks.objects.invoice import Invoice
 from quickbooks.objects.payment import Payment, PaymentLine
 
-callback_url = 'http://localhost:5000/qbologged'
+callback_url = os.getenv('CALLBACK_URL')
 
 def post_payment():
     qb = fetch('qbclient')
@@ -25,8 +25,8 @@ def post_payment():
 
 def get_auth_url():
     session_manager = Oauth2SessionManager(
-        client_id = os.environ['QUICKBOOKS_CLIENT_ID'],
-        client_secret = os.environ['QUICKBOOKS_CLIENT_SECRET'],
+        client_id = os.getenv('QUICKBOOKS_CLIENT_ID'),
+        client_secret = os.getenv('QUICKBOOKS_CLIENT_SECRET'),
         base_url = callback_url,
     )
     authorize_url = session_manager.get_authorize_url(callback_url)
@@ -34,8 +34,8 @@ def get_auth_url():
 
 def set_global_vars(realmid, code):
     session_manager = Oauth2SessionManager(
-        client_id = os.environ['QUICKBOOKS_CLIENT_ID'],
-        client_secret = os.environ['QUICKBOOKS_CLIENT_SECRET'],
+        client_id = os.getenv('QUICKBOOKS_CLIENT_ID'),
+        client_secret = os.getenv('QUICKBOOKS_CLIENT_SECRET'),
         base_url = callback_url,
     )
     realm_id = realmid
@@ -44,7 +44,7 @@ def set_global_vars(realmid, code):
     refresh_token = session_manager.refresh_token
     session_manager = Oauth2SessionManager(
         client_id = realm_id,
-        client_secret = os.environ['QUICKBOOKS_CLIENT_SECRET'],
+        client_secret = os.getenv('QUICKBOOKS_CLIENT_SECRET'),
         access_token = access_token,
     )
     qbclient = QuickBooks(

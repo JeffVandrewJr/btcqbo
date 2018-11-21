@@ -1,8 +1,9 @@
 from btcpay import BTCPayClient
 from btcpay.crypto import generate_privkey
 from app.utils import save
+import os
 
-btcpay_host = 'https://btcpay.vandrew.com'
+btcpay_host = os.getenv('BTCPAY_HOST')
 
 def pairing(code):
     privkey = generate_privkey()
