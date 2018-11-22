@@ -46,24 +46,7 @@ def authbtc():
     else:
         return "Access Denied"
 
-@app.route('/postpayment')
-def postpayment():
-    return qbo.post_payment()
-
-@app.route('/refresh')
-def test_refresh():
-    old_token = fetch('access_token')
-    qbo.refresh_stored_tokens()
-    new_token = fetch('access_token')
-    return 'done'
-
-@app.route('/testinvoice')
-def test_invoice():
-    btc_client = fetch('btc_client')
-    invoice = btc_client.create_invoice({"price": 477.5, "currency": "USD", "orderId": 1065, "buyer": {"email": "jeffvandrew@yahoo.com"}})
-    return "class is" + invoice.__class__.__name__ + " and URL is: " + str(invoice['url'])
-    
-@app.route('/api/payment', methods=['POST'])
+@app.route('/api/v1/payment', methods=['POST'])
 def paymentapi():
     if not request.json or not 'id' in request.json:
         abort(400)
