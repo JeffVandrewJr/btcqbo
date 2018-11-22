@@ -10,6 +10,7 @@ from quickbooks.objects.payment import Payment, PaymentLine
 callback_url = os.getenv('CALLBACK_URL')
 
 def post_payment(doc_number="", amount=0):
+    refresh_stored_tokens()
     qb = fetch('qbclient')
     invoice_list = Invoice.filter(DocNumber=doc_number, qb=qb)
     linked_invoice = invoice_list[0].to_linked_txn()

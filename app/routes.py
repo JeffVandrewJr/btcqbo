@@ -1,5 +1,5 @@
 import os
-from flask import render_template, redirect, request
+from flask import render_template, redirect, request, abort
 from app import app
 import app.qbo as qbo
 import app.btcp as btcp
@@ -63,3 +63,19 @@ def test_invoice():
     invoice = btc_client.create_invoice({"price": 477.5, "currency": "USD", "orderId": 1065, "buyer": {"email": "jeffvandrew@yahoo.com"}})
     return "class is" + invoice.__class__.__name__ + " and URL is: " + str(invoice['url'])
     
+@app.route('/api/payment', methods=['POST'])
+def paymentapi():
+    if not request.json or not 'id' in request.json:
+        abort(400)
+    btc_client = fetch('btc_client')
+    invoice = btc_client.get_invoice(request.json['id'])
+    if invoice['status'] == "complete":
+        doc_number = invoice['orderId']
+        amount = float(invoice['price']) 
+        if amount > 0 and doc_number != None: 
+            post_payment(doc_number=str(doc_number), amount=amount) 
+            return "Payment Accepted", 201
+        else:
+            return "Payment Amount was zero or doc number was invalid", 200
+    else:
+        return "Good request, but JSON states payment not yet confirmed", 200
