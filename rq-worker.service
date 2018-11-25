@@ -1,0 +1,12 @@
+[Unit]
+Description=RQ Worker for BTCQBO
+
+[Service]
+ExecStart=/home/ubuntu/btcqbo/venv/bin/rq worker btcqbo
+User=ubuntu
+Type=simple
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

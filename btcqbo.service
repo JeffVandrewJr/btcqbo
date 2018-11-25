@@ -1,0 +1,12 @@
+[Unit]
+Description=BTCQBO Bridge
+
+[Service]
+ExecStart=/home/ubuntu/btcqbo/venv/bin/gunicorn -b localhost:8000 -w 2 btcqbo:app
+User=ubuntu
+Type=simple
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
