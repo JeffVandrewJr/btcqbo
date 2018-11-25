@@ -1,5 +1,6 @@
 from btcpay import BTCPayClient
 from btcpay.crypto import generate_privkey
+from app import app
 from app.utils import save
 import os
 

@@ -12,7 +12,7 @@ def index():
     if os.getenv('AUTH_ACCESS') == 'True':
         return render_template('index.html')
     else:
-        return "Access Denied"
+        return str(os.getenv('AUTH_ACCESS'))
 
 @app.route('/authqbo')
 def authqbo():

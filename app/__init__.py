@@ -10,5 +10,5 @@ app.redis = Redis.from_url(app.config['REDIS_URL'])
 app.task_queue = rq.Queue('btcqbo', connection=app.redis)
 bootstrap = Bootstrap(app)
 
-from app import routes, models
+from app import routes
 

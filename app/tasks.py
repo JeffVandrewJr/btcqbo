@@ -1,5 +1,5 @@
 import time
-import app.qbo as qbo
+from app import qbo as qbo
 
 def repeat_refresh():
     while True:
