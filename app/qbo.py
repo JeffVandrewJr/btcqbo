@@ -48,8 +48,11 @@ def set_global_vars(realmid, code):
         client_secret = os.getenv('QUICKBOOKS_CLIENT_SECRET'),
         access_token = access_token,
     )
+    sandbox = False
+    if os.getenv('QUICKBOOKS_SANDBOX') == 'True':
+        sandbox = True
     qbclient = QuickBooks(
-        sandbox = True,
+        sandbox = sandbox,
         session_manager=session_manager,
         company_id=realm_id
     )
