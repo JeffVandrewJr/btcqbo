@@ -1,5 +1,6 @@
 [Unit]
 Description=BTCQBO Bridge
+After=network.target
 
 [Service]
 WorkingDirectory=/home/ubuntu/btcqbo

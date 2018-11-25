@@ -1,5 +1,8 @@
 [Unit]
 Description=RQ Worker for BTCQBO
+After=redis-server.service
+After=network.target
+Requires=redis-server.service
 
 [Service]
 ExecStart=/home/ubuntu/btcqbo/venv/bin/rq worker btcqbo
