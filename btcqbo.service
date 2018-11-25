@@ -1,6 +1,7 @@
 [Unit]
 Description=BTCQBO Bridge
 After=network.target
+After=rq-worker.service
 
 [Service]
 WorkingDirectory=/home/ubuntu/btcqbo
