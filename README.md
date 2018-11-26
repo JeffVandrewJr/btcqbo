@@ -47,7 +47,7 @@ $ sudo pip install -r requirements.txt
 
 7. Enable systemd unit files for btcqbo.service and rq-worker.service. Sample templates for both are provided which use standard LunaNode VPS file paths; you will need to edit the file paths accordingly for your installation. After enabling the unit files, be sure to start them.
 
-8. Go to /etc/nginx/sites-enabled and remove the "default" file. Create a file named "btcqbo". A sample of what should be included in that file is provided in this repository as "btcqbo.nginx.conf". [Note that the file name in /etc/nginx/sites-enabled should simply be "btcqbo".]
+8. Go to /etc/nginx/sites-enabled and remove the "default" file. Create a file named "btcqbo". A sample of what should be included in that file is provided in this repository as "btcqbo.nginx". [Note that the file name in /etc/nginx/sites-enabled should simply be "btcqbo".]
 
 9. $ sudo service nginx reload
 
