@@ -90,4 +90,4 @@ Invoice Number:
 
 5. In Quickbooks Online, edit your outgoing email template for invoicing with a concluding paragraph like this one:
 
-"Click "Review and Pay below to pay via ACH or Credit Card, or click https://example.com/pay to bay via Bitcoin.
+`"Click "Review and Pay below to pay via ACH or Credit Card, or click https://example.com/pay to bay via Bitcoin.`
