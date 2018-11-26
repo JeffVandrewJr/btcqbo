@@ -72,7 +72,7 @@ These instructions assume your business' public facing page is a wordpress site.
 2. Create a new page on your wordpress site. Title it "Make a Bitcoin Payment". Set the URL so to something short, like example.com/pay.
 
 3. Paste the code below into the body:
-<form method="POST" action="ENTER POS URL HERE">
+`<form method="POST" action="ENTER POS URL HERE">
 USD Amount:
   <input type="text" name="amount" />
 Email Address:
@@ -82,7 +82,7 @@ Invoice Number:
   <input type="hidden" name="notificationUrl" value="https://btcqbo.example.com:8000/api/v1/payment" />
   <input type="hidden" name="redirectUrl" value="https://example.com/thanksyou" />
   <button type="submit">Pay now</button>
-</form>
+</form>`
 
 4. Enter the URL from #3 above as ENTER POS URL HERE. Change btcqbo.example.com to your domain later in the form code. Add a post-payment redirect URL of your choice in the appropriate section.
 
