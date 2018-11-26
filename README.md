@@ -63,7 +63,7 @@ $ sudo pip install -r requirements.txt
 
 5. Disable public access by editing your .env file to change AUTH_ACCESS to false. The restart btcqbo.service for the change to take effect.
 
-<h4>Part 4: The Public Facing Payment Portal</h4>
+<h3>Part 4: The Public Facing Payment Portal</h3>
 
 These instructions assume your business' public facing page is a wordpress site. 
 
