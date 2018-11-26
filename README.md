@@ -67,7 +67,7 @@ $ sudo pip install -r requirements.txt
 
 These instructions assume your business' public facing page is a wordpress site. 
 
-1. From within BTCPay, click "Apps", then create a new POS app. Scroll to the sample code at the bottom, and note the URL given on the <form method="POST" action section.
+1. From within BTCPay, click "Apps", then create a new POS app. Scroll to the sample code at the bottom, and note the URL given on the `<form method="POST" action section`.
 
 2. Create a new page on your wordpress site. Title it "Make a Bitcoin Payment". Set the URL so to something short, like example.com/pay.
 
