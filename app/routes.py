@@ -66,3 +66,8 @@ def paymentapi():
             return "Payment Amount was zero or doc number was invalid", 200
     else:
         return "Good request, but JSON states payment not yet confirmed", 200
+
+@app.route('/test')
+def test():
+    payment = qbo.post_payment(doc_number="1036", amount=477.5)
+    return payment

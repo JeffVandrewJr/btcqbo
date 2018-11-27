@@ -4,9 +4,11 @@ import app.tasks as tasks
 from app.utils import save, fetch
 from quickbooks import Oauth2SessionManager, QuickBooks
 from quickbooks.objects.account import Account
+from quickbooks.objects.base import Ref
 from quickbooks.objects.customer import Customer
 from quickbooks.objects.invoice import Invoice
 from quickbooks.objects.payment import Payment, PaymentLine
+from quickbooks.objects.paymentmethod import PaymentMethod
 
 callback_url = os.getenv('CALLBACK_URL')
 
@@ -14,33 +16,61 @@ callback_url = os.getenv('CALLBACK_URL')
 def post_payment(doc_number="", amount=0):
     refresh_stored_tokens()
     qb = fetch('qbclient')
-    accounts = Account.filter(
+    pmt_method_list = PaymentMethod.filter(
+        Name="BTCPay",
+        qb=qb
+    )
+    try:
+        pmt_method = pmt_method_list[0]
+    except IndexError:
+        new_pmt_method = PaymentMethod()
+        new_pmt_method.Name = "BTCPay"
+        new_pmt_method.save(qb=qb)
+        pmt_method_list = PaymentMethod.filter(
+            Name="BTCPay",
+            qb=qb
+        )
+        pmt_method = pmt_method_list[0]
+    deposit_acct_list = Account.filter(
         Name="Bitcoin",
         AccountSubType="OtherCurrentAssets",
         qb=qb
     )
-    if accounts[0] is None:
+    try:
+        deposit_acct = deposit_acct_list[0]
+    except IndexError:
         new_acct = Account()
         new_acct.Name = "Bitcoin"
         new_acct.AccountSubType = "OtherCurrentAssets"
         new_acct.save(qb=qb)
-        accounts = Account.filter(
+        deposit_acct_list = Account.filter(
             Name="Bitcoin",
             AccountSubType="OtherCurrentAssets",
             qb=qb
         )
+        deposit_acct = deposit_acct_list[0]
     invoice_list = Invoice.filter(DocNumber=doc_number, qb=qb)
-    linked_invoice = invoice_list[0].to_linked_txn()
-    payment_line = PaymentLine()
-    payment_line.Amount = amount
-    payment_line.LinkedTxn.append(linked_invoice)
-    payment = Payment()
-    payment.TotalAmt = amount
-    payment.CustomerRef = invoice_list[0].CustomerRef
-    payment.DepositToAccountRef.value = accounts[0].Id
-    payment.Line.append(payment_line)
-    payment.save(qb=qb)
-    return str(payment)
+    try:
+        invoice = invoice_list[0]
+    except IndexError:
+        return "No Such Invoice"
+    else:
+        linked_invoice = invoice.to_linked_txn()
+        payment_line = PaymentLine()
+        payment_line.Amount = amount
+        payment_line.LinkedTxn.append(linked_invoice)
+        payment = Payment()
+        payment.TotalAmt = amount
+        payment.CustomerRef = invoice.CustomerRef
+        deposit_account_ref = Ref()
+        deposit_account_ref.value = deposit_acct.Id
+        pmt_method_ref = Ref()
+        pmt_method_ref.name = pmt_method.Name
+        payment.PaymentMethodRef = pmt_method_ref
+        payment.DepositToAccountRef = deposit_account_ref
+        payment.Line.append(payment_line)
+        payment.save(qb=qb)
+        return "Payment Made: " + str(payment)
 
 
 def get_auth_url():
