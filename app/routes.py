@@ -4,7 +4,7 @@ from app import app
 import app.qbo as qbo
 import app.btcp as btcp
 from app.forms import BTCCodeForm
-from app.utils import save, fetch
+
 
 @app.route('/')
 @app.route('/index')
@@ -14,18 +14,20 @@ def index():
     else:
         return str(os.getenv('AUTH_ACCESS'))
 
+
 @app.route('/authqbo')
 def authqbo():
-    #calls fn to grab qbo auth url and then redirects there
+    # calls fn to grab qbo auth url and then redirects there
     if os.getenv('AUTH_ACCESS') == 'True':
         return redirect(qbo.get_auth_url())
     else:
         return "Access Denied"
 
+
 @app.route('/qbologged')
 def qbologged():
-    #user is redirected here after qbo authorizes
-    #sets the token values and real id globally using values passed in URL
+    # user is redirected here after qbo authorizes
+    # sets the token values and real id globally using values passed in URL
     if os.getenv('AUTH_ACCESS') == 'True':
         qbo.set_global_vars(
             realmid=request.args.get('realmId'),
@@ -34,6 +36,7 @@ def qbologged():
         return "Logged"
     else:
         return "Access Denied"
+
 
 @app.route('/authbtc', methods=['GET', 'POST'])
 def authbtc():
@@ -45,6 +48,7 @@ def authbtc():
         return render_template('authbtc.html', title='Enter Code', form=form)    
     else:
         return "Access Denied"
+
 
 @app.route('/api/v1/payment', methods=['POST'])
 def paymentapi():

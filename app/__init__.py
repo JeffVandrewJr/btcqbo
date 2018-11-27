@@ -11,4 +11,3 @@ app.task_queue = rq.Queue('btcqbo', connection=app.redis)
 bootstrap = Bootstrap(app)
 
 from app import routes
-

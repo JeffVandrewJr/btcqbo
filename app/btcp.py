@@ -6,6 +6,7 @@ import os
 
 btcpay_host = os.getenv('BTCPAY_HOST')
 
+
 def pairing(code):
     privkey = generate_privkey()
     btc_client = BTCPayClient(host=btcpay_host, pem=privkey)
