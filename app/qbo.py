@@ -128,6 +128,7 @@ def refresh_stored_tokens():
         session_manager=session_manager,
         company_id=realm_id
     )
+    QuickBooks.enable_global()
     save('access_token', session_manager.access_token)
     save('refresh_token', session_manager.refresh_token)
     save('session_manager', session_manager)
