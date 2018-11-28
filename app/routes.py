@@ -61,7 +61,7 @@ def paymentapi():
         doc_number = invoice['orderId']
         amount = float(invoice['price']) 
         if amount > 0 and doc_number != None: 
-            post_payment(doc_number=str(doc_number), amount=amount) 
+            qbo.post_payment(doc_number=str(doc_number), amount=amount) 
             return "Payment Accepted", 201
         else:
             return "Payment Amount was zero or doc number was invalid", 200

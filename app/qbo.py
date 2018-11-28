@@ -118,10 +118,20 @@ def set_global_vars(realmid, code):
 
 def refresh_stored_tokens():
     session_manager = fetch('session_manager')
+    realm_id = fetch('realm_id')
+    sandbox = False
+    if os.getenv('QUICKBOOKS_SANDBOX') == 'True':
+        sandbox = True
     session_manager.refresh_access_tokens()
+    qbclient = QuickBooks(
+        sandbox=sandbox,
+        session_manager=session_manager,
+        company_id=realm_id
+    )
     save('access_token', session_manager.access_token)
     save('refresh_token', session_manager.refresh_token)
     save('session_manager', session_manager)
+    save('qbclient', qbclient)
 
 
 def verify_invoice(doc_number="", email=""):
