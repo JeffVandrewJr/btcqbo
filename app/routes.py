@@ -46,29 +46,29 @@ def authbtc():
         if form.validate_on_submit():
             btcp.pairing(str(form.code.data))
             return render_template('success.html', output="success")
-        return render_template('authbtc.html', title='Enter Code', form=form)    
+        return render_template('authbtc.html', title='Enter Code', form=form)
     else:
         return "Access Denied"
 
 
 @app.route('/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
-    if not request.json or not 'id' in request.json:
+    if not request.json or 'id' not in request.json:
         abort(400)
     btc_client = fetch('btc_client')
     invoice = btc_client.get_invoice(request.json['id'])
     if invoice['status'] == "complete":
         doc_number = invoice['orderId']
-        amount = float(invoice['price']) 
-        if amount > 0 and doc_number != None: 
-            qbo.post_payment(doc_number=str(doc_number), amount=amount) 
+        amount = float(invoice['price'])
+        if amount > 0 and doc_number is not None:
+            qbo.post_payment(doc_number=str(doc_number), amount=amount)
             return "Payment Accepted", 201
         else:
             return "Payment Amount was zero or doc number was invalid", 200
     else:
         return "Good request, but JSON states payment not yet confirmed", 200
 
-@app.route('/test')
-def test():
-    payment = qbo.post_payment(doc_number="1036", amount=477.5)
-    return payment
+
+@app.route('/refresh')
+def refresh():
+    return qbo.refresh_stored_tokens()

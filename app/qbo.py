@@ -32,20 +32,18 @@ def post_payment(doc_number="", amount=0):
         )
         pmt_method = pmt_method_list[0]
     deposit_acct_list = Account.filter(
-        Name="Bitcoin",
-        AccountSubType="OtherCurrentAssets",
+        Name="Bitcoin-BTCPay",
         qb=qb
     )
     try:
         deposit_acct = deposit_acct_list[0]
     except IndexError:
         new_acct = Account()
-        new_acct.Name = "Bitcoin"
+        new_acct.Name = "Bitcoin-BTCPay"
         new_acct.AccountSubType = "OtherCurrentAssets"
         new_acct.save(qb=qb)
         deposit_acct_list = Account.filter(
-            Name="Bitcoin",
-            AccountSubType="OtherCurrentAssets",
+            Name="Bitcoin-BTCPay",
             qb=qb
         )
         deposit_acct = deposit_acct_list[0]
@@ -117,22 +115,34 @@ def set_global_vars(realmid, code):
 
 
 def refresh_stored_tokens():
-    session_manager = fetch('session_manager')
     realm_id = fetch('realm_id')
+    session_manager = Oauth2SessionManager(
+        client_id=os.getenv('QUICKBOOKS_CLIENT_ID'),
+        client_secret=os.getenv('QUICKBOOKS_CLIENT_SECRET'),
+        base_url=callback_url,
+        access_token=fetch('access_token'),
+        refresh_token=fetch('refresh_token'),
+    )
+    result = session_manager.refresh_access_tokens(return_result=True)
+    save('access_token', session_manager.access_token)
+    save('refresh_token', session_manager.refresh_token)
+    session_manager = Oauth2SessionManager(
+        client_id=realm_id,
+        client_secret=os.getenv('QUICKBOOKS_CLIENT_SECRET'),
+        access_token=fetch('access_token'),
+    )
     sandbox = False
     if os.getenv('QUICKBOOKS_SANDBOX') == 'True':
         sandbox = True
-    session_manager.refresh_access_tokens()
     qbclient = QuickBooks(
         sandbox=sandbox,
         session_manager=session_manager,
         company_id=realm_id
     )
     QuickBooks.enable_global()
-    save('access_token', session_manager.access_token)
-    save('refresh_token', session_manager.refresh_token)
     save('session_manager', session_manager)
     save('qbclient', qbclient)
+    return str(result)
 
 
 def verify_invoice(doc_number="", email=""):
