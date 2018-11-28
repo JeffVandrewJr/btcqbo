@@ -3,6 +3,7 @@ from flask import render_template, redirect, request, abort
 from app import app
 import app.qbo as qbo
 import app.btcp as btcp
+from app.utils import fetch
 from app.forms import BTCCodeForm
 
 
