@@ -1,6 +1,6 @@
 from app import app
 import os
-import app.tasks as tasks
+import time
 from app.utils import save, fetch
 from quickbooks import Oauth2SessionManager, QuickBooks
 from quickbooks.objects.account import Account
@@ -113,7 +113,7 @@ def set_global_vars(realmid, code):
     save('session_manager', session_manager)
     save('qbclient', qbclient)
     if '1' not in app.task_queue.job_ids:
-        app.task_queue.enqueue_call(func=tasks.repeat_refresh, timeout=-1, job_id='1')
+        app.task_queue.enqueue_call(func=repeat_refresh, timeout=-1, job_id='1')
 
 
 def refresh_stored_tokens():
@@ -132,3 +132,9 @@ def verify_invoice(doc_number="", email=""):
         return True
     else:
         return False
+
+
+def repeat_refresh():
+    while True:
+        time.sleep(3000)
+        refresh_stored_tokens()

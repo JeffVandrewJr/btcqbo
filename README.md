@@ -14,6 +14,16 @@ Quickbooks Online (QBO) is currently the most popular small business bookkeeping
 
 Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay invoice generated with the customer's data pre-filled, and payments to the BTCPay invoice are autmatically recorded in QBO.
 
+<h2>Needed Improvements (hopefully soon)</h2>
+
+1. This application needs to be Dockerized so that users can easily slide it in alongside the other Docker containers that are currently part of BTCPay one-click install on LunaNode.
+
+2. Before generating a BTCPay invoice, the software should ping QBO and verify the email address to the invoice number to prevent against customer typos.
+
+<h2>Notes</h2>
+
+All payments made through BTCPay will be recorded in QBO in an "Other Current Asset" account called "Bitcoin." They are recorded at USD value as of the date the invoice was paid. This is not a bug; it is intentional behavior. The USD value on the payment date is the amount of taxable income recognized as well as the tax basis for a future sale of BTC under US Tax law, so the BTC is recorded in QBO accordingly. The information herein is educational only and is not tax advice; consult your tax professional.
+
 <h2>Installation</h2>
 
 This install documentation is sparse and will be improved over the coming weeks!
@@ -43,7 +53,7 @@ Below are installation instructions for deployment on a Linux server or VPS sepa
 5. Install dependencies by running:
 $ sudo pip install -r requirements.txt
 
-6. Create an .env file. A form template is provided as env.sample. Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. SECRET_KEY can remain all zeroes as the this site will not be public facing after syncing is complete.
+6. Create an .env file. A form template is provided as env.sample. Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. 
 
 7. Enable systemd unit files for btcqbo.service and rq-worker.service. Sample templates for both are provided which use standard LunaNode VPS file paths; you will need to edit the file paths accordingly for your installation. After enabling the unit files, be sure to start them.
 

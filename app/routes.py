@@ -12,7 +12,7 @@ def index():
     if os.getenv('AUTH_ACCESS') == 'True':
         return render_template('index.html')
     else:
-        return str(os.getenv('AUTH_ACCESS'))
+        return "Access Denied"
 
 
 @app.route('/authqbo')
@@ -50,7 +50,7 @@ def authbtc():
         return "Access Denied"
 
 
-@app.route('/api/v1/payment', methods=['POST'])
+@app.route('/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
     if not request.json or not 'id' in request.json:
         abort(400)
