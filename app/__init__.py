@@ -7,9 +7,12 @@ import rq
 import rq_dashboard
 
 app = Flask(__name__)
-if os.getenv('AUTH_ACCESS') == 'True':
+if os.getenv('RQ_ACCESS') == 'True':
     app.config.from_object(rq_dashboard.default_settings)
-    app.register_blueprint(rq_dashboard.blueprint, url_prefix="/btcqbo/rq")
+    app.register_blueprint(
+        rq_dashboard.blueprint,
+        url_prefix="/btcqbo/rq",
+    )
 # after rq blueprint registers, override config to the app's config
 app.config.from_object(Config)
 app.redis = Redis.from_url(app.config['REDIS_URL'])
