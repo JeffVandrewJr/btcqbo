@@ -7,8 +7,7 @@ from app.utils import fetch
 from app.forms import BTCCodeForm
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/btcqbo')
 def index():
     if os.getenv('AUTH_ACCESS') == 'True':
         return render_template('index.html')
@@ -16,7 +15,7 @@ def index():
         return "Access Denied"
 
 
-@app.route('/authqbo')
+@app.route('/btcqbo/authqbo')
 def authqbo():
     # calls fn to grab qbo auth url and then redirects there
     if os.getenv('AUTH_ACCESS') == 'True':
@@ -25,7 +24,7 @@ def authqbo():
         return "Access Denied"
 
 
-@app.route('/qbologged')
+@app.route('/btcqbo/qbologged')
 def qbologged():
     # user is redirected here after qbo authorizes
     # sets the token values and real id globally using values passed in URL
@@ -39,7 +38,7 @@ def qbologged():
         return "Access Denied"
 
 
-@app.route('/authbtc', methods=['GET', 'POST'])
+@app.route('/btcqbo/authbtc', methods=['GET', 'POST'])
 def authbtc():
     if os.getenv('AUTH_ACCESS') == 'True':
         form = BTCCodeForm()
@@ -51,7 +50,7 @@ def authbtc():
         return "Access Denied"
 
 
-@app.route('/api/v1/payment', methods=['GET', 'POST'])
+@app.route('/btcqbo/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
     if not request.json or 'id' not in request.json:
         abort(400)
@@ -69,6 +68,6 @@ def paymentapi():
         return "Good request, but JSON states payment not yet confirmed", 200
 
 
-@app.route('/refresh')
+@app.route('/btcqbo/refresh')
 def refresh():
     return qbo.refresh_stored_tokens()
