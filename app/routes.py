@@ -66,8 +66,3 @@ def paymentapi():
             return "Payment Amount was zero or doc number was invalid", 200
     else:
         return "Good request, but JSON states payment not yet confirmed", 200
-
-
-@app.route('/btcqbo/refresh')
-def refresh():
-    return qbo.refresh_stored_tokens()
