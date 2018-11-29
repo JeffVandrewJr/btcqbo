@@ -16,9 +16,9 @@ Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay
 
 <h2>Needed Improvements (hopefully soon)</h2>
 
-1. This application needs to be Dockerized so that users can easily slide it in alongside the other Docker containers that are currently part of BTCPay one-click install on LunaNode.
+1. Before generating a BTCPay invoice, the software should ping QBO and verify the email address to the invoice number to prevent against customer typos.
 
-2. Before generating a BTCPay invoice, the software should ping QBO and verify the email address to the invoice number to prevent against customer typos.
+2. Dockerization.
 
 <h2>Notes</h2>
 
@@ -28,7 +28,7 @@ All payments made through BTCPay will be recorded in QBO in an "Other Current As
 
 This install documentation is sparse and will be improved over the coming weeks!
 
-Below are installation instructions for deployment on a Linux server or VPS separate from your BTCPay Server instance. Deployment is also possible in a Docker container residing on the same server with BTCPay; instructions are forthcoming for users wanting to deploy a dockerized BTCQBO instance alongside the dockerized BTCPay server created with one click on LunaNode.
+Below are installation instructions for deployment on a LunaNode VPS that was set up via the one-click install recommended by the BTCPay team. More technical users can adapt these instructions for other setups.
 
 <h3>Part 1: Obtain Intuit Keys</h3>
 
@@ -36,42 +36,80 @@ Below are installation instructions for deployment on a Linux server or VPS sepa
 
 2. After logging in, clock on "My Apps" and create a new app. The title is irrelevant.
 
-3. After teh app is created, click "Keys". There will be sandbox and production keys. To obtain the production keys, Intuit will require you to fully fill out your developer profile. Intuit will also require links to your privacy policy; these are largely irrelevant since your own business will the only "user" of your app. If you don't have a privacy policy on your site, here's a sample: https://www.bbb.org/greater-san-francisco/for-businesses/toolkits1/sample-privacy-policy/
+3. After the "app" is created, click "Keys". There will be sandbox and production keys. To obtain the production keys, Intuit will require you to fully fill out your developer profile. Intuit will also require links to your privacy policy; these are largely irrelevant since your own business will the only "user" of your app. If you don't have a privacy policy on your site, here's a sample: https://www.bbb.org/greater-san-francisco/for-businesses/toolkits1/sample-privacy-policy/
 
-4. Select a new subdomain for the connector. If your company's main site is example.com, you may wish to use btcqbo.example.com. This won't be a customer-facing site, so choice doesn't much matter. Set the DNS record for this subdomain to point to the public IP address of the server you're using for deployment. Underneath your Intuit keys, add "https://btcqbo.example.com:8000/qbologged" as a redirect URI, replacing btcqbo.example.com with your domain.
+4. Underneath your Intuit keys, add "https://btcpay.example.com/btcqbo/qbologged" as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted.
 
 <h3>Part 2: Install BTCQBO</h3>
 
-1. Using your distribution's package manager, install redis-server, python3, python3-venv, python3-dev, and nginx.
+1. Log into your LunaNode VPS using SSH. 
 
-2. Using systemd, enable redis-server.service, then start redis-server.service. Do the same for nginx.
+2. Install redis-server, python3, python3-venv, and python3-dev. Assuming you've accessed LunaNode's Ubuntu VPS via SSH, this would done from the command line as follows:
+`$ sudo apt-get install redis-server python3 python3-venv python3-dev`
 
-3. Using git, clone this repository to a local folder.
+2. Using systemd, enable redis-server.service, then start redis-server.service:
+```
+$ sudo systemctl enable redis-server.service
+$ sudo systemctl start redis-server.service
+```
 
-4. From the cloned repository folder, create a python venv ($ python3 -m venv venv). Then activate the venv ($ source venv/bin/activate).
+3. Using git, clone this repository to a local directory:
+`$ git clone https://github.com/JeffVandrewJr/btcqbo`
+
+4. Change directory into the new 'btcqbo' directory, create a python venv and activate it:
+```
+$ python3 -m venv venv
+$ source venv/bin/activate
+```
 
 5. Install dependencies by running:
-$ sudo pip install -r requirements.txt
+`$ sudo pip install -r requirements.txt`
 
-6. Create an .env file. A form template is provided as env.sample. Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. 
+6. Create an .env file by running `$ cp env.sample .env`. Then, using the text editor of your choice, open the .env (example using nano: `$ nano .env`). Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
 
-7. Enable systemd unit files for btcqbo.service and rq-worker.service. Sample templates for both are provided which use standard LunaNode VPS file paths; you will need to edit the file paths accordingly for your installation. After enabling the unit files, be sure to start them.
+7. Create, enable, and start the systemd unit files for btcqbo.service and rq-worker.service:
+```
+$ sudo cp btcqbo.service /etc/systemd/system/btcqbo.service
+$ sudo cp rq-worker.service /etc/systemd/system/rq-worker.service
+$ sudo enable btcqbo.service
+$ sudo enable rq-worker-service
+$ sudo start btcqbo.service
+$ sudo start rq-worker.service
+```
 
-8. Go to /etc/nginx/sites-enabled and remove the "default" file. Create a file named "btcqbo". A sample of what should be included in that file is provided in this repository as "btcqbo.nginx". [Note that the file name in /etc/nginx/sites-enabled should simply be "btcqbo".]
+8. Make a copy of the nginx default.conf out of its Docker container: `sudo docker cp nginx:/etc/nginx/conf.d/default.conf .`. Don't forget the trailing period.
 
-9. $ sudo service nginx reload
+9. Just before the final closing curly brace, add this code:
+```
+location /btcqbo/ {
+proxy_pass http://XXX.XX.XXX.XX:8001/;
+proxy_redirect off;
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+```
+The X's above need to be replaced with your public IP address, which is found in your LunaNode web login.
 
+9. Copy the default.conf back into the nginx Docker container: `sudo docker cp default.conf nginx:/etc/nginx/conf.d/default.conf`
+
+10. Restart nginx (the final exit is critical to avoid corrupting your nginx container):
+```
+$ sudo docker exec -it nginx /bin/bash
+# service nginx reload
+# exit
+```
 <h3>Part 3: Sync with Intuit & BTCPay</h3>
 
-1. From a web browser, visit https://btcqbo.example.com:8000/authqbo, replacing btcqbo.example.com with your domain.
+1. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain.
 
 2. Follow the steps to sync to Inuit.
 
 3. Go log into your BTCPay server, click on your store, and then hit settings. From the settings menu, create an authorization token. Once the token is created, BTCPay will provide a pairing code.
 
-4. From a web browser, visit https://btcqbo.example.com:8000/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
+4. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
 
-5. Disable public access by editing your .env file to change AUTH_ACCESS to false. The restart btcqbo.service for the change to take effect.
+5. Disable public access by editing your .env file to change AUTH_ACCESS to false. The restart btcqbo.service for the change to take effect (`$ sudo systemctl restart btcqbo`).
 
 <h3>Part 4: The Public Facing Payment Portal</h3>
 
@@ -90,13 +128,13 @@ Email Address:
   <input type="text" name="email" />
 Invoice Number:
   <input type="text" name="orderId" />
-  <input type="hidden" name="notificationUrl" value="https://btcqbo.example.com:8000/api/v1/payment" />
+  <input type="hidden" name="notificationUrl" value="https://btcpay.example.com/btcqbo/api/v1/payment" />
   <input type="hidden" name="redirectUrl" value="https://example.com/thanksyou" />
   <button type="submit">Pay now</button>
 </form>
 ```
 
-4. Enter the URL from #3 above as ENTER POS URL HERE. Change btcqbo.example.com to your domain later in the form code. Add a post-payment redirect URL of your choice in the appropriate section.
+4. Enter the URL from #3 above as ENTER POS URL HERE. Change btcpay.example.com to your domain later in the form code. Add a post-payment redirect URL of your choice in the appropriate section.
 
 5. In Quickbooks Online, edit your outgoing email template for invoicing with a concluding paragraph like this one:
 
