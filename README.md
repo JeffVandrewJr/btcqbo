@@ -18,7 +18,9 @@ Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay
 
 1. Before generating a BTCPay invoice, the software should ping QBO and verify the email address to the invoice number to prevent against customer typos.
 
-2. Dockerization.
+2. Easier install for non-technical users. Since the BTCPay one-click install method deploys on an Ubuntu VPS, it seems the best way to accomplish this is by creating a .deb file.
+
+3. A cli tool for verifying QBO OAuth status, viewing tokens, etc.
 
 <h2>Notes</h2>
 
@@ -110,7 +112,7 @@ $ sudo docker exec -it nginx /bin/bash
 
 4. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
 
-5. Disable public access by editing your .env file to change AUTH_ACCESS to false. The restart btcqbo.service for the change to take effect (`$ sudo systemctl restart btcqbo`).
+5. Disable public access by editing your .env file to change AUTH_ACCESS to `False` (capital 'F'). The restart btcqbo.service for the change to take effect (`$ sudo systemctl restart btcqbo`).
 
 <h3>Part 4: The Public Facing Payment Portal</h3>
 
