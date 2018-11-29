@@ -82,7 +82,7 @@ $ sudo start rq-worker.service
 9. Just before the final closing curly brace, add this code:
 ```
 location /btcqbo/ {
-proxy_pass http://XXX.XX.XXX.XX:8001/;
+proxy_pass http://XXX.XX.XXX.XX:8001;
 proxy_redirect off;
 proxy_set_header Host $host;
 proxy_set_header X-Real-IP $remote_addr;
