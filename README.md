@@ -38,7 +38,7 @@ Below are installation instructions for deployment on a LunaNode VPS that was se
 
 2. After logging in, clock on "My Apps" and create a new app. The title is irrelevant.
 
-3. After the "app" is created, click "Keys". There will be sandbox and production keys. To obtain the production keys, Intuit will require you to fully fill out your developer profile. Intuit will also require links to your privacy policy and EULA; these are largely irrelevant since your own business will the only "user" of your app. If you don't have links to a EULA and privacy policy, you may choose to use these links https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/privacy and https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/eula-sample. This is not legal advice, and consult with your own attorney if you have questions. 
+3. After the "app" is created, click "Keys". There will be sandbox and production keys. To obtain the production keys, Intuit will require you to fully fill out your developer profile. Intuit will also require links to your privacy policy and EULA; these are largely irrelevant since your own business will the only "user" of your app. If you don't have links to a EULA and privacy policy, you may choose to use these links https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/privacy-sample and https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/eula-sample. This is not legal advice, and consult with your own attorney if you have questions. 
 
 4. Underneath your Intuit keys, add "https://btcpay.example.com/btcqbo/qbologged" as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted.
 
