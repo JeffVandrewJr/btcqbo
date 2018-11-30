@@ -16,11 +16,9 @@ Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay
 
 <h2>Needed Improvements (hopefully soon)</h2>
 
-1. Before generating a BTCPay invoice, the software should ping QBO and verify the email address to the invoice number to prevent against customer typos.
+1. Easier install for non-technical users. Since the BTCPay one-click install method deploys on an Ubuntu VPS, it seems the best way to accomplish this is by creating a .deb file.
 
-2. Easier install for non-technical users. Since the BTCPay one-click install method deploys on an Ubuntu VPS, it seems the best way to accomplish this is by creating a .deb file.
-
-3. A cli tool for verifying QBO OAuth status, viewing tokens, etc.
+2. A cli tool for verifying QBO OAuth status, viewing tokens, etc.
 
 <h2>Notes</h2>
 
@@ -118,13 +116,11 @@ $ sudo docker exec -it nginx /bin/bash
 
 These instructions assume your business' public facing page is a wordpress site. 
 
-1. From within BTCPay, click "Apps", then create a new POS app. Scroll to the sample code at the bottom, and note the URL given on the `<form method="POST" action` section.
+1. Create a new page on your wordpress site. Title it "Make a Bitcoin Payment". Set the URL so to something short, like example.com/pay.
 
-2. Create a new page on your wordpress site. Title it "Make a Bitcoin Payment". Set the URL so to something short, like example.com/pay.
-
-3. Paste the code below into the body:
+2. Paste the code below into the body:
 ```
-<form method="POST" action="ENTER POS URL HERE">
+<form method="POST" action="https://btcpay.example.com/btcqbo/verify">
 USD Amount:
   <input type="text" name="amount" />
 Email Address:
@@ -132,12 +128,12 @@ Email Address:
 Invoice Number:
   <input type="text" name="orderId" />
   <input type="hidden" name="notificationUrl" value="https://btcpay.example.com/btcqbo/api/v1/payment" />
-  <input type="hidden" name="redirectUrl" value="https://example.com/thanksyou" />
+  <input type="hidden" name="redirectUrl" value="https://example.com" />
   <button type="submit">Pay now</button>
 </form>
 ```
 
-4. Enter the URL from #3 above as ENTER POS URL HERE. Change btcpay.example.com to your domain later in the form code. Add a post-payment redirect URL of your choice in the appropriate section.
+4. In the code, change btcpay.example.com to your appropriate domain, and set the redirect URL of your choice. Save the page in Wordpress; due to the magic of CSS it should automatically be styled to match your site.
 
 5. In Quickbooks Online, edit your outgoing email template for invoicing with a concluding paragraph like this one:
 
