@@ -150,9 +150,9 @@ def verify_invoice(doc_number="", email=""):
     invoice_list = Invoice.filter(DocNumber=doc_number, qb=qb)
     customers = Customer.filter(id=invoice_list[0].CustomerRef.value, qb=qb)
     if customers[0].PrimaryEmailAddr.Address.lower() == email.lower():
-        return True
+        return customers[0]
     else:
-        return False
+        return None
 
 
 def repeat_refresh():

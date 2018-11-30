@@ -66,3 +66,26 @@ def paymentapi():
             return "Payment Amount was zero or doc number was invalid", 200
     else:
         return "Good request, but JSON states payment not yet confirmed", 200
+
+
+@app.route('/btcqbo/verify', methods=['POST'])
+def verify():
+    data = request.form
+    customer = qbo.verify_invoice(
+        doc_number=str(data['orderId']),
+        email=str(data['email'])
+    )
+    if customer is not None:
+        btc_client = fetch('btc_client')
+        inv_data = btc_client.create_invoice({
+            "price": data['amount'],
+            "currency": "USD",
+            "buyer": {"name": customer.DisplayName, "email": data['email']},
+            "orderId": data['orderId'],
+            "notificationURL": data['notificationUrl'],
+            "redirectURL": data['redirectUrl']
+        })
+        inv_url = inv_data['url']
+        return redirect(inv_url)
+    else:
+        return "The email and invoice number provided do not match. Please try again. If multiple emails are associated to the invoice, you must use the primary one."
