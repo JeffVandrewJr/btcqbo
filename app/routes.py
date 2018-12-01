@@ -86,7 +86,12 @@ def verify():
         inv_data = btc_client.create_invoice({
             "price": data['amount'],
             "currency": "USD",
-            "buyer": {"name": customer.DisplayName, "email": data['email']},
+            "buyer": {
+                "name": customer.DisplayName,
+                "email": data['email'],
+                "notify": True,
+            },
+            "notificationEmail": data['email'],
             "orderId": data['orderId'],
             "notificationURL": data['notificationUrl'],
             "redirectURL": data['redirectUrl']
