@@ -110,8 +110,7 @@ def set_global_vars(realmid, code):
     save('refresh_token', refresh_token)
     save('session_manager', session_manager)
     save('qbclient', qbclient)
-    if '1' not in app.task_queue.job_ids:
-        app.task_queue.enqueue_call(func=repeat_refresh, timeout=-1, job_id='1')
+    add_job()
 
 
 def refresh_stored_tokens():
@@ -142,6 +141,7 @@ def refresh_stored_tokens():
     QuickBooks.enable_global()
     save('session_manager', session_manager)
     save('qbclient', qbclient)
+    add_job()
     return str(result)
 
 
@@ -160,3 +160,8 @@ def repeat_refresh():
     while True:
         time.sleep(3000)
         refresh_stored_tokens()
+
+
+def add_job():
+    if '1' not in app.task_queue.job_ids:
+        app.task_queue.enqueue_call(func=repeat_refresh, timeout=-1, job_id='1')
