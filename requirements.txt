@@ -1,12 +1,13 @@
 btcpay==1.0.3
+click==7.0
 Flask==1.0.2
 Flask-Bootstrap==3.3.7.1
+flask-HTTPauth==3.2.4
 Flask-WTF==0.14.2
+gunicorn==19.9.0
 python-dotenv==0.9.1
 python-quickbooks==0.7.5
 redis==2.10.6
 rq==0.12.0
 rq-dashboard==0.3.12
 WTForms==2.2.1
-gunicorn==19.9.0
-click==7.0

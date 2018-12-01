@@ -1,13 +1,43 @@
 import os
-from flask import render_template, redirect, request, abort
+from flask import render_template, redirect, request, abort, Response
+from werkzeug.security import check_password_hash
 from app import app
+from app import auth
 import app.qbo as qbo
 import app.btcp as btcp
 from app.utils import fetch
 from app.forms import BTCCodeForm
+from rq_dashboard import blueprint
 
 
-@app.route('/btcqbo')
+if os.getenv('AUTH_ACCESS') == 'True':
+    @blueprint.before_request
+    def rq_login():
+        auth = request.authorization
+        if (auth is None or not check_password_hash(fetch('hash'), auth.password or
+                fetch('username') != auth.username)):
+            return Response("Authentication Failed", 401)
+        elif (fetch('username') == auth.username and
+                check_password_hash(fetch('hash'), auth.password)):
+            pass
+        else:
+            return Response("Authentication Failed", 401)
+    app.register_blueprint(
+        blueprint,
+        url_prefix="/btcqbo/rq",
+    )
+
+
+@auth.verify_password
+def verify_password(username, pswd):
+    if fetch('username') == username:
+        return check_password_hash(fetch('hash'), pswd)
+    else:
+        return False
+
+
+@app.route('/btcqbo/index')
+@auth.login_required
 def index():
     if os.getenv('AUTH_ACCESS') == 'True':
         return render_template('index.html')
@@ -16,6 +46,7 @@ def index():
 
 
 @app.route('/btcqbo/authqbo')
+@auth.login_required
 def authqbo():
     # calls fn to grab qbo auth url and then redirects there
     if os.getenv('AUTH_ACCESS') == 'True':
@@ -39,6 +70,7 @@ def qbologged():
 
 
 @app.route('/btcqbo/authbtc', methods=['GET', 'POST'])
+@auth.login_required
 def authbtc():
     if os.getenv('AUTH_ACCESS') == 'True':
         form = BTCCodeForm()
@@ -71,7 +103,7 @@ def paymentapi():
         else:
             return "No payment status received.", 400
     else:
-        return "Invalid transaction ID.", 400        
+        return "Invalid transaction ID.", 400
 
 
 @app.route('/btcqbo/verify', methods=['POST'])
