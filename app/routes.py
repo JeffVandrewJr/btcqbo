@@ -1,5 +1,5 @@
 import os
-from flask import render_template, redirect, request, abort, Response
+from flask import render_template, redirect, request, abort, url_for, Response
 from werkzeug.security import check_password_hash
 from app import app
 from app import auth
@@ -21,7 +21,7 @@ if os.getenv('AUTH_ACCESS') == 'True':
                 check_password_hash(fetch('hash'), auth.password)):
             pass
         else:
-            return Response("Authentication Failed", 401)
+            return redirect(url_for('index'))
     app.register_blueprint(
         blueprint,
         url_prefix="/btcqbo/rq",
