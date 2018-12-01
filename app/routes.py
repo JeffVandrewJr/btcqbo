@@ -10,7 +10,7 @@ from app.forms import BTCCodeForm
 from rq_dashboard import blueprint
 
 
-if os.getenv('AUTH_ACCESS') == 'True':
+if os.getenv('RQ_ACCESS') == 'True':
     @blueprint.before_request
     def rq_login():
         auth = request.authorization
