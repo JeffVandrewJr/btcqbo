@@ -14,19 +14,17 @@ Quickbooks Online (QBO) is currently the most popular small business bookkeeping
 
 Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay invoice generated with the customer's data pre-filled, and payments to the BTCPay invoice are autmatically recorded in QBO. Before generating the invoice, the software verifies that the email and invoice number match to prevent against customer typos.
 
-<h2>Needed Improvements (hopefully soon)</h2>
+<h2>Improvements Roadmap</h2>
 
-1. Easier install for non-technical users. Since the BTCPay one-click install method deploys on an Ubuntu VPS, it seems the best way to accomplish this is by creating a .deb file.
+1. Quicker install method. Since the BTCPay one-click install method deploys on an Ubuntu VPS, it seems the best way to accomplish this short-term is by creating a .deb.
 
-2. A cli tool for verifying QBO OAuth status, viewing tokens, etc.
+2. I've included a rudimentary a CLI tool for manually refreshing QBO Oauth2 tokens. (The tokens auto-refresh without ever toughing the CLI; the CLI tool is simply for testing the connection to QBO.) Additional CLI functionality could be useful for activating/deactivating public access (currently accomplished via environmental variables) and other QBO connection testing purposes.
 
 <h2>Notes</h2>
 
 All payments made through BTCPay will be recorded in QBO in an "Other Current Asset" account called "Bitcoin." They are recorded at USD value as of the date the invoice was paid. This is not a bug; it is intentional behavior. The USD value on the payment date is the amount of taxable income recognized as well as the tax basis for a future sale of BTC under US Tax law, so the BTC is recorded in QBO accordingly. The information herein is educational only and is not tax advice; consult your tax professional.
 
 <h2>Installation</h2>
-
-This install documentation is sparse and will be improved over the coming weeks!
 
 Below are installation instructions for deployment on a LunaNode VPS that was set up via the one-click install recommended by the BTCPay team. More technical users can adapt these instructions for other setups.
 
@@ -65,9 +63,9 @@ $ source venv/bin/activate
 5. Install dependencies by running:
 `$ sudo pip install -r requirements.txt`
 
-6. Create an .env file by running `$ cp env.sample .env`. Then, using the text editor of your choice, open the .env (example using nano: `$ nano .env`). Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
+6. Create an .env file by running `$ cp env.sample .env` in the btcqbo directory. Then, using the text editor of your choice, open the .env (example using nano as a text editor: `$ nano .env`). Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
 
-7. Create, enable, and start the systemd unit files for btcqbo.service and rq-worker.service:
+7. Create, enable, and start the systemd unit files for btcqbo.service and rq-worker.service. To do so, from the btcqbo directory:
 ```
 $ sudo cp btcqbo.service /etc/systemd/system/btcqbo.service
 $ sudo cp rq-worker.service /etc/systemd/system/rq-worker.service
@@ -79,7 +77,7 @@ $ sudo start rq-worker.service
 
 8. Make a copy of the nginx default.conf out of its Docker container: `sudo docker cp nginx:/etc/nginx/conf.d/default.conf .`. Don't forget the trailing period.
 
-9. Just before the final closing curly brace, add this code:
+9. Open the default.conf you just copied in the text editor of your choice (example: `nano default.conf`) Just before the final closing curly brace in the file, add this code:
 ```
 location /btcqbo/ {
 proxy_pass http://XXX.XX.XXX.XX:8001;
@@ -110,13 +108,13 @@ $ sudo docker exec -it nginx /bin/bash
 
 4. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
 
-5. Disable public access by editing your .env file to change AUTH_ACCESS to `False` (capital 'F'). The restart btcqbo.service for the change to take effect (`$ sudo systemctl restart btcqbo`).
+5. Disable public access by editing your .env file to change AUTH_ACCESS to `False` (capital 'F'). Then restart btcqbo.service for the change to take effect (`$ sudo systemctl restart btcqbo`).
 
 <h3>Part 4: The Public Facing Payment Portal</h3>
 
-These instructions assume your business' public facing page is a wordpress site. 
+These instructions assume your business' public facing page is a Wordpress site. 
 
-1. Create a new page on your wordpress site. Title it "Make a Bitcoin Payment". Set the URL so to something short, like example.com/pay.
+1. Create a new page on your Wordpress site. Title it "Make a Bitcoin Payment". Set the URL so to something short, like example.com/pay.
 
 2. Paste the code below into the body:
 ```
