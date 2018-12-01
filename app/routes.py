@@ -56,16 +56,22 @@ def paymentapi():
         abort(400)
     btc_client = fetch('btc_client')
     invoice = btc_client.get_invoice(request.json['id'])
-    if invoice['status'] == "complete":
-        doc_number = invoice['orderId']
-        amount = float(invoice['price'])
-        if amount > 0 and doc_number is not None:
-            qbo.post_payment(doc_number=str(doc_number), amount=amount)
-            return "Payment Accepted", 201
+    if isinstance(invoice, dict):
+        if 'status' in invoice:
+            if invoice['status'] == "confirmed":
+                doc_number = invoice['orderId']
+                amount = float(invoice['price'])
+                if amount > 0 and doc_number is not None:
+                    qbo.post_payment(doc_number=str(doc_number), amount=amount)
+                    return "Payment Accepted", 201
+                else:
+                    return "Payment was zero or invalid invoice #.", 200
+            else:
+                return "Payment not yet confirmed.", 200
         else:
-            return "Payment Amount was zero or doc number was invalid", 200
+            return "No payment status received.", 400
     else:
-        return "Good request, but JSON states payment not yet confirmed", 200
+        return "Invalid transaction ID.", 400        
 
 
 @app.route('/btcqbo/verify', methods=['POST'])
