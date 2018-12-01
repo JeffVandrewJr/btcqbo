@@ -98,9 +98,14 @@ $ sudo docker exec -it nginx /bin/bash
 # service nginx reload
 # exit
 ```
+
+11. Set your username and password for the web interface by running from the btcqbo directory:
+`$ python3 cli.py setlogin`
+You can run this command to reset your login in the future if you forget it.
+
 <h3>Part 3: Sync with Intuit & BTCPay</h3>
 
-1. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain.
+1. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain. Login with the username and password that you set above.
 
 2. Follow the steps to sync to Inuit.
 
@@ -108,7 +113,7 @@ $ sudo docker exec -it nginx /bin/bash
 
 4. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
 
-5. Disable public access by editing your .env file to change AUTH_ACCESS to `False` (capital 'F'). Then restart btcqbo.service for the change to take effect (`$ sudo systemctl restart btcqbo`).
+5. If you like, after authorizing you can disable web access by editing your .env file to change AUTH_ACCESS to `False` (capital 'F'). Then restart btcqbo.service for the change to take effect (`$ sudo systemctl restart btcqbo`).
 
 <h3>Part 4: The Public Facing Payment Portal</h3>
 
@@ -136,3 +141,9 @@ Invoice Number:
 5. In Quickbooks Online, edit your outgoing email template for invoicing with a concluding paragraph like this one:
 
 `"Click "Review and Pay below to pay via ACH or Credit Card, or click https://example.com/pay to bay via Bitcoin.`
+
+<h2>Troubleshooting</h2>
+
+If QBO becomes unsynced, from the btcqbo directory try running `python3 cli.py refresh`. If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
+
+If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Access will be disabled if you're not logged into the web interface.
