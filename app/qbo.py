@@ -146,6 +146,7 @@ def refresh_stored_tokens():
 
 
 def verify_invoice(doc_number="", email=""):
+    refresh_stored_tokens()
     qb = fetch('qbclient')
     invoice_list = Invoice.filter(DocNumber=doc_number, qb=qb)
     customers = Customer.filter(id=invoice_list[0].CustomerRef.value, qb=qb)
