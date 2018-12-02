@@ -60,6 +60,7 @@ $ git clone https://github.com/JeffVandrewJr/btcqbo
 
 4. Change directory into the new 'btcqbo' directory, create a python venv and activate it:
 ```
+$ cd btcqbo
 $ python3 -m venv venv
 $ source venv/bin/activate
 ```
