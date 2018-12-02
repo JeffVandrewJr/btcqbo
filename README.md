@@ -97,8 +97,11 @@ proxy_set_header X-Real-IP $remote_addr;
  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
 ```
-The X's above need to be replaced with your an IP address that your container resolves to localhost. To find this, run:
-`sudo docker network inspect generated_default`. Under "Config", there will be an entry for "Gateway". That will be the IP address to use. Don't forget to append the :8001 to the end as shown above. When you save the file, you may need to override its read-only status. In vim this is accomplished via `:w!`; other text editors should prompt you on screen for the override if necessary.
+The X's above need to be replaced with your an IP address that your container resolves to localhost. To find this, first run:
+```
+$ sudo docker network inspect generated_default
+```
+In the output, under "Config", there will be an entry for "Gateway". That will be the IP address to use. Don't forget to append the :8001 to the end as shown above. When you save the file, you may need to override its read-only status. In vim this is accomplished via `:w!`; other text editors should prompt you on screen for the override if necessary.
 
 9. Copy the default.conf file back into the nginx Docker container: 
 ```
