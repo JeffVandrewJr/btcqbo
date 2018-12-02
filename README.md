@@ -66,7 +66,7 @@ $ source venv/bin/activate
 
 5. Install dependencies by running:
 ```
-$ sudo pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 6. Create an .env file by running `$ cp env.sample .env` in the btcqbo directory. Then, using the text editor of your choice, open the .env (example using nano as a text editor: `$ nano .env`). Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
