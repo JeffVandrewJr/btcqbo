@@ -10,7 +10,7 @@ You should have received a copy of the GNU General Public License along with thi
  
 <h2>Introduction</h2>
  
-Quickbooks Online (QBO) is currently the most popular small business bookkeeping solution, and is often used as an online invoicing solution. When customers receive an online invoice from a business using QBO, they currently have the option to pay electronically using credit card or ACH (via integrated Intuit Payments) or Bitcoin (via Intuit PayByCoin, which unfortunately only supports BitPay and Coinbase). This software extends Quickbooks Online to take payments through BTCPay server. It is self-hosted and does not rely on any third party (in contrast to Intuit's native solution for Quickbooks Online Invoicing, which relies on Bitpay).
+Quickbooks Online (QBO) is currently the most popular small business bookkeeping solution, and is often used as an online invoicing solution. When customers receive an online invoice from a business using QBO, they currently have the option to pay electronically using credit card or ACH (via integrated Intuit Payments) or Bitcoin (via Intuit PayByCoin, which unfortunately only supports Bitpay and Coinbase). This software extends Quickbooks Online to take payments through BTCPay server. It is self-hosted and does not rely on any third party.
 
 Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay invoice generated with the customer's data pre-filled, and payments to the BTCPay invoice are autmatically recorded in QBO. Before generating the invoice, the software verifies that the email and invoice number match to prevent against customer typos.
 
