@@ -109,7 +109,7 @@ In the output, under "Config", there will be an entry for "Gateway". That will b
 $ sudo docker cp default.conf nginx:/etc/nginx/conf.d/default.conf
 ```
 
-10. Restart nginx (the final exit is critical to avoid corrupting your nginx container):
+10. Restart nginx by running the following three commands in succession (the final exit command is critical to avoid corrupting your nginx container):
 ```
 $ sudo docker exec -it nginx /bin/bash
 # service nginx reload
