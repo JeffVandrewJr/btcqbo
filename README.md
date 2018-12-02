@@ -87,7 +87,7 @@ $ sudo start rq-worker.service
 sudo docker cp nginx:/etc/nginx/conf.d/default.conf .
 ```
 
-9. Open the default.conf you just copied in the text editor of your choice (example: `nano default.conf`) Just before the final closing curly brace in the file, add this code:
+9. Open the default.conf you just copied in the text editor of your choice (example: `$ nano default.conf`) Just before the final closing curly brace in the file, add this code:
 ```
 location /btcqbo/ {
 proxy_pass http://XXX.XX.XXX.XX:8001;
