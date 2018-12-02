@@ -84,7 +84,7 @@ $ sudo start rq-worker.service
 
 8. Make a copy of the nginx default.conf out of its Docker container (don't forget the trailing period): 
 ```
-sudo docker cp nginx:/etc/nginx/conf.d/default.conf .
+$ sudo docker cp nginx:/etc/nginx/conf.d/default.conf .
 ```
 
 9. Open the default.conf you just copied in the text editor of your choice (example: `$ nano default.conf`) Just before the final closing curly brace in the file, add this code:
@@ -96,6 +96,7 @@ proxy_set_header Host $host;
 proxy_set_header X-Real-IP $remote_addr;
  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
+[Final curly brace of the file is on this line.]
 ```
 The X's above need to be replaced with your an IP address that your container resolves to localhost. To find this, first run:
 ```
