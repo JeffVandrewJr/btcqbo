@@ -82,7 +82,11 @@ $ sudo start btcqbo.service
 $ sudo start rq-worker.service
 ```
 
-8. Make a copy of the nginx default.conf out of its Docker container: `sudo docker cp nginx:/etc/nginx/conf.d/default.conf .`. Don't forget the trailing period.
+8. Make a copy of the nginx default.conf out of its Docker container: 
+```
+sudo docker cp nginx:/etc/nginx/conf.d/default.conf .
+```
+Don't forget the trailing period.
 
 9. Open the default.conf you just copied in the text editor of your choice (example: `nano default.conf`) Just before the final closing curly brace in the file, add this code:
 ```
