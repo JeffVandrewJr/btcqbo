@@ -10,13 +10,13 @@ You should have received a copy of the GNU General Public License along with thi
  
 <h2>Introduction</h2>
  
-Quickbooks Online (QBO) is currently the most popular small business bookkeeping solution, and is often used as an online invoicing solution. When customers receive an online invoice from a business using QBO, they currently have the option to pay electronically using credit card or ACH (via integrated Intuit Payments) or Bitcoin (via Intuit PayByCoin, which unfortunately only supports BitPay and Coinbase). This software extends Quickbooks Online to take payments through BTCPay server.
+Quickbooks Online (QBO) is currently the most popular small business bookkeeping solution, and is often used as an online invoicing solution. When customers receive an online invoice from a business using QBO, they currently have the option to pay electronically using credit card or ACH (via integrated Intuit Payments) or Bitcoin (via Intuit PayByCoin, which unfortunately only supports BitPay and Coinbase). This software extends Quickbooks Online to take payments through BTCPay server. It is self-hosted and does not rely on any third party (in contrast to Intuit's native solution for Quickbooks Online Invoicing, which relies on Bitpay).
 
 Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay invoice generated with the customer's data pre-filled, and payments to the BTCPay invoice are autmatically recorded in QBO. Before generating the invoice, the software verifies that the email and invoice number match to prevent against customer typos.
 
 <h2>Improvements Roadmap</h2>
 
-1. Quicker install method. Since the BTCPay one-click install method deploys on an Ubuntu VPS, it seems the best way to accomplish this short-term is by creating a .deb.
+1. Quicker install method. Since the one-click install method referenced by the BTCPay team deploys on an Ubuntu VPS, it seems the best way to accomplish this short-term is by creating a .deb, possibly paired with a setup/config bash script.
 
 2. I've included a rudimentary a CLI tool for troubleshooting. Right now it only troubleshoots the refresh of QBO Oauth2 tokens. (The tokens auto-refresh without ever toughing the CLI; the CLI tool is simply for testing the connection to QBO.) Additional CLI functionality could be useful for activating/deactivating public access (currently accomplished via environmental variables) and other QBO connection testing purposes.
 
@@ -26,7 +26,7 @@ All payments made through BTCPay will be recorded in QBO in an "Other Current As
 
 <h2>Installation</h2>
 
-Below are installation instructions for deployment on a LunaNode VPS that was set up via the one-click install recommended by the BTCPay team. More technical users can adapt these instructions for other setups.
+Below are installation instructions for deployment on a BTCPay Server instance which was set up via the one-click install referenced by the BTCPay team in their docs (LunaNode). More technical users can adapt these instructions for other setups.
 
 <h3>Part 1: Obtain Intuit Keys</h3>
 
@@ -34,16 +34,18 @@ Below are installation instructions for deployment on a LunaNode VPS that was se
 
 2. After logging in, clock on "My Apps" and create a new app. The title is irrelevant.
 
-3. After the "app" is created, click "Keys". There will be sandbox and production keys. To obtain the production keys, Intuit will require you to fully fill out your developer profile. Intuit will also require links to your privacy policy and EULA; these are largely irrelevant since your own business will the only "user" of your app. If you don't have links to a EULA and privacy policy, you may choose to use these links https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/privacy-sample and https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/eula-sample. This is not legal advice, and consult with your own attorney if you have questions. 
+3. After the "app" is created, click "Keys". There will be sandbox and production keys. To obtain the production keys, Intuit will require you to fully fill out your developer profile. Intuit will also require links to your privacy policy and EULA; these are largely irrelevant since your own business will the only "user" of your app. If you don't have links to a EULA and privacy policy, you may choose to use these links https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/privacy-sample and https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/eula-sample. These are provided for educational purposes, and consult with your own attorney if you have questions. 
 
-4. Underneath your Intuit keys, add "https://btcpay.example.com/btcqbo/qbologged" as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted.
+4. On the Intuit Developer site, underneath your Intuit "production" keys, add "https://btcpay.example.com/btcqbo/qbologged" as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted. Ensure you're doing this in the "production" (not sandbox) area of the page.
 
 <h3>Part 2: Install BTCQBO</h3>
 
-1. Log into your LunaNode VPS using SSH. 
+1. Log into your BTCPay LunaNode VPS using SSH. 
 
 2. Install redis-server, python3, python3-venv, and python3-dev. Assuming you've accessed LunaNode's Ubuntu VPS via SSH, this would done from the command line as follows:
-`$ sudo apt-get install redis-server python3 python3-venv python3-dev`
+```
+$ sudo apt-get install redis-server python3 python3-venv python3-dev
+```
 
 2. Using systemd, enable redis-server.service, then start redis-server.service:
 ```
@@ -52,7 +54,9 @@ $ sudo systemctl start redis-server.service
 ```
 
 3. Using git, clone this repository to a local directory:
-`$ git clone https://github.com/JeffVandrewJr/btcqbo`
+```
+$ git clone https://github.com/JeffVandrewJr/btcqbo
+```
 
 4. Change directory into the new 'btcqbo' directory, create a python venv and activate it:
 ```
@@ -61,7 +65,9 @@ $ source venv/bin/activate
 ```
 
 5. Install dependencies by running:
-`$ sudo pip install -r requirements.txt`
+```
+$ sudo pip install -r requirements.txt
+```
 
 6. Create an .env file by running `$ cp env.sample .env` in the btcqbo directory. Then, using the text editor of your choice, open the .env (example using nano as a text editor: `$ nano .env`). Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
 
@@ -90,7 +96,10 @@ proxy_set_header X-Real-IP $remote_addr;
 The X's above need to be replaced with your an IP address that your container resolves to localhost. To find this, run:
 `sudo docker network inspect generated_default`. Under "Config", there will be an entry for "Gateway". That will be the IP address to use. Don't forget to append the :8001 to the end as shown above. When you save the file, you may need to override its read-only status. In vim this is accomplished via `:w!`; other text editors should prompt you on screen for the override if necessary.
 
-9. Copy the default.conf file back into the nginx Docker container: `sudo docker cp default.conf nginx:/etc/nginx/conf.d/default.conf`
+9. Copy the default.conf file back into the nginx Docker container: 
+```
+$ sudo docker cp default.conf nginx:/etc/nginx/conf.d/default.conf
+```
 
 10. Restart nginx (the final exit is critical to avoid corrupting your nginx container):
 ```
@@ -100,7 +109,9 @@ $ sudo docker exec -it nginx /bin/bash
 ```
 
 11. Set your username and password for the web interface by running from the btcqbo directory:
-`$ python3 cli.py setlogin`
+```
+$ python3 cli.py setlogin
+```
 You can run this command to reset your login in the future if you forget it.
 
 <h3>Part 3: Sync with Intuit & BTCPay</h3>
@@ -139,11 +150,12 @@ Invoice Number:
 4. In the code, change btcpay.example.com to your appropriate domain, and set the redirect URL of your choice. Save the page in Wordpress; due to the magic of CSS it should automatically be styled to match your site.
 
 5. In Quickbooks Online, edit your outgoing email template for invoicing with a concluding paragraph like this one:
-
-`"Click "Review and Pay below to pay via ACH or Credit Card, or click https://example.com/pay to bay via Bitcoin.`
+```
+"Click "Review and Pay below to pay via ACH or Credit Card, or click https://example.com/pay to bay via Bitcoin.
+```
 
 <h2>Troubleshooting</h2>
 
-If QBO becomes unsynced, from the btcqbo directory try running `python3 cli.py refresh`. If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
+If QBO becomes unsynced, from the btcqbo directory try running `$ python3 cli.py refresh`. If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
 
 If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Access will be disabled if you're not logged into the web interface.
