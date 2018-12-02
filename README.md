@@ -158,4 +158,4 @@ Invoice Number:
 
 If QBO becomes unsynced, from the btcqbo directory try running `$ python3 cli.py refresh`. If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
 
-If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Access will be disabled if you're not logged into the web interface.
+If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Access will be disabled if you're not logged into the web interface, so if you haven't previously logged in during a given session, head to https://btcpay.example.com/btcqbo/index to log in, then head to https://btcpay.example.com/btcqbo/rq.
