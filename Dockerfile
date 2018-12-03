@@ -2,7 +2,7 @@ FROM python:3
 
 WORKDIR /btcqbo
 
-COPY . /btcqbp
+COPY . /btcqbo
 
 RUN pip install -r requirements.txt
 
