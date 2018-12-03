@@ -10,7 +10,7 @@ Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay
 
 <h2>Improvements Roadmap</h2>
 
-1. Dokckerization.
+1. Dockerization. A "dockerized" branch has been created and is in process. It is currently not yet deployable.
 
 2. I've included a rudimentary a CLI tool for troubleshooting. Right now it only troubleshoots the refresh of QBO Oauth2 tokens. (The tokens auto-refresh without ever toughing the CLI; the CLI tool is simply for testing the connection to QBO.) Additional CLI functionality could be useful for activating/deactivating public access (currently accomplished via environmental variables) and other QBO connection testing purposes.
 
@@ -76,7 +76,8 @@ $ sudo start btcqbo.service
 $ sudo start rq-worker.service
 ```
 
-8. Make a copy of the nginx default.conf out of its Docker container (don't forget the trailing period): 
+8. Make a copy of the nginx default.conf out of its 
+container (don't forget the trailing period): 
 ```
 $ sudo docker cp nginx:/etc/nginx/conf.d/default.conf .
 ```
