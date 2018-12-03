@@ -10,7 +10,7 @@ Customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay
 
 <h2>Improvements Roadmap</h2>
 
-1. Quicker install method. Since the one-click install method referenced by the BTCPay team deploys on an Ubuntu VPS, it seems the best way to accomplish this short-term is by creating a .deb, possibly paired with a setup/config bash script.
+1. Dokckerization.
 
 2. I've included a rudimentary a CLI tool for troubleshooting. Right now it only troubleshoots the refresh of QBO Oauth2 tokens. (The tokens auto-refresh without ever toughing the CLI; the CLI tool is simply for testing the connection to QBO.) Additional CLI functionality could be useful for activating/deactivating public access (currently accomplished via environmental variables) and other QBO connection testing purposes.
 
@@ -161,3 +161,5 @@ Invoice Number:
 If QBO becomes unsynced, from the btcqbo directory try running `$ python3 cli.py refresh`. If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
 
 If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Access will be disabled if you're not logged into the web interface, so if you haven't previously logged in during a given session, head to https://btcpay.example.com/btcqbo/index to log in, then head to https://btcpay.example.com/btcqbo/rq. You must also ensure that RQ_ACCESS is set to `True` in your .env file.
+
+Currently, when you update your BTCPay Server instance, it will override the nginx settings and therefore you will need to redo steps 9-11 in Part 2 of the installation instructions. Once this plugin is Dockerized, that problem should be solved.
