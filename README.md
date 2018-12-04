@@ -37,7 +37,7 @@ $ git clone https://github.com/JeffVandrewJr/btcqbo
 
 3. Create an .env file by running `$ cp env.sample .env` in the btcqbo directory. Then, using the text editor of your choice, open the .env (example using nano as a text editor: `$ nano .env`). Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
 
-4. Create a Redis container:
+4. Run a Redis container:
 ```
 $ sudo docker run --name redis --network=generated_default -d redis:latest
 ```
@@ -47,12 +47,12 @@ $ sudo docker run --name redis --network=generated_default -d redis:latest
 sudo docker build -t btcqbo .
 ```
 
-5. Create a btcqbo container:
+5. Run a btcqbo container:
 ```
 $ sudo docker run -d -p 8001:8001 --name btcqbo -e REDIS_URL=redis://redis:6379/0 --network=generated_default btcqbo:latest
 ```
 
-6. Create an rq-worker container:
+6. Run an rq-worker container:
 ```
 $ sudo docker run -d --name rq-worker -e REDIS_URL=redis://redis:6379/0 --network=generated_default --entrypoint "/usr/local/bin/rq" btcqbo:latest worker -u redis://redis:6379/0 btcqbo
 ```
