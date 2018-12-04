@@ -123,7 +123,6 @@ def verify():
                 "email": data['email'],
                 "notify": True,
             },
-            "notificationEmail": data['email'],
             "orderId": data['orderId'],
             "notificationURL": data['notificationUrl'],
             "redirectURL": data['redirectUrl']
