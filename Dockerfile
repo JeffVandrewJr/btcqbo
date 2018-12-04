@@ -8,4 +8,4 @@ RUN pip install -r requirements.txt
 
 EXPOSE 8001
 
-CMD ["gunicorn", "-b :8001", "-w 2", "btcqbo:app"]
+CMD ["gunicorn", "-b 0.0.0.0:8001", "-w 2", "btcqbo:app"]
