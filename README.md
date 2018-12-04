@@ -1,4 +1,4 @@
-<h1>Dockerized Quickbooks Online Connector for BTCPay Server</h1>
+<h1>Quickbooks Online Connector for BTCPay Server</h1>
 
 Copyright (C) 2018 Jeff Vandrew Jr
 
