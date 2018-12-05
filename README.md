@@ -8,6 +8,10 @@ Quickbooks Online (QBO) is currently the most popular small business bookkeeping
 
 When this plugin is installed, customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay invoice generated with the customer's data pre-filled, and payments to the BTCPay invoice are autmatically recorded in QBO. Before generating the invoice, the software verifies that the email and invoice number match to prevent against customer typos.
 
+<h2>Known Issue</h2>
+
+Whenever you update BTCPay server or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A solution to this issue is being worked on.
+
 <h2>Notes</h2>
 
 All payments made through BTCPay will be recorded in QBO in an "Other Current Asset" account called "Bitcoin." They are recorded at USD value as of the date the invoice was paid. This is not a bug; it is intentional behavior. The USD value on the payment date is the amount of taxable income recognized as well as the tax basis for a future sale of BTC under US Tax law, so the BTC is recorded in QBO accordingly. The information herein is educational only and is not tax advice; consult your tax professional.
