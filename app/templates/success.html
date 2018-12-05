@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    {{ output }}
+<p>Success!</p>
+<p><a href="{{ url_for('authqbo') }}" class="btn btn-default">Authorize QBO</a></p>
+<p><a href="{{ url_for('authbtc') }}" class="btn btn-default">Authorize BTCPay</a></p>
 {% endblock %}

@@ -1,12 +1,12 @@
 import os
 from flask import render_template, redirect, request, abort, url_for, Response
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
 from app import auth
 import app.qbo as qbo
 import app.btcp as btcp
-from app.utils import fetch
-from app.forms import BTCCodeForm
+from app.utils import fetch, save
+from app.forms import BTCCodeForm, PasswordForm
 from rq_dashboard import blueprint
 
 
@@ -43,6 +43,23 @@ def index():
         return render_template('index.html')
     else:
         return "Access Denied"
+
+
+@app.route('/btcqbo/setpassword', methods=['GET', 'POST'])
+def set_password():
+    if fetch('hash') is None:
+        form = PasswordForm()
+        if form.validate_on_submit():
+            save('username', form.username.data)
+            hash = generate_password_hash(form.password.data)
+            save('hash', hash)
+            return render_template('success.html')
+        return render_template('setpassword.html',
+                               title='Set Username & Password',
+                               form=form
+                            )
+    else:
+        return "Your password has already been set."
 
 
 @app.route('/btcqbo/authqbo')

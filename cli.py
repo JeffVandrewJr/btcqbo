@@ -1,7 +1,7 @@
 import click
 from app.qbo import refresh_stored_tokens
 from getpass import getpass
-from app.utils import save
+from app.utils import save, wipe
 from werkzeug.security import generate_password_hash
 
 
@@ -22,6 +22,12 @@ def setlogin():
     hash = generate_password_hash(pswd)
     save('hash', hash)
     save('username', username)
+
+
+@cli.command()
+def deletelogin():
+    wipe('hash')
+    wipe('username')
 
 
 if __name__ == '__main__':

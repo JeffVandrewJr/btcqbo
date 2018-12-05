@@ -10,5 +10,12 @@ def save(key, object):
 
 
 def fetch(key):
-    unpacked_object = pickle.loads(r.get(key))
-    return unpacked_object
+    try: 
+        unpacked_object = pickle.loads(r.get(key))
+        return unpacked_object
+    except:
+        return None
+
+
+def wipe(key):
+    r.delete(key)
