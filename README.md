@@ -10,7 +10,7 @@ When this plugin is installed, customers choosing to pay a QBO invoice using BTC
 
 <h2>Known Issue</h2>
 
-Whenever you update BTCPay server or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A solution to this issue is being worked on.
+Whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A solution to this issue is being worked on.
 
 <h2>Notes</h2>
 
