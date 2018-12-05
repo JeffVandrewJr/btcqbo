@@ -78,7 +78,7 @@ proxy_pass http://btcqbo:8001;
 proxy_redirect off;
 proxy_set_header Host $host;
 proxy_set_header X-Real-IP $remote_addr;
- proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 }
 [Final curly brace of the file is on this line.]
 ```
@@ -95,13 +95,8 @@ $ sudo docker exec -it nginx /bin/bash
 # exit
 ```
 
-11. Set your username and password for the web interface by running the following three commands in succession (the final exit command is critical to avoid corrupting your container):
-```
-$ sudo docker exec -it btcqbo /bin/bash
-# python3 cli.py setlogin
-[follow the prompts]
-# exit
-```
+11. Set your username and password for the web interface by visiting https://btcpay.example.com/btcqbo/setpassword.
+
 You can run this command sequence to reset your login in the future if you forget it.
 
 <h3>Part 3: Sync with Intuit & BTCPay</h3>
