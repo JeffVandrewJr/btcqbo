@@ -1,3 +1,6 @@
+#hacky nginx workaround
+default.conf
+
 #persistent storage
 data
 dump.rdb

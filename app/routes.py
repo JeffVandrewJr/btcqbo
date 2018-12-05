@@ -6,7 +6,7 @@ from app import auth
 import app.qbo as qbo
 import app.btcp as btcp
 from app.utils import fetch, save
-from app.forms import BTCCodeForm, PasswordForm
+from app.forms import BTCCodeForm, PasswordForm, KeysForm
 from rq_dashboard import blueprint
 
 
@@ -45,6 +45,24 @@ def index():
         return "Access Denied"
 
 
+@app.route('/btcqbo/setkeys', methods=['GET', 'POST'])
+@auth.login_required
+def set_keys():
+    if os.getenv('AUTH_ACCESS') == 'True':
+        form = KeysForm()
+        if form.validate_on_submit():
+            save('qb_id', form.qb_id.data)
+            save('qb_secret', form.qb_secret.data)
+            save('qb_sandbox', form.qb_sandbox.data)
+            return render_template('keysset.html')
+        return render_template('setkeys.html',
+                               title='Set Intuit Keys',
+                               form=form
+                            )
+    else:
+        return "Access Denied."
+
+
 @app.route('/btcqbo/setpassword', methods=['GET', 'POST'])
 def set_password():
     if fetch('hash') is None:
@@ -67,9 +85,12 @@ def set_password():
 def authqbo():
     # calls fn to grab qbo auth url and then redirects there
     if os.getenv('AUTH_ACCESS') == 'True':
-        return redirect(qbo.get_auth_url())
+        if fetch('qb_secret') is not None:
+            return redirect(qbo.get_auth_url())
+        else:
+            return redirect(url_for('set_keys'))
     else:
-        return "Access Denied"
+        return "Access Denied."
 
 
 @app.route('/btcqbo/qbologged')
@@ -81,7 +102,7 @@ def qbologged():
             realmid=request.args.get('realmId'),
             code=request.args.get('code'),
         )
-        return "Logged"
+        return render_template('success.html')
     else:
         return "Access Denied"
 

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Please enter your Intuit API Keys:</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>Quickbooks Client ID:</p>
+        <p>
+            {{ form.qb_id(size=32) }}
+        </p>
+        <p>Quickbooks Client Secret:</p>
+        <p>
+            {{ form.qb_secret(size=32) }}
+        </p>
+        <p>Is this a sandbox?</p>
+        <p>[Sandbox companies are for testing. Leave unchecked if this will be used with a "live" QBO company.]</p>
+        <p>
+            {{ form.qb_sandbox() }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

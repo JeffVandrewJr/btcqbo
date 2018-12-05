@@ -1,7 +1,8 @@
 import click
+import os
 from app.qbo import refresh_stored_tokens
 from getpass import getpass
-from app.utils import save, wipe
+from app.utils import save, wipe, fetch
 from werkzeug.security import generate_password_hash
 
 
@@ -13,6 +14,14 @@ def cli():
 @cli.command()
 def refresh():
     click.echo(refresh_stored_tokens())
+
+
+@cli.command()
+def printqb():
+    click.echo(fetch('qb_id'))
+    click.echo(fetch('qb_secret'))
+    click.echo(fetch('qb_sandbox'))
+    click.echo(os.getenv('CALLBACK_URL'))
 
 
 @cli.command()
@@ -28,6 +37,13 @@ def setlogin():
 def deletelogin():
     wipe('hash')
     wipe('username')
+
+
+@cli.command()
+def deletekeys():
+    wipe('qb_id')
+    wipe('qb_secret')
+    wipe('qb_sandbox')
 
 
 if __name__ == '__main__':

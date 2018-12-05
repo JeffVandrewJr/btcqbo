@@ -73,8 +73,8 @@ def post_payment(doc_number="", amount=0):
 
 def get_auth_url():
     session_manager = Oauth2SessionManager(
-        client_id=os.getenv('QUICKBOOKS_CLIENT_ID'),
-        client_secret=os.getenv('QUICKBOOKS_CLIENT_SECRET'),
+        client_id=fetch('qb_id'),
+        client_secret=fetch('qb_secret'),
         base_url=callback_url,
     )
     authorize_url = session_manager.get_authorize_url(callback_url)
@@ -83,8 +83,8 @@ def get_auth_url():
 
 def set_global_vars(realmid, code):
     session_manager = Oauth2SessionManager(
-        client_id=os.getenv('QUICKBOOKS_CLIENT_ID'),
-        client_secret=os.getenv('QUICKBOOKS_CLIENT_SECRET'),
+        client_id=fetch('qb_id'),
+        client_secret=fetch('qb_secret'),
         base_url=callback_url,
     )
     realm_id = realmid
@@ -93,12 +93,10 @@ def set_global_vars(realmid, code):
     refresh_token = session_manager.refresh_token
     session_manager = Oauth2SessionManager(
         client_id=realm_id,
-        client_secret=os.getenv('QUICKBOOKS_CLIENT_SECRET'),
+        client_secret=fetch('qb_secret'),
         access_token=access_token,
     )
-    sandbox = False
-    if os.getenv('QUICKBOOKS_SANDBOX') == 'True':
-        sandbox = True
+    sandbox = fetch('qb_sandbox')
     qbclient = QuickBooks(
         sandbox=sandbox,
         session_manager=session_manager,
@@ -116,8 +114,8 @@ def set_global_vars(realmid, code):
 def refresh_stored_tokens():
     realm_id = fetch('realm_id')
     session_manager = Oauth2SessionManager(
-        client_id=os.getenv('QUICKBOOKS_CLIENT_ID'),
-        client_secret=os.getenv('QUICKBOOKS_CLIENT_SECRET'),
+        client_id=fetch('qb_id'),
+        client_secret=fetch('qb_secret'),
         base_url=callback_url,
         access_token=fetch('access_token'),
         refresh_token=fetch('refresh_token'),
@@ -127,12 +125,10 @@ def refresh_stored_tokens():
     save('refresh_token', session_manager.refresh_token)
     session_manager = Oauth2SessionManager(
         client_id=realm_id,
-        client_secret=os.getenv('QUICKBOOKS_CLIENT_SECRET'),
+        client_secret=fetch('qb_secret'),
         access_token=fetch('access_token'),
     )
-    sandbox = False
-    if os.getenv('QUICKBOOKS_SANDBOX') == 'True':
-        sandbox = True
+    sandbox = fetch('qb_sandbox')
     qbclient = QuickBooks(
         sandbox=sandbox,
         session_manager=session_manager,
