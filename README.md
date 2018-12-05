@@ -10,7 +10,7 @@ When this plugin is installed, customers choosing to pay a QBO invoice using BTC
 
 <h2>Known Issues</h2>
 
-Whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A solution to this issue is being worked on.
+At the current time, whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A more official integration with BTCPay is coming soon and will solve this issue (as well as streamline the install process).
 
 Unfortunately the Quickbooks API does not allow emailing customer receipts. BTCPay does not support this either, leaving the feature to merchant software. Assuming there are no plans for BTCPay to support this feature, I will implement this in the plugin in the near future.
 
@@ -149,4 +149,4 @@ If the screen prints a bunch of JSON data, you've successfully resynced. If not,
 
 If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Access will be disabled if you're not logged into the web interface, so if you haven't previously logged in during a given session, head to https://btcpay.example.com/btcqbo/index to log in, then head to https://btcpay.example.com/btcqbo/rq. You must also ensure that RQ_ACCESS is set to `True` in your .env file.
 
-Whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A solution to this issue is being worked on.
+At the current time, whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A more official integration with BTCPay is coming soon and will solve this issue (as well as streamline the install process).
