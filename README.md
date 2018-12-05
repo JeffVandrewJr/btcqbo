@@ -97,7 +97,7 @@ $ sudo docker exec -it nginx /bin/bash
 
 11. Set your username and password for the web interface by visiting https://btcpay.example.com/btcqbo/setpassword.
 
-You can run this command sequence to reset your login in the future if you forget it.
+Do not lose your username and password.
 
 <h3>Part 3: Sync with Intuit & BTCPay</h3>
 
