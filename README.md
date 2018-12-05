@@ -98,7 +98,7 @@ $ sudo docker exec -it nginx /bin/bash
 11. Set your username and password for the web interface by running the following three commands in succession (the final exit command is critical to avoid corrupting your container):
 ```
 $ sudo docker exec -it btcqbo /bin/bash
-$ python3 cli.py setlogin
+# python3 cli.py setlogin
 [follow the prompts]
 # exit
 ```
@@ -147,7 +147,7 @@ Invoice Number:
 If QBO becomes unsynced, from the btcqbo directory try running:
 ```
 $ sudo docker exec -it btcqbo /bin/bash
-$ python3 cli.py refresh
+# python3 cli.py refresh
 # exit
 ```
 If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
