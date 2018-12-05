@@ -8,13 +8,17 @@ Quickbooks Online (QBO) is currently the most popular small business bookkeeping
 
 When this plugin is installed, customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay invoice generated with the customer's data pre-filled, and payments to the BTCPay invoice are autmatically recorded in QBO. Before generating the invoice, the software verifies that the email and invoice number match to prevent against customer typos.
 
-<h2>Known Issue</h2>
+<h2>Known Issues</h2>
 
 Whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A solution to this issue is being worked on.
+
+Unfortunately the Quickbooks API does not allow emailing customer receipts. BTCPay does not support this either, leaving the feature to merchant software. Assuming there are no plans for BTCPay to support this feature, I will implement this in the plugin in the near future.
 
 <h2>Notes</h2>
 
 All payments made through BTCPay will be recorded in QBO in an "Other Current Asset" account called "Bitcoin." They are recorded at USD value as of the date the invoice was paid. This is not a bug; it is intentional behavior. The USD value on the payment date is the amount of taxable income recognized as well as the tax basis for a future sale of BTC under US Tax law, so the BTC is recorded in QBO accordingly. The information herein is educational only and is not tax advice; consult your tax professional.
+
+Payments will not record in QBO until the invoice status in BTCPay is "confirmed." Payments are considered "confirmed" based on your BTCPay settings. The default is one on-chain confirmation.
 
 <h2>Installation</h2>
 
@@ -150,4 +154,4 @@ If the screen prints a bunch of JSON data, you've successfully resynced. If not,
 
 If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Access will be disabled if you're not logged into the web interface, so if you haven't previously logged in during a given session, head to https://btcpay.example.com/btcqbo/index to log in, then head to https://btcpay.example.com/btcqbo/rq. You must also ensure that RQ_ACCESS is set to `True` in your .env file.
 
-Currently, when you update your BTCPay Server instance, it will override the nginx settings and therefore you will need to redo steps 9-11 in Part 2 of the installation instructions. Once this plugin is Dockerized, that problem should be solved.
+Whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A solution to this issue is being worked on.
