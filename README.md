@@ -43,7 +43,7 @@ Below are installation instructions for Dockerized deployment on a BTCPay Server
 $ git clone https://github.com/JeffVandrewJr/btcqbo
 ```
 
-3. Create an .env file by running `$ cp env.sample .env` in the btcqbo directory. Then, using the text editor of your choice, open the .env (example using nano as a text editor: `$ nano .env`). Be sure to enter your "client ID" and "client secret" from the keys tab on the Intuit Developer site. Also change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
+3. Create an .env file by running `$ cp env.sample .env` in the btcqbo directory. Then, using the text editor of your choice, open the .env (example using nano as a text editor: `$ nano .env`). Change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
 
 4. Run a Redis container:
 ```
@@ -101,13 +101,15 @@ Do not lose your username and password.
 
 <h3>Part 3: Sync with Intuit & BTCPay</h3>
 
-1. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain. Login with the username and password that you set above.
+1. From a web browser, visit https://btcpay.example.com/btcqbo/setkeys, replacing btcqbo.example.com with your domain. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer in Part 1. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company.
 
-2. Follow the steps to sync to Inuit.
+2. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain. Login with the username and password that you set above.
 
-3. Go log into your BTCPay server, click on your store, and then hit settings. From the settings menu, create an authorization token. Once the token is created, BTCPay will provide a pairing code.
+3. Follow the steps to sync to Inuit.
 
-4. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
+4. Go log into your BTCPay server, click on your store, and then hit settings. From the settings menu, create an authorization token. Once the token is created, BTCPay will provide a pairing code.
+
+5. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
 
 <h3>Part 4: The Public Facing Payment Portal</h3>
 
