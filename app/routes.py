@@ -1,4 +1,5 @@
 import os
+import requests
 from urllib.parse import urljoin
 from flask import render_template, redirect, request, abort, url_for, Response
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -113,7 +114,7 @@ def qbologged():
 def authbtc():
     if os.getenv('AUTH_ACCESS') == 'True':
         form = BTCCodeForm()
-        url = urljoin(os.getenv('BTCPAY_HOST', 'api-tokens'))
+        url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
         if form.validate_on_submit():
             btcp.pairing(str(form.code.data))
             return render_template('success.html')
@@ -171,3 +172,11 @@ def verify():
         return redirect(inv_url)
     else:
         return "The email and invoice number provided do not match. Please try again. If multiple emails are associated to the invoice, you must use the primary one."
+
+
+@app.route('/btcqbo/testing')
+def testing():
+    cookies = request.cookies
+    url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
+    r = requests.get(url, cookies=cookies)
+    return str(r.status_code)
