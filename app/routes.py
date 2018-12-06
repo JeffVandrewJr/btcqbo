@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urljoin
 from flask import render_template, redirect, request, abort, url_for, Response
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import app
@@ -112,10 +113,11 @@ def qbologged():
 def authbtc():
     if os.getenv('AUTH_ACCESS') == 'True':
         form = BTCCodeForm()
+        url = urljoin(os.getenv('BTCPAY_HOST', 'api-tokens'))
         if form.validate_on_submit():
             btcp.pairing(str(form.code.data))
-            return render_template('success.html', output="success")
-        return render_template('authbtc.html', title='Enter Code', form=form)
+            return render_template('success.html')
+        return render_template('authbtc.html', title='Enter Code', form=form, url=url)
     else:
         return "Access Denied"
 
