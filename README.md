@@ -10,8 +10,6 @@ When this plugin is installed, customers choosing to pay a QBO invoice using BTC
 
 <h2>Known Issues</h2>
 
-At the current time, whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A more official integration with BTCPay is coming soon and will solve this issue (as well as streamline the install process).
-
 Unfortunately the Quickbooks API does not allow emailing customer receipts. BTCPay does not support this either, leaving the feature to merchant software. Assuming there are no plans for BTCPay to support this feature, I will implement this in the plugin in the near future.
 
 <h2>Notes</h2>
@@ -22,9 +20,29 @@ Payments will not record in QBO until the invoice status in BTCPay is "confirmed
 
 <h2>Installation</h2>
 
-Below are installation instructions for Dockerized deployment on a BTCPay Server instance which was set up via the one-click install referenced by the BTCPay team in their docs (LunaNode). More technical users can adapt these instructions for other setups.
+Instructions assume that you are using the Dockerized BTCPay Server, which would be the case if you originally used the one-click install through LunaNode.
 
-<h3>Part 1: Obtain Intuit Keys</h3>
+These instructions use the BTCPay install scripts, which are for technical users only. A one-click install from the BTCPay 
+
+1. Log into your LunaNode or other VPS via SSH.
+
+2. `$ sudo su -` THE TRAILING DASH IS CRITICALLY IMPORTANT. You may wipe your data if you do an install after running the command without the trailing dash.
+
+3. `# cd btcpayserver-docker`
+
+4. `# btcpay-update.sh`
+
+4. `# export BTCPAYGEN_ADDITIONAL_FRAGMENTS="$BTCPAYGEN_ADDITIONAL_FRAGMENTS;opt-add-btcqbo"`
+
+5. `# . btcpay-setup.sh -i`
+
+6. `# exit`
+
+7. Check to make sure that v0.1.2 or higher is installed. Versions prior to 0.1.2 are buggy. To check, run `$ sudo docker ps`. In the list that follows, you should see: "jvandrew/btcqbo:0.1.2" where the numbers are 0.1.2 or higher.
+
+<h3>Obtain Intuit Keys</h3>
+
+You need API keys from Intuit to sync to Quickbooks Online.
 
 1. Head to https://developer.intuit.com and log in using the same login you normally use for Quickbooks Online. Your account will then be granted developer privileges.
 
@@ -34,72 +52,7 @@ Below are installation instructions for Dockerized deployment on a BTCPay Server
 
 4. On the Intuit Developer site, underneath your Intuit "production" keys, add "https://btcpay.example.com/btcqbo/qbologged" as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted. Ensure you're doing this in the "production" (not sandbox) area of the page.
 
-<h3>Part 2: Install BTCQBO</h3>
-
-1. Log into your BTCPay LunaNode VPS using SSH. 
-
-2. Using git, clone this repository to a local directory:
-```
-$ git clone https://github.com/JeffVandrewJr/btcqbo
-```
-
-3. Create an .env file by running `$ cp env.sample .env` in the btcqbo directory. Then, using the text editor of your choice, open the .env (example using nano as a text editor: `$ nano .env`). Change the callback URL to the URL you chose in the last step of Part 1. Finally, change the BTCPay server URL to the URL of your BTCPay instance. After you're done, save the .env file and exit.
-
-4. Run a Redis container:
-```
-$ sudo docker run --name redis --network=generated_default -d redis:latest
-```
-
-5. Build a btcqbo image (include the trailing period):
-```
-sudo docker build -t btcqbo .
-```
-
-5. Run a btcqbo container:
-```
-$ sudo docker run -d -p 8001:8001 --name btcqbo -e REDIS_URL=redis://redis:6379/0 --network=generated_default btcqbo:latest
-```
-
-6. Run an rq-worker container:
-```
-$ sudo docker run -d --name rq-worker -e REDIS_URL=redis://redis:6379/0 --network=generated_default --entrypoint "/usr/local/bin/rq" btcqbo:latest worker -u redis://redis:6379/0 btcqbo
-```
-
-7. Make a copy of the nginx default.conf out of its 
-container (don't forget the trailing period): 
-```
-$ sudo docker cp nginx:/etc/nginx/conf.d/default.conf .
-```
-
-8. Open the default.conf you just copied in the text editor of your choice (example: `$ nano default.conf`) Just before the final closing curly brace in the file, add this code:
-```
-location /btcqbo/ {
-proxy_pass http://btcqbo:8001;
-proxy_redirect off;
-proxy_set_header Host $host;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-}
-[Final curly brace of the file is on this line.]
-```
-
-9. Copy the default.conf file back into the nginx Docker container: 
-```
-$ sudo docker cp default.conf nginx:/etc/nginx/conf.d/default.conf
-```
-
-10. Restart nginx by running the following three commands in succession (the final exit command is critical to avoid corrupting your nginx container):
-```
-$ sudo docker exec -it nginx /bin/bash
-# service nginx reload
-# exit
-```
-
-11. Set your username and password for the web interface by visiting https://btcpay.example.com/btcqbo/setpassword.
-
-Do not lose your username and password.
-
-<h3>Part 3: Sync with Intuit & BTCPay</h3>
+<h3>Syncing QBO & BTCPay to the Plugin</h3>
 
 1. From a web browser, visit https://btcpay.example.com/btcqbo/setkeys, replacing btcqbo.example.com with your domain. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer in Part 1. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company.
 
@@ -111,13 +64,18 @@ Do not lose your username and password.
 
 5. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
 
-<h3>Part 4: The Public Facing Payment Portal</h3>
+<h3>The Public Facing Payment Portal</h3>
 
-These instructions assume your business' public facing page is a Wordpress site. 
+You also need a page on your business' site to which your Quickbooks invoices can link. These instructions assume your business' public facing page is a Wordpress site. 
 
-1. Create a new page on your Wordpress site. Title it "Make a Bitcoin Payment". Set the URL so to something short, like example.com/pay.
+1. In Quickbooks Online, edit your outgoing email template for invoicing with a concluding paragraph like this one:
+```
+"Click "Review and Pay below to pay via ACH or Credit Card, or click https://yourdomain.com/pay to pay via Bitcoin.
+```
 
-2. Paste the code below into the body:
+2. Create a new page on your Wordpress site. Title it "Make a Bitcoin Payment". Set the URL to the one you chose in Step 1 (ex: yourdomain.com/pay).
+
+3. Paste the code below into the body:
 ```
 <form method="POST" action="https://btcpay.example.com/btcqbo/verify">
 USD Amount:
@@ -131,24 +89,16 @@ Invoice Number:
   <button type="submit">Pay now</button>
 </form>
 ```
+In the code, change btcpay.example.com to the domain of your BTCPay host (but leave all portions of the URL after the ".com" the same, and set the redirect URL of your choice. Save the page in Wordpress; due to the magic of CSS it should automatically be styled to match your site.
 
-4. In the code, change btcpay.example.com to your appropriate domain, and set the redirect URL of your choice. Save the page in Wordpress; due to the magic of CSS it should automatically be styled to match your site.
+<h4>Troubleshooting</h4>
 
-5. In Quickbooks Online, edit your outgoing email template for invoicing with a concluding paragraph like this one:
+If QBO becomes unsynced, try running:
 ```
-"Click "Review and Pay below to pay via ACH or Credit Card, or click https://example.com/pay to pay via Bitcoin.
-```
-
-<h2>Troubleshooting</h2>
-
-If QBO becomes unsynced, from the btcqbo directory try running:
-```
-$ sudo docker exec -it btcqbo /bin/bash
+$ sudo docker exec -it generated_btcqbo_1 /bin/bash
 # python3 cli.py refresh
 # exit
 ```
 If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
 
-If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Access will be disabled if you're not logged into the web interface, so if you haven't previously logged in during a given session, head to https://btcpay.example.com/btcqbo/index to log in, then head to https://btcpay.example.com/btcqbo/rq. You must also ensure that RQ_ACCESS is set to `True` in your .env file.
-
-At the current time, whenever you do an update on your BTCPay server installation or otherwise add or remove a Docker container to the network, you must repeat steps 7-11 in Part 2 to reconfigure nginx. A more official integration with BTCPay is coming soon and will solve this issue (as well as streamline the install process).
+If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain).
