@@ -22,8 +22,6 @@ Payments will not record in QBO until the invoice status in BTCPay is "confirmed
 
 Instructions assume that you are using the Dockerized BTCPay Server, which would be the case if you originally used the one-click install through LunaNode.
 
-These instructions use the BTCPay install scripts, which are for technical users only. A one-click install from the BTCPay web interface is forthcoming. If you aren't a technical user, you may wish to wait a short period of time for that to be released. If you use the instructions below, back up/export your data first.
-
 1. Log into your LunaNode or other VPS via SSH.
 
 2. `$ sudo su -` THE TRAILING DASH IS CRITICALLY IMPORTANT. You may wipe your data if you do an install after running the command without the trailing dash.
