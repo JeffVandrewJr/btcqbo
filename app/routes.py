@@ -152,11 +152,3 @@ def verify():
         return redirect(inv_url)
     else:
         return "The email and invoice number provided do not match. Please try again. If multiple emails are associated to the invoice, you must use the primary one."
-
-
-@app.route('/btcqbo/testing')
-def testing():
-    cookies = request.cookies
-    url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
-    response = requests.get(url, cookies=cookies)
-    return str(response.status_code)
