@@ -38,7 +38,7 @@ These instructions use the BTCPay install scripts, which are for technical users
 
 6. `# exit`
 
-7. Check to make sure that v0.1.2 or higher is installed. Versions prior to 0.1.2 are buggy. To check, run `$ sudo docker ps`. In the list that follows, you should see: "jvandrew/btcqbo:0.1.2" where the numbers are 0.1.2 or higher.
+7. Check to make sure that v0.1.2 or higher is installed. Versions prior to 0.1.8 are buggy. To check, run `$ sudo docker ps`. In the list that follows, you should see: "jvandrew/btcqbo:0.1.8" where the numbers are 0.1.2 or higher.
 
 <h3>Obtain Intuit Keys</h3>
 
