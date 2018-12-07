@@ -25,7 +25,7 @@ if os.getenv('RQ_ACCESS') == 'True':
     )
 
 
-@app.route('/btcqbo')
+@app.route('/btcqbo/')
 @app.route('/btcqbo/index')
 def index():
     status = login(request.cookies)
