@@ -23,7 +23,7 @@ def wipe(key):
 
 
 def login(cookies):
-    url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
+    url = urljoin(str(os.getenv('BTCPAY_HOST')), 'server/users')
     response = requests.get(url, cookies=cookies)
     try:
         first = response.history[0]

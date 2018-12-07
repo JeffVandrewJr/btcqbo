@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block app_content %}
+<h2>BTCQBO</h2>
+<p>Welcome to BTCQBO, the Quickbooks Online Connector for BTCPay Server.</p>
+<p>Use the buttons below to authorize both QBO and BTCPay, and then you're set!</p>
 <a href="{{ url_for('authqbo') }}" class="btn btn-default">Authorize QBO</a>
 <a href="{{ url_for('authbtc') }}" class="btn btn-default">Authorize BTCPay</a>
 {% endblock %}
