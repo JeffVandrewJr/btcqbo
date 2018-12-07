@@ -88,7 +88,9 @@ def set_global_vars(realmid, code):
         base_url=callback_url,
     )
     realm_id = realmid
-    session_manager.get_access_tokens(code)
+    data = session_manager.get_access_tokens(auth_code=code, return_result=True)
+    if 'token_type' not in data:
+        return None
     access_token = session_manager.access_token
     refresh_token = session_manager.refresh_token
     session_manager = Oauth2SessionManager(
