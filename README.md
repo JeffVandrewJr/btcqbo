@@ -36,8 +36,6 @@ Instructions assume that you are using the Dockerized BTCPay Server, which would
 
 6. `# exit`
 
-7. Check to make sure that v0.1.2 or higher is installed. Versions prior to 0.1.8 are buggy. To check, run `$ sudo docker ps`. In the list that follows, you should see: "jvandrew/btcqbo:0.1.8" where the numbers are 0.1.2 or higher.
-
 <h3>Obtain Intuit Keys</h3>
 
 You need API keys from Intuit to sync to Quickbooks Online.
