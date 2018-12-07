@@ -95,7 +95,7 @@ In the code, change btcpay.example.com to the domain of your BTCPay host (but le
 
 If QBO becomes unsynced, try running:
 ```
-$ sudo docker exec -it generated_btcqbo_1 /bin/bash
+$ sudo docker exec -it generated_btcqbo_1 /bin/sh
 # python3 cli.py refresh
 # exit
 ```
