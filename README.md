@@ -36,6 +36,8 @@ Instructions assume that you are using the Dockerized BTCPay Server, which would
 
 6. `# exit`
 
+You only need to do this once, as going forward the plugin should update automatically when you update BTCPay.
+
 <h3>Obtain Intuit Keys</h3>
 
 You need API keys from Intuit to sync to Quickbooks Online.
@@ -60,16 +62,23 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 5. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
 
-<h3>The Public Facing Payment Portal</h3>
+<h3>Creating Public Facing Payment Portal</h3>
 
-You also need a page on your business' site to which your Quickbooks invoices can link. These instructions assume your business' public facing page is a Wordpress site. 
+You also need a page on your business' website to which your Quickbooks invoices can link. You'll also need to edit your Quickbooks templates so that customers know they can pay in Bitcoin! This section will show you how.
 
-1. In Quickbooks Online, edit your outgoing email template for invoicing with a concluding paragraph like this one:
+These instructions assume your business' normal public facing site is a Wordpress site. 
+
+1. In Quickbooks Online, edit your outgoing email template for invoicing (Gear Icon --> Account & Settings --> Sales --> Messages) with a concluding paragraph like this one:
 ```
 "Click "Review and Pay below to pay via ACH or Credit Card, or click https://yourdomain.com/pay to pay via Bitcoin.
 ```
+Also edit your Quickbooks Online invoice template. To get there, in Quickbooks Online, click the gear icon, then Custom Form Styles, then hit "Edit" next your current form style. Then click the block that says "Content". The sample invoice will then become clickable. Click on the bottom content block (where it says "Total Due"). A "Message to Customer" field will then appear. In that field, type:
+```
+Head to https://yourdomain.com/pay to pay via Bitcoin.
+```
+Set the font size, and then don't forget to hit "Done" to save your changes in Quickbooks Online.
 
-2. Create a new page on your Wordpress site. Title it "Make a Bitcoin Payment". Set the URL to the one you chose in Step 1 (ex: yourdomain.com/pay).
+2. Log into your Wordpress site and create a new page. Title the new page "Make a Bitcoin Payment". Set the URL to match the one you chose in Step 1 (ex: yourdomain.com/pay).
 
 3. Paste the code below into the body:
 ```
@@ -85,9 +94,9 @@ Invoice Number:
   <button type="submit">Pay now</button>
 </form>
 ```
-In the code, change btcpay.example.com to the domain of your BTCPay host (but leave all portions of the URL after the ".com" the same, and set the redirect URL of your choice. Save the page in Wordpress; due to the magic of CSS it should automatically be styled to match your site.
+In the code, change `btcpay.example.com` to the domain of your BTCPay host (but leave all portions of the URL following the ".com" the same). Also set the redirect URL of your choice. Save the page in Wordpress; due to the magic of CSS it should automatically be styled to match your site.
 
-<h4>Troubleshooting</h4>
+<h4>Troubleshooting (only for technical users!)</h4>
 
 If QBO becomes unsynced, try running:
 ```
