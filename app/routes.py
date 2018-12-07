@@ -1,46 +1,35 @@
 import os
 import requests
 from urllib.parse import urljoin
-from flask import render_template, redirect, request, abort, url_for, Response
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import render_template, redirect, request, abort, url_for
 from app import app
-from app import auth
 import app.qbo as qbo
 import app.btcp as btcp
-from app.utils import fetch, save
-from app.forms import BTCCodeForm, PasswordForm, KeysForm
+from app.utils import fetch, save, login
+from app.forms import BTCCodeForm, KeysForm
 from rq_dashboard import blueprint
 
 
 if os.getenv('RQ_ACCESS') == 'True':
     @blueprint.before_request
+    # decorator modifies the blueprint imported from rq_dashboard
+    # modification is that before a request, this authorization fn is run
     def rq_login():
-        auth = request.authorization
-        if (auth is None or not check_password_hash(fetch('hash'), auth.password or
-                fetch('username') != auth.username)):
-            return Response("Authentication Failed", 401)
-        elif (fetch('username') == auth.username and
-                check_password_hash(fetch('hash'), auth.password)):
-            pass
-        else:
-            return redirect(url_for('index'))
+        status = login(request.cookies)
+        if status is not None:
+            return redirect(status)
+    # after adding before_request to preset blueprint, register the blueprint
     app.register_blueprint(
         blueprint,
         url_prefix="/btcqbo/rq",
     )
 
 
-@auth.verify_password
-def verify_password(username, pswd):
-    if fetch('username') == username:
-        return check_password_hash(fetch('hash'), pswd)
-    else:
-        return False
-
-
 @app.route('/btcqbo/index')
-@auth.login_required
 def index():
+    status = login(request.cookies)
+    if status is not None:
+        return redirect(status)
     if os.getenv('AUTH_ACCESS') == 'True':
         return render_template('index.html')
     else:
@@ -48,8 +37,10 @@ def index():
 
 
 @app.route('/btcqbo/setkeys', methods=['GET', 'POST'])
-@auth.login_required
 def set_keys():
+    status = login(request.cookies)
+    if status is not None:
+        return redirect(status)
     if os.getenv('AUTH_ACCESS') == 'True':
         form = KeysForm()
         if form.validate_on_submit():
@@ -65,26 +56,11 @@ def set_keys():
         return "Access Denied."
 
 
-@app.route('/btcqbo/setpassword', methods=['GET', 'POST'])
-def set_password():
-    if fetch('hash') is None:
-        form = PasswordForm()
-        if form.validate_on_submit():
-            save('username', form.username.data)
-            hash = generate_password_hash(form.password.data)
-            save('hash', hash)
-            return render_template('success.html')
-        return render_template('setpassword.html',
-                               title='Set Username & Password',
-                               form=form
-                            )
-    else:
-        return "Your password has already been set."
-
-
 @app.route('/btcqbo/authqbo')
-@auth.login_required
 def authqbo():
+    status = login(request.cookies)
+    if status is not None:
+        return redirect(status)
     # calls fn to grab qbo auth url and then redirects there
     if os.getenv('AUTH_ACCESS') == 'True':
         if fetch('qb_secret') is not None:
@@ -104,14 +80,17 @@ def qbologged():
             realmid=request.args.get('realmId'),
             code=request.args.get('code'),
         )
+        qbo.add_job()
         return render_template('success.html')
     else:
         return "Access Denied"
 
 
 @app.route('/btcqbo/authbtc', methods=['GET', 'POST'])
-@auth.login_required
 def authbtc():
+    status = login(request.cookies)
+    if status is not None:
+        return redirect(status)
     if os.getenv('AUTH_ACCESS') == 'True':
         form = BTCCodeForm()
         url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
@@ -178,5 +157,5 @@ def verify():
 def testing():
     cookies = request.cookies
     url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
-    r = requests.get(url, cookies=cookies)
-    return str(r.status_code)
+    response = requests.get(url, cookies=cookies)
+    return str(response.status_code)
