@@ -52,19 +52,15 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 <h3>Syncing QBO & BTCPay to the Plugin</h3>
 
-1. From a web browser, visit https://btcpay.example.com/btcqbo/setkeys, replacing btcqbo.example.com with your domain. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer in Part 1. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company.
+1. From a web browser, while logged into your BTCPay Server web interface, visit https://btcpay.example.com/btcqbo/setkeys, replacing btcqbo.example.com with your domain. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer site in above. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company).
 
-2. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain. Login with the username and password that you set above.
+2. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain. Login with the username and password that you set above. Follow the steps to sync to Inuit. You can repeat this step at any time in the future if you become unsynced from Intuit for any reason.
 
-3. Follow the steps to sync to Inuit.
-
-4. Go log into your BTCPay server, click on your store, and then hit settings. From the settings menu, create an authorization token. Once the token is created, BTCPay will provide a pairing code.
-
-5. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Enter the pairing code from the step above, and submit.
+3. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Click on the link provided to obtain a pairing code from your BTCPay Server instance. Then enter the pairing code in the plugin, and submit.
 
 <h3>Creating Public Facing Payment Portal</h3>
 
-You also need a page on your business' website to which your Quickbooks invoices can link. You'll also need to edit your Quickbooks templates so that customers know they can pay in Bitcoin! This section will show you how.
+You will also need a page on your business' website to which your Quickbooks invoices can link. You'll also need to edit your Quickbooks templates so that customers know they can pay in Bitcoin! This section will show you how.
 
 These instructions assume your business' normal public facing site is a Wordpress site. 
 
