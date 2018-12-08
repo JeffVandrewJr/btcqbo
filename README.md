@@ -94,12 +94,4 @@ In the code, change `btcpay.example.com` to the domain of your BTCPay host (but 
 
 <h4>Troubleshooting (only for technical users!)</h4>
 
-If QBO becomes unsynced, try running:
-```
-$ sudo docker exec -it generated_btcqbo_1 /bin/sh
-# python3 cli.py refresh
-# exit
-```
-If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
-
-If you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain).
+If you are a more technical user, there are some advanced troubleshooting and testing tools explained in the advanced_troubleshooting.md file.
