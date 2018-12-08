@@ -60,7 +60,7 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 <h3>Creating Public Facing Payment Portal</h3>
 
-You will also need a page on your business' website to which your Quickbooks invoices can link. You'll also need to edit your Quickbooks templates so that customers know they can pay in Bitcoin! This section will show you how.
+You will need a page on your business' website to which your Quickbooks invoices can link. You'll also need to edit your Quickbooks templates so that customers know they can pay in Bitcoin! This section will show you how to do both of those things.
 
 These instructions assume your business' normal public facing site is a Wordpress site. 
 
