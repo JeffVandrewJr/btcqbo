@@ -10,7 +10,7 @@ $ sudo docker exec -it generated_btcqbo_1 /bin/sh
 # python3 cli.py refresh
 # exit
 ```
-If the screen prints a bunch of JSON data, you've successfully refreshed. If not, you may have to reauthorize from the web interface.
+Current token data will then print to screen.
 
 If you want to print your current stored QBO API keys and tokens to screen, try:
 ```
