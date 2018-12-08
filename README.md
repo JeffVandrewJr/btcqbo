@@ -68,15 +68,15 @@ These instructions assume your business' normal public facing site is a Wordpres
 ```
 "Click "Review and Pay below to pay via ACH or Credit Card, or click https://yourdomain.com/pay to pay via Bitcoin.
 ```
-Also edit your Quickbooks Online invoice template. To get there, in Quickbooks Online, click the gear icon, then Custom Form Styles, then hit "Edit" next your current form style. Then click the block that says "Content". The sample invoice will then become clickable. Click on the bottom content block (where it says "Total Due"). A "Message to Customer" field will then appear. In that field, type:
+2. Also edit your Quickbooks Online invoice template. To get there, in Quickbooks Online, click the gear icon, then Custom Form Styles, then hit "Edit" next your current form style. Then click the block that says "Content". The sample invoice will then become clickable. Click on the bottom content block (where it says "Total Due"). A "Message to Customer" field will then appear. In that field, type:
 ```
 Head to https://yourdomain.com/pay to pay via Bitcoin.
 ```
 Set the font size, and then don't forget to hit "Done" to save your changes in Quickbooks Online.
 
-2. Log into your Wordpress site and create a new page. Title the new page "Make a Bitcoin Payment". Set the URL to match the one you chose in Step 1 (ex: yourdomain.com/pay).
+3. Log into your Wordpress site and create a new page. Title the new page "Make a Bitcoin Payment". Set the URL to match the one you chose in Step 1 (ex: yourdomain.com/pay).
 
-3. Paste the code below into the body:
+4. Paste the code below into the body:
 ```
 <form method="POST" action="https://btcpay.example.com/btcqbo/verify">
 USD Amount:
