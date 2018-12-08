@@ -4,15 +4,15 @@ There are a couple of advanced torubleshooting tools for more adventurous techni
 
 The first is the CLI tool.
 
-If QBO becomes unsynced, try running:
+You can run a manual QBO token refresh:
 ```
 $ sudo docker exec -it generated_btcqbo_1 /bin/sh
 # python3 cli.py refresh
 # exit
 ```
-If the screen prints a bunch of JSON data, you've successfully resynced. If not, you may have to reauthorize from the web interface.
+If the screen prints a bunch of JSON data, you've successfully refreshed. If not, you may have to reauthorize from the web interface.
 
-If you want to print your QBO API keys and tokens to screen, try:
+If you want to print your current stored QBO API keys and tokens to screen, try:
 ```
 $ sudo docker exec -it generated_btcqbo_1 /bin/sh
 # python3 cli.py printqb
