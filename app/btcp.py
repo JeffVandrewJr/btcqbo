@@ -8,6 +8,7 @@ btcpay_host = os.getenv('BTCPAY_HOST')
 
 
 def pairing(code):
+    # pairs BTCPay to plugin, then stores btc_client object to redis
     privkey = generate_privkey()
     btc_client = BTCPayClient(host=btcpay_host, pem=privkey)
     btc_token = btc_client.pair_client(code)

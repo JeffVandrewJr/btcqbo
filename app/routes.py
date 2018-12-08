@@ -1,5 +1,4 @@
 import os
-import requests
 from urllib.parse import urljoin
 from flask import render_template, redirect, request, abort, url_for
 from app import app
@@ -75,7 +74,6 @@ def authqbo():
 @app.route('/btcqbo/qbologged')
 def qbologged():
     # user is redirected here after qbo authorizes
-    # sets the token values and real id globally using values passed in URL
     if os.getenv('AUTH_ACCESS') == 'True':
         qbo.set_global_vars(
             realmid=request.args.get('realmId'),
@@ -89,6 +87,7 @@ def qbologged():
 
 @app.route('/btcqbo/authbtc', methods=['GET', 'POST'])
 def authbtc():
+    # accepts BTCPay pairing code and calls pairing fn
     status = login(request.cookies)
     if status is not None:
         return redirect(status)
@@ -105,6 +104,7 @@ def authbtc():
 
 @app.route('/btcqbo/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
+    # receives and processes pmt notifications from BTCPay
     if not request.json or 'id' not in request.json:
         abort(400)
     btc_client = fetch('btc_client')
@@ -129,11 +129,13 @@ def paymentapi():
 
 @app.route('/btcqbo/verify', methods=['POST'])
 def verify():
+    # receives/processes form data from public facing pmt page
     data = request.form
     customer = qbo.verify_invoice(
         doc_number=str(data['orderId']),
         email=str(data['email'])
     )
+    # create BTCPay invoice from submitted form data
     if customer is not None:
         btc_client = fetch('btc_client')
         inv_data = btc_client.create_invoice({

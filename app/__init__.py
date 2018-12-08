@@ -10,7 +10,6 @@ app = Flask(__name__)
 
 if os.getenv('RQ_ACCESS') == 'True':
     app.config.from_object(rq_dashboard.default_settings)
-# after rq blueprint registers, override config to the app's config
 app.config.from_object(Config)
 app.redis = Redis.from_url(app.config['REDIS_URL'])
 app.task_queue = rq.Queue('btcqbo', connection=app.redis)
