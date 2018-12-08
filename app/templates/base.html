@@ -1,21 +1,18 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-    {% if title %}{{ title }}{% else %}BTC 2 QBO{% endif %}
+    {% if title %}{{ title }}{% else %}BTCQBO{% endif %}
 {% endblock %}
-
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul>
-    {% for message in messages %}
-    <li>{{ nessage }}</li>
-    {% endfor % }
-</ul>
-{% endif %}
-{% endwith %}
 
 {% block content %}
     <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
         {% block app_content %}{% endblock %}
     </div>
 {% endblock %}
