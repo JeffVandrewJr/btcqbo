@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Please enter your email server info:</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>Check to enable email receipts: {{ form.mail_on }}
+        <p>SMTP Host:</p>
+        <p>
+            {{ form.mail_host(size=32) }}
+        </p>
+        <p>SMTP Port:</p>
+        <p>
+            {{ form.mail_port(size=32) }}
+        </p>
+        <p>Email Username:</p>
+        <p>
+            {{ form.mail_user(size=32) }}
+        </p>
+        <p>Email Password:</p>
+        <p>
+            {{ form.mail_pswd(size=32) }}
+        </p>
+        <p>Send From Address:</p>
+        <p>
+            {{ form.mail_from(size=32) }}
+        </p>
+        <p>If you wish to send a test email, enter recipient below:</p>
+        <p>
+            {{ form.recipient(size=32) }}
+        </p>
+        <p>Business Name to Show on Receipts:</p>
+        <p>
+            {{ form.merchant(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+<p>Need help? <a href="https://github.com/JeffVandrewJr/btcqbo/blob/master/README.md#email-setup" target="_blank">Click here for instructions.</a></p>
+{% endblock %}

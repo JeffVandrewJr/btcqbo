@@ -1,6 +1,7 @@
 import pickle
 import requests
 import os
+import smtplib
 from urllib.parse import urljoin
 from app import app
 
@@ -44,3 +45,24 @@ def login(cookies):
         initial_url = urljoin(str(os.getenv('BTCPAY_HOST')), 'Account/Login')
         full_url = initial_url + '?ReturnUrl=%2Fbtcqbo%2Findex'
         return full_url
+
+
+def send(dest, qb_inv, btcp_inv, amt):
+    # emails receipt to customer
+    msg = f'''
+    Subject: Receipt from {fetch('merchant')}\n
+    Amount Paid: {amt}\n
+    Invoice Number: {qb_inv}\n
+    Confirmation ID: {btcp_inv}
+    '''
+    smtp = smtplib.SMTP(
+        host=fetch('mail_host'),
+        port=fetch('mail_port'),
+        timeout=7,
+    )
+    smtp.ehlo()
+    if fetch('mail_port') == 587:
+        smtp.starttls()
+    smtp.login(fetch('mail_user'), fetch('mail_pswd'))
+    smtp.sendmail(fetch('mail_from'), dest, msg)
+    smtp.quit()

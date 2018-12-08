@@ -1,11 +1,11 @@
 import os
 from urllib.parse import urljoin
-from flask import render_template, redirect, request, abort, url_for
+from flask import render_template, redirect, request, abort, url_for, flash
 from app import app
 import app.qbo as qbo
 import app.btcp as btcp
-from app.utils import fetch, save, login
-from app.forms import BTCCodeForm, KeysForm
+from app.utils import fetch, save, login, send
+from app.forms import BTCCodeForm, KeysForm, MailForm
 from rq_dashboard import blueprint
 
 
@@ -48,10 +48,11 @@ def set_keys():
             save('qb_secret', form.qb_secret.data)
             save('qb_sandbox', form.qb_sandbox.data)
             return render_template('keysset.html')
-        return render_template('setkeys.html',
-                               title='Set Intuit Keys',
-                               form=form
-                            )
+        return render_template(
+            'setkeys.html',
+            title='Set Intuit Keys',
+            form=form
+        )
     else:
         return "Access Denied."
 
@@ -97,7 +98,44 @@ def authbtc():
         if form.validate_on_submit():
             btcp.pairing(str(form.code.data))
             return render_template('success.html')
-        return render_template('authbtc.html', title='Enter Code', form=form, url=url)
+        return render_template(
+            'authbtc.html',
+            title='Enter Code',
+            form=form,
+            url=url
+        )
+    else:
+        return "Access Denied"
+
+
+@app.route('/btcqbo/mail')
+def setmail():
+    # sets user email settings
+    status = login(request.cookies)
+    if status is not None:
+        return redirect(status)
+    if os.getenv('AUTH_ACCESS') == 'True':
+        form = MailForm()
+        if form.validate_on_submit():
+            save('mail_on', form.mail_on.data)
+            save('mail_user', form.mail_user.data)
+            save('mail_pswd', form.mail_pswd.data)
+            save('mail_host', form.mail_host.data)
+            save('mail_port', int(form.mail_port.data))
+            save('mail_from', form.mail_from.data)
+            save('merchant', form.merchant.data)
+            if form.recipient.data is not None and form.recipient.data != "":
+                send(
+                    dest=form.recipient.data,
+                    qb_inv='test',
+                    btcp_inv='test',
+                    amt=0.00,
+                )
+                flash('Test email sent.')
+            else:
+                flash('Email settings updated.')
+            return render_template('index.html')
+        return render_template('setmail.html')
     else:
         return "Access Denied"
 
@@ -119,6 +157,14 @@ def paymentapi():
                     return "Payment Accepted", 201
                 else:
                     return "Payment was zero or invalid invoice #.", 200
+            elif invoice['status'] == "paid" and fetch('mail_on'):
+                # emails buyer when invoice is "paid"
+                dest = invoice['buyer']['email']
+                qb_inv = invoice['orderId']
+                btcp_inv = invoice['id']
+                amt = float(invoice['price'])
+                send(dest, qb_inv, btcp_inv, amt)
+                return "Buyer email sent.", 200
             else:
                 return "Payment not yet confirmed.", 200
         else:

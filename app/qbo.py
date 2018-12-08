@@ -111,7 +111,10 @@ def set_global_vars(realmid, code):
         base_url=callback_url,
     )
     realm_id = realmid
-    data = session_manager.get_access_tokens(auth_code=code, return_result=True)
+    data = session_manager.get_access_tokens(
+        auth_code=code,
+        return_result=True,
+    )
     # sanity check: if no valid response from Intuit, abort fn
     if 'token_type' not in data:
         return None
