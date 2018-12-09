@@ -118,13 +118,13 @@ def setmail():
         form = MailForm()
         if form.validate_on_submit():
             save('mail_on', form.mail_on.data)
-            save('mail_user', form.mail_user.data)
-            save('mail_pswd', form.mail_pswd.data)
-            save('mail_host', form.mail_host.data)
+            save('mail_user', str(form.mail_user.data))
+            save('mail_pswd', str(form.mail_pswd.data))
+            save('mail_host', str(form.mail_host.data))
             save('mail_port', int(form.mail_port.data))
-            save('mail_from', form.mail_from.data)
-            save('merchant', form.merchant.data)
-            if form.recipient.data is not None and form.recipient.data != "":
+            save('mail_from', str(form.mail_from.data))
+            save('merchant', str(form.merchant.data))
+            if form.recipient.data is not None and str(form.recipient.data) != "":
                 send(
                     dest=form.recipient.data,
                     qb_inv='test',

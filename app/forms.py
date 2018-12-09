@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField
+from wtforms import StringField, SubmitField, BooleanField, PasswordField
 from wtforms.validators import DataRequired
 
 
@@ -18,7 +18,7 @@ class KeysForm(FlaskForm):
 class MailForm(FlaskForm):
     mail_on = BooleanField('Mail On or Off')
     mail_user = StringField('Email Username', validators=[DataRequired()])
-    mail_pswd = StringField('Email Password', validators=[DataRequired()])
+    mail_pswd = PasswordField('Email Password', validators=[DataRequired()])
     mail_host = StringField('Email Host', validators=[DataRequired()])
     mail_port = StringField('Email Port', validators=[DataRequired()])
     mail_from = StringField('Sender Email', validators=[DataRequired()])

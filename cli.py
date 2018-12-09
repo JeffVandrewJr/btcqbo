@@ -1,4 +1,5 @@
 import click
+import smtplib
 import os
 from app.qbo import refresh_stored_tokens
 from app.utils import wipe, fetch
@@ -32,6 +33,24 @@ def deletekeys():
     wipe('qb_id')
     wipe('qb_secret')
     wipe('qb_sandbox')
+
+
+@cli.command()
+def mail():
+    recipient = input('Enter recipient: ')
+    msg = 'Subject: Hi\nHow are you?'
+    click.echo(fetch('mail_on'))
+    click.echo(fetch('mail_user'))
+    click.echo(fetch('mail_pswd'))
+    click.echo(fetch('mail_host'))
+    click.echo(fetch('mail_port'))
+    click.echo(fetch('mail_from'))
+    smtp = smtplib.SMTP(fetch('mail_host'), fetch('mail_port'))
+    click.echo(smtp.ehlo())
+    if fetch('mail_port') == 587:
+        click.echo(smtp.starttls())
+    click.echo(smtp.login(fetch('mail_user'), fetch('mail_pswd')))
+    smtp.sendmail('test@testingsite.com', recipient, msg)
 
 
 if __name__ == '__main__':
