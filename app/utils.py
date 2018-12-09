@@ -49,12 +49,11 @@ def login(cookies):
 
 def send(dest, qb_inv, btcp_inv, amt):
     # emails receipt to customer
-    msg = f'''
-    Subject: Receipt from {fetch('merchant')}\n
-    Amount Paid: {amt}\n
-    Invoice Number: {qb_inv}\n
-    Confirmation ID: {btcp_inv}
-    '''
+    merchant = fetch('merchant')
+    msg = f'Subject: Receipt from {merchant} \nAmount Paid: ${amt}\n \
+Amount Paid: ${amt}\n \
+Invoice Number: {qb_inv}\n \
+Confirmation ID: {btcp_inv} '
     smtp = smtplib.SMTP(
         host=fetch('mail_host'),
         port=fetch('mail_port'),
