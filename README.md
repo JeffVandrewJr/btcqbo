@@ -14,11 +14,13 @@ All payments made through BTCPay will be recorded in QBO in an "Other Current As
 
 Payments will not record in QBO until the invoice status in BTCPay is "confirmed." Payments are considered "confirmed" based on your BTCPay settings. The default is one on-chain confirmation.
 
-<h2>Installation</h2>
+<h2>Activation</h2>
 
 Instructions assume that you are using the Dockerized BTCPay Server, which would be the case if you originally used the one-click install through LunaNode.
 
-You only need to do this once, as going forward the plugin should update automatically when you update BTCPay.
+You only need to activate the plugin once, as going forward after activation the plugin should update automatically when you update BTCPay.
+
+To activate:
 
 1. Log into your LunaNode or other VPS via SSH.
 
@@ -34,7 +36,14 @@ You only need to do this once, as going forward the plugin should update automat
 
 6. `# exit`
 
-<h3>Obtain Intuit Keys</h3>
+After activation, you can access the plugin at https://btcpay.example.com/btcqbo, replacing btcpay.excample.com with the domain where your BTCPay instance is hosted. On the welcome screen, there will be buttons for:
+
+* Entering Intuit API Keys
+* Syncing the plugin to QBO
+* Syncing the plugin to BTCPay
+* Setting up email receipts
+
+<h3>Entering Intuit API Keys</h3>
 
 You need API keys from Intuit to sync to Quickbooks Online.
 
@@ -46,17 +55,19 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 4. On the Intuit Developer site, underneath your Intuit "production" keys, add "https://btcpay.example.com/btcqbo/qbologged" as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted. Ensure you're doing this in the "production" (not sandbox) area of the page.
 
-<h3>Syncing QBO & BTCPay to the Plugin</h3>
+5. From the plugin welcome screen, click the button to enter your Intuit API Keys. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer site in above. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company).
 
-1. From a web browser, while logged into your BTCPay Server web interface, visit https://btcpay.example.com/btcqbo/setkeys, replacing btcqbo.example.com with your domain. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer site in above. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company).
+<h3>Syncing QBO</h3>
 
-2. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain. Login with the username and password that you set above. Follow the steps to sync to Inuit. You can repeat this step at any time in the future if you become unsynced from Intuit for any reason.
+From the plugin welcome screen, hit the button to sync QBO. Follow the steps to sync to Inuit; you'll need your QBO username and password. You can repeat this step at any time in the future if you become unsynced from Intuit for any reason.
 
-3. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Click on the link provided to obtain a pairing code from your BTCPay Server instance. Then enter the pairing code in the plugin, and submit.
+<h3>Syncing BTCPay</h3>
+
+From the plugin welcome screen, hit the button to sync BTCPay. Click on the link provided to obtain a pairing code from your BTCPay Server instance. Then enter the pairing code in the plugin, and submit.
 
 <h3>Email Setup</h3>
 
-Versions 0.1.17 and higher of the plugin allow automatic emailing of customer receipts. This is set up at https://btcpay.example.com/btcqbo/mail (replacing btcpay.example.com with the domain of your BTCPay instance). You'll need to enter your SMTP server settings. If you enter a test email recipient, it will test the connection and send a test email.
+Versions 0.1.17 and higher of the plugin allow automatic emailing of customer receipts. To set this up, click the emails setup button on the plugin welcome screen. You'll need to enter your SMTP server settings. If you enter a test email recipient, it will test the connection and send a test email.
 
 If you don't know what an SMTP server is, that's OK! Your email provider almost definitely provides SMTP access for free. If it doesn't, you can always sign up for a free account with a provider that does (Gmail, Yahoo, Outlook.com, etc).
 
