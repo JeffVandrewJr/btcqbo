@@ -12,7 +12,7 @@ $ sudo docker exec -it generated_btcqbo_1 /bin/sh
 ```
 Status of the refresh will print to screen.
 
-If you want to print your current stored QBO API keys and tokens to screen, try:
+If you want to print your current stored QBO API Client ID to screen, try:
 ```
 $ sudo docker exec -it generated_btcqbo_1 /bin/sh
 # python3 cli.py printqb
