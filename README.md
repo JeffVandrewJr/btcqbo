@@ -56,7 +56,7 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 <h3>Email Setup</h3>
 
-Versions 0.1.17 and higher of the plugin allow automatic emailing of customer receipts. This is set up at https://btcpay.example.com/btcqbo/mail. You'll need to enter your SMTP server settings. If you enter a test email recipient, it will test the connection and send a test email.
+Versions 0.1.17 and higher of the plugin allow automatic emailing of customer receipts. This is set up at https://btcpay.example.com/btcqbo/mail (replacing btcpay.example.com with the domain of your BTCPay instance). You'll need to enter your SMTP server settings. If you enter a test email recipient, it will test the connection and send a test email.
 
 If you don't know what an SMTP server is, that's OK! Your email provider almost definitely provides SMTP access for free. If it doesn't, you can always sign up for a free account with a provider that does (Gmail, Yahoo, Outlook.com, etc).
 
