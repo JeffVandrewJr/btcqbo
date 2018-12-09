@@ -14,7 +14,9 @@ All payments made through BTCPay will be recorded in QBO in an "Other Current As
 
 Payments will not record in QBO until the invoice status in BTCPay is "confirmed." Payments are considered "confirmed" based on your BTCPay settings. The default is one on-chain confirmation.
 
-<h2>Activation</h2>
+<h2>Setup</h2>
+
+<h3>Activation</h3>
 
 Instructions assume that you are using the Dockerized BTCPay Server, which would be the case if you originally used the one-click install through LunaNode.
 
@@ -35,6 +37,8 @@ To activate:
 5. `# . btcpay-setup.sh -i`
 
 6. `# exit`
+
+<h3>Post-Activation</h3>
 
 After activation, you can access the plugin at https://btcpay.example.com/btcqbo, replacing btcpay.excample.com with the domain where your BTCPay instance is hosted. Alternatively, you can access it directly from within BTCPay under Server Settings/Services. On the plugin welcome screen, there will be buttons for:
 
