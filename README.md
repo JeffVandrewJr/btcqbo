@@ -36,7 +36,7 @@ To activate:
 
 6. `# exit`
 
-After activation, you can access the plugin at https://btcpay.example.com/btcqbo, replacing btcpay.excample.com with the domain where your BTCPay instance is hosted. On the welcome screen, there will be buttons for:
+After activation, you can access the plugin at https://btcpay.example.com/btcqbo, replacing btcpay.excample.com with the domain where your BTCPay instance is hosted. Alternatively, you can access it directly from within BTCPay under Server Settings/Services. On the plugin welcome screen, there will be buttons for:
 
 * Entering Intuit API Keys
 * Syncing the plugin to QBO
