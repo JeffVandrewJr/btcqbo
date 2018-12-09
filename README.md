@@ -22,7 +22,7 @@ You only need to do this once, as going forward the plugin should update automat
 
 1. Log into your LunaNode or other VPS via SSH.
 
-2. `$ sudo su -` THE TRAILING DASH IS CRITICALLY IMPORTANT. You may wipe your data if you do an install after running the command without the trailing dash.
+2. `$ sudo su -` THE TRAILING HYPHEN IS CRITICALLY IMPORTANT. 
 
 3. `# cd btcpayserver-docker`
 
