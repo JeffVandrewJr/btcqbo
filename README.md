@@ -71,7 +71,7 @@ From the plugin welcome screen, hit the button to sync BTCPay. Click on the link
 
 <h3>Email Setup</h3>
 
-Versions 0.1.17 and higher of the plugin allow automatic emailing of customer receipts. To set this up, click the emails setup button on the plugin welcome screen. You'll need to enter your SMTP server settings. If you enter a test email recipient, it will test the connection and send a test email.
+Versions 0.1.20 and higher of the plugin allow automatic emailing of customer receipts. To set this up, click the emails setup button on the plugin welcome screen. You'll need to enter your SMTP server settings. If you enter a test email recipient, it will test the connection and send a test email.
 
 If you don't know what an SMTP server is, that's OK! Your email provider almost definitely provides SMTP access for free. If it doesn't, you can always sign up for a free account with a provider that does (Gmail, Yahoo, Outlook.com, etc).
 
