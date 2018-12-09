@@ -59,7 +59,7 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 4. On the Intuit Developer site, underneath your Intuit "production" keys, add "https://btcpay.example.com/btcqbo/qbologged" as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted. Ensure you're doing this in the "production" (not sandbox) area of the page.
 
-5. From the plugin welcome screen, click the button to enter your Intuit API Keys. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer site in above. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company).
+5. From the plugin welcome screen, click the button to enter your Intuit API Keys. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer site above. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company).
 
 <h3>Syncing QBO</h3>
 
