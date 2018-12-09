@@ -41,7 +41,6 @@ def mail():
     msg = 'Subject: Hi\nHow are you?'
     click.echo(fetch('mail_on'))
     click.echo(fetch('mail_user'))
-    click.echo(fetch('mail_pswd'))
     click.echo(fetch('mail_host'))
     click.echo(fetch('mail_port'))
     click.echo(fetch('mail_from'))
