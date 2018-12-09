@@ -2,6 +2,7 @@ import pickle
 import requests
 import os
 import smtplib
+import sys
 from urllib.parse import urljoin
 from app import app
 
@@ -19,7 +20,9 @@ def fetch(key):
     try:
         unpacked_object = pickle.loads(app.redis.get(key))
         return unpacked_object
-    except:
+    except Exception as e:
+        traceback.print_tb(err.__traceback__)
+        sys.stdout.flush()
         return None
 
 

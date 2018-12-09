@@ -1,4 +1,6 @@
 import os
+import sys
+import traceback
 from urllib.parse import urljoin
 from flask import render_template, redirect, request, abort, url_for, flash
 from app import app
@@ -47,7 +49,7 @@ def set_keys():
             save('qb_id', form.qb_id.data)
             save('qb_secret', form.qb_secret.data)
             save('qb_sandbox', form.qb_sandbox.data)
-            return render_template('keysset.html')
+            return redirect(url_for('authqbo'))
         return render_template(
             'setkeys.html',
             title='Set Intuit Keys',
@@ -81,7 +83,8 @@ def qbologged():
             code=request.args.get('code'),
         )
         qbo.add_job()
-        return render_template('success.html')
+        flash('Sync to QBO Successful.')
+        return render_template('index.html')
     else:
         return "Access Denied"
 
@@ -97,7 +100,8 @@ def authbtc():
         url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
         if form.validate_on_submit():
             btcp.pairing(str(form.code.data))
-            return render_template('success.html')
+            flash('Pairing to BTCPay Successful')
+            return render_template('index.html')
         return render_template(
             'authbtc.html',
             title='Enter Code',
@@ -125,12 +129,18 @@ def setmail():
             save('mail_from', str(form.mail_from.data))
             save('merchant', str(form.merchant.data))
             if form.recipient.data is not None and str(form.recipient.data) != "":
-                send(
-                    dest=form.recipient.data,
-                    qb_inv='test',
-                    btcp_inv='test',
-                    amt=0.00,
-                )
+                try:
+                    send(
+                        dest=form.recipient.data,
+                        qb_inv='test',
+                        btcp_inv='test',
+                        amt=0.00,
+                    )
+                except Exception as e:
+                    traceback.print_tb(e.__traceback__)
+                    sys.stdout.flush()
+                    flash('Connection to SMTP server failed.')
+                    return render_template('index.html')
                 flash('Test email sent.')
             else:
                 flash('Email settings updated.')
