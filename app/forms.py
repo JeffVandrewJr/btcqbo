@@ -24,3 +24,4 @@ class MailForm(FlaskForm):
     mail_from = StringField('Sender Email', validators=[DataRequired()])
     merchant = StringField('Merchant Name', validators=[DataRequired()])
     recipient = StringField('Test Recipient')
+    submit = SubmitField('Submit')
