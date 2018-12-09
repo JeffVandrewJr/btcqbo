@@ -56,8 +56,9 @@ def send(dest, qb_inv, btcp_inv, amt):
     # emails receipt to customer
     merchant = fetch('merchant')
     msg = Message()
-    del msg['subject']
     msg['subject'] = f'Receipt from {merchant}'
+    msg['to'] = dest
+    msg['from'] = fetch('mail_from')
     body = f'''
     Amount Paid: ${amt}\n
     Invoice Number: {qb_inv}\n
