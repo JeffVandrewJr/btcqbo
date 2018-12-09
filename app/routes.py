@@ -108,7 +108,7 @@ def authbtc():
         return "Access Denied"
 
 
-@app.route('/btcqbo/mail')
+@app.route('/btcqbo/mail', methods=['GET', 'POST'])
 def setmail():
     # sets user email settings
     status = login(request.cookies)
