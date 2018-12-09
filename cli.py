@@ -15,14 +15,17 @@ def cli():
 @cli.command()
 def refresh():
     # manually refreshes stored QBO tokens
-    click.echo(refresh_stored_tokens())
+    data = refresh_stored_tokens()
+    if 'token_type' not in data:
+        click.echo('Refresh failed.')
+    else:
+        click.echo('Refresh success.')
 
 
 @cli.command()
 def printqb():
-    # prints QBO API keys and token to screen
+    # prints QBO API ID and token to screen
     click.echo(fetch('qb_id'))
-    click.echo(fetch('qb_secret'))
     click.echo(fetch('qb_sandbox'))
     click.echo(os.getenv('CALLBACK_URL'))
 
