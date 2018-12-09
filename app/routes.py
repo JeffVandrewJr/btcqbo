@@ -135,7 +135,11 @@ def setmail():
             else:
                 flash('Email settings updated.')
             return render_template('index.html')
-        return render_template('setmail.html')
+        return render_template(
+            'setmail.html',
+            title='Email Settings',
+            form=form,
+        )
     else:
         return "Access Denied"
 
