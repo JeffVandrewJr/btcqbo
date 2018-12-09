@@ -4,6 +4,7 @@ import os
 import smtplib
 import sys
 from urllib.parse import urljoin
+from email.message import Message
 from app import app
 
 
@@ -53,10 +54,15 @@ def login(cookies):
 def send(dest, qb_inv, btcp_inv, amt):
     # emails receipt to customer
     merchant = fetch('merchant')
-    msg = f'Subject: Receipt from {merchant} \nAmount Paid: ${amt}\n \
-Amount Paid: ${amt}\n \
-Invoice Number: {qb_inv}\n \
-Confirmation ID: {btcp_inv} '
+    msg = Message()
+    del msg['subject']
+    msg['subject'] = f'Receipt from {merchant}'
+    body = f'''
+    Amount Paid: ${amt}\n
+    Invoice Number: {qb_inv}\n
+    Confirmation ID: {btcp_inv}
+    '''
+    msg.set_payload(body)
     smtp = smtplib.SMTP(
         host=fetch('mail_host'),
         port=fetch('mail_port'),
@@ -66,5 +72,5 @@ Confirmation ID: {btcp_inv} '
     if fetch('mail_port') == 587:
         smtp.starttls()
     smtp.login(fetch('mail_user'), fetch('mail_pswd'))
-    smtp.sendmail(fetch('mail_from'), dest, msg)
+    smtp.send_message(msg=msg, from_addr=fetch('mail_from'), to_addrs=dest)
     smtp.quit()
