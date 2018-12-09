@@ -59,7 +59,7 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 <h3>Syncing QBO</h3>
 
-From the plugin welcome screen, hit the button to sync QBO. Follow the steps to sync to Inuit; you'll need your QBO username and password. You can repeat this step at any time in the future if you become unsynced from Intuit for any reason.
+After entering your Intuit API keys into the plugin, you'll be automatically redirected to sync the plugin to QBO. (If you need to resync later without updating your API keys, from the plugin welcome screen, you can hit the button to sync QBO.) Follow the on-screen instructions to sync to Inuit; you'll need your QBO username and password. You can repeat this step at any time in the future if you become unsynced from Intuit for any reason.
 
 <h3>Syncing BTCPay</h3>
 
