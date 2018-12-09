@@ -213,4 +213,9 @@ def verify():
         inv_url = inv_data['url']
         return redirect(inv_url)
     else:
-        return "The email and invoice number provided do not match. Please try again. If multiple emails are associated to the invoice, you must use the primary one."
+        no_match = '''
+        The email and invoice number provided do not match. 
+        Please try again. If multiple emails are associated to 
+        the invoice, you must use the primary one.
+        '''
+        return no_match
