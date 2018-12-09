@@ -8,10 +8,6 @@ Quickbooks Online (QBO) is currently the most popular small business bookkeeping
 
 When this plugin is installed, customers choosing to pay a QBO invoice using BTCPay automatically have a BTCPay invoice generated with the customer's data pre-filled, and payments to the BTCPay invoice are autmatically recorded in QBO. Before generating the invoice, the software verifies that the email and invoice number match to prevent against customer typos.
 
-<h2>Known Issues</h2>
-
-Unfortunately the Quickbooks API does not allow emailing customer receipts. BTCPay does not support this either, leaving the feature to merchant software. Assuming there are no plans for BTCPay to support this feature, I will implement this in the plugin in the near future.
-
 <h2>Notes</h2>
 
 All payments made through BTCPay will be recorded in QBO in an "Other Current Asset" account called "Bitcoin." They are recorded at USD value as of the date the invoice was paid. This is not a bug; it is intentional behavior. The USD value on the payment date is the amount of taxable income recognized as well as the tax basis for a future sale of BTC under US Tax law, so the BTC is recorded in QBO accordingly. The information herein is educational only and is not tax advice; consult your tax professional.
@@ -57,6 +53,16 @@ You need API keys from Intuit to sync to Quickbooks Online.
 2. From a web browser, visit https://btcpay.example.com/btcqbo/authqbo, replacing btcqbo.example.com with your domain. Login with the username and password that you set above. Follow the steps to sync to Inuit. You can repeat this step at any time in the future if you become unsynced from Intuit for any reason.
 
 3. From a web browser, visit https://btcpay.example.com/btcqbo/authbtc, replacing btcqbo.example.com with your domain. Click on the link provided to obtain a pairing code from your BTCPay Server instance. Then enter the pairing code in the plugin, and submit.
+
+<h3>Email Setup</h3>
+
+Versions 0.1.17 and higher of the plugin allow automatic emailing of customer receipts. This is set up at https://btcpay.example.com/btcqbo/mail. You'll need to enter your SMTP server settings. If you enter a test email recipient, it will test the connection and send a test email.
+
+If you don't know what an SMTP server is, that's OK! Your email provider almost definitely provides SMTP access for free. If it doesn't, you can always sign up for a free account with a provider that does (Gmail, Yahoo, Outlook.com, etc).
+
+Googling your email provider and "SMTP" will likely show you the settings. For example G-Suite (and Gmail) use smtp.gmail.com as host, and use port 587. With Google (and most providers), your email is your username. Your password is your normal password, unless you use Two Factor Authentication. If you use 2FA, you'll need to generate an application-specific password (example instructions for Google are [here](https://support.google.com/mail/answer/185833?hl=en)).
+
+Your "send from" address is the address you want receipts to be sent from, and may be the same as your username. "Business Name" is your business name as you want it to appear on receipts.
 
 <h3>Creating Public Facing Payment Portal</h3>
 
