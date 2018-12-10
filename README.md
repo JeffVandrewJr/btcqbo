@@ -26,7 +26,7 @@ To activate:
 
 1. Log into your LunaNode or other VPS via SSH.
 
-2. `$ sudo su -` THE TRAILING HYPHEN IS CRITICALLY IMPORTANT. 
+2. `$ sudo su -` THE TRAILING HYPHEN IS CRITICALLY IMPORTANT. If you get an arror message about an environmental variable (such as BTCPAY_HOST) not being set, stop. This means you're not properly logged in as root, probably because you forgot the hyphen.
 
 3. `# cd btcpayserver-docker`
 
