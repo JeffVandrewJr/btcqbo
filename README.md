@@ -26,17 +26,15 @@ To activate:
 
 1. Log into your LunaNode or other VPS via SSH.
 
-2. `$ sudo su -` THE TRAILING HYPHEN IS CRITICALLY IMPORTANT. If you get an error message about an environmental variable (such as BTCPAY_HOST) not being set, stop. This means you're not properly logged in as root, probably because you forgot the hyphen.
+```bash
+# Log in as root and load environment variables of BTCPayServer
+sudo su -
 
-3. `# cd btcpayserver-docker`
-
-4. `# btcpay-update.sh`
-
-4. `# export BTCPAYGEN_ADDITIONAL_FRAGMENTS="$BTCPAYGEN_ADDITIONAL_FRAGMENTS;opt-add-btcqbo"`
-
-5. `# . btcpay-setup.sh -i`
-
-6. `# exit`
+# Add this plugin docker fragment
+export BTCPAYGEN_ADDITIONAL_FRAGMENTS="$BTCPAYGEN_ADDITIONAL_FRAGMENTS;opt-add-btcqbo"
+# Save
+. btcpay-setup.sh -i
+```
 
 <h3>Post-Activation</h3>
 
