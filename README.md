@@ -83,7 +83,7 @@ These instructions assume your business' normal public facing site is a Wordpres
 
 1. In Quickbooks Online, edit your outgoing email template for invoicing (Gear Icon --> Account & Settings --> Sales --> Messages) like this:
 ```
-Attached is your invoice from me. 
+Attached is your invoice from [your business name]. 
 
 <html>If you'd like to pay in Bitcoin, click <a href="https://vandrew.com/pay-bitcoin" target="_blank">here</a>.</html>
 
