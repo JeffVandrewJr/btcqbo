@@ -81,11 +81,19 @@ You will need a page on your business' website to which your Quickbooks invoices
 
 These instructions assume your business' normal public facing site is a Wordpress site. 
 
-1. In Quickbooks Online, edit your outgoing email template for invoicing (Gear Icon --> Account & Settings --> Sales --> Messages) with a concluding paragraph like this one:
+1. In Quickbooks Online, edit your outgoing email template for invoicing (Gear Icon --> Account & Settings --> Sales --> Messages) like this:
 ```
-"Click "Review and Pay below to pay via ACH or Credit Card, or click https://yourdomain.com/pay to pay via Bitcoin.
+Attached is your invoice from me. 
+
+<html>If you'd like to pay in Bitcoin, click <a href="https://vandrew.com/pay-bitcoin" target="_blank">here</a>.</html>
+
+If you'd like to pay in US Dollars, click the "Review & Pay" button below, where you can view the invoice and pay electronically.
+
+Thanks!
 ```
-2. Also edit your Quickbooks Online invoice template. To get there, in Quickbooks Online, click the gear icon, then Custom Form Styles, then hit "Edit" next your current form style. Then click the block that says "Content". The sample invoice will then become clickable. Click on the bottom content block (where it says "Total Due"). A "Message to Customer" field will then appear. In that field, type:
+Quickbooks automatically generates the "Review & Pay" button for fiat payments. The paragraph within the html tags generates a link for your BTC customers to use to pay.
+
+2. In addition to editing the email template, also edit your Quickbooks Online invoice template. To get there, in Quickbooks Online, click the gear icon, then Custom Form Styles, then hit "Edit" next your current form style. Then click the block that says "Content". The sample invoice will then become clickable. Click on the bottom content block (where it says "Total Due"). A "Message to Customer" field will then appear. In that field, type:
 ```
 Head to https://yourdomain.com/pay to pay via Bitcoin.
 ```
