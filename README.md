@@ -91,7 +91,7 @@ If you'd like to pay in US Dollars, click the "Review & Pay" button below, where
 
 Thanks!
 ```
-You'll need to change the "example.com/pay" to the URL you're using in Step 3 below. Leave `[Invoice No.]` alone, as that is a Quickbooks placeholder that will auto-insert the appropriate data when the email is sent. Quickbooks automatically generates the "Review & Pay" button for fiat payments. The paragraph within the html tags generates a link for your BTC customers to use to pay.
+You'll need to change the "example.com/pay" to the URL you're using in Step 3 below. Leave `[Invoice No.]` alone, as that is a Quickbooks placeholder that will auto-insert the appropriate data when the email is sent. Quickbooks automatically generates the "Review & Pay" button for fiat payments.
 
 2. In addition to editing the email template, also edit your Quickbooks Online invoice template. To get there, in Quickbooks Online, click the gear icon, then Custom Form Styles, then hit "Edit" next your current form style. Then click the block that says "Content". The sample invoice will then become clickable. Click on the bottom content block (where it says "Total Due"). A "Message to Customer" field will then appear. In that field, type:
 ```
