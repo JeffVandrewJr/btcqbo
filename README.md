@@ -115,7 +115,7 @@ Invoice Number:
   <button type="submit">Pay now</button>
 </form>
 ```
-In the code, change `btcpay.example.com` to the domain of your BTCPay host (but leave all portions of the URL following the ".com" the same). Also set the redirect URL of your choice. Save the page in Wordpress; due to the magic of CSS it should automatically be styled to match your site.
+If you're using the "new" Wordpress 5.0, you'll need to first click the three dots at the top left of the content block and select "Edit as HTML." In the pasted code, change `btcpay.example.com` to the domain of your BTCPay host (but leave all portions of the URL following the ".com" the same). Also set the redirect URL of your choice. Save the page in Wordpress; due to the magic of CSS it should automatically be styled to match your site.
 
 <h4>Troubleshooting (only for technical users!)</h4>
 
