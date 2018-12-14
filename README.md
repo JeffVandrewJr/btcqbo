@@ -16,6 +16,8 @@ Payments will not record in QBO until the invoice status in BTCPay is "confirmed
 
 <h2>Setup</h2>
 
+Setup instructions can also be viewed in video format: https://www.youtube.com/watch?v=srgwL9ozg6c
+
 <h3>Activation</h3>
 
 Instructions assume that you are using the Dockerized BTCPay Server, which would be the case if you originally used the one-click install through LunaNode.
