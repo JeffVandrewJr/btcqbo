@@ -30,7 +30,7 @@ To activate, log into your LunaNode or other VPS via SSH and run the commands be
 # Log in as root and load environment variables of BTCPayServer
 sudo su -
 
-#go into the BTCPay-Docker directory
+# go into the BTCPay-Docker directory
 cd btcpay-docker
 
 # Add this plugin docker fragment
