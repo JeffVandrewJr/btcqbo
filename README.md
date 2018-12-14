@@ -52,7 +52,7 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 1. Head to https://developer.intuit.com and log in using the same login you normally use for Quickbooks Online. Your account will then be granted developer privileges.
 
-2. After logging in, click on "My Apps" and create a new app. Call the app "BTCQBO".
+2. After logging in, click on "My Apps" and create a new app. Call the app "BTCQBO". Whenever Intuit asks, you need access to the Accounting API (not the Payments API).
 
 3. After the "app" is created, click "Keys". There will be sandbox and production keys. To obtain the production keys, Intuit will require you to fully fill out your developer profile. Intuit will also require links to your privacy policy and EULA; these are largely irrelevant since your own business will the only "user" of your app. If you don't have links to a EULA and privacy policy, you may choose to use these links https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/privacy-sample and https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/eula-sample. These are provided for educational purposes, and consult with your own attorney if you have questions. 
 
