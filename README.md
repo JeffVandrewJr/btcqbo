@@ -35,6 +35,7 @@ cd btcpay-docker
 
 # Add this plugin docker fragment
 export BTCPAYGEN_ADDITIONAL_FRAGMENTS="$BTCPAYGEN_ADDITIONAL_FRAGMENTS;opt-add-btcqbo"
+
 # Save
 . btcpay-setup.sh -i
 ```
