@@ -239,6 +239,8 @@ def verify():
                 "notify": True,
             },
             "orderId": data['orderId'],
+            "extendedNotifications": True,
+            "fullNotifications": True,
             "notificationURL": data['notificationUrl'],
             "redirectURL": data['redirectUrl']
         })
