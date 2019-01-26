@@ -50,7 +50,7 @@ def login(cookies):
         return full_url
 
 
-def forward_ipn(forward_url, json):
+def repeat_ipn(forward_url, json):
     r = requests.post(forward_url, json=json)
     counter = 0
     while not r.ok:
