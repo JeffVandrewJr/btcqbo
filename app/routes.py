@@ -184,8 +184,14 @@ def deposit_api():
     if isinstance(deposit, dict):
         if 'status' in deposit:
             if deposit['status'] == "confirmed":
-                amount = float(deposit['price'])
-                tax = float(deposit['taxIncluded'])
+                if deposit.get('price'):
+                    amount = float(deposit['price'])
+                else:
+                    price = float(0)
+                if deposit.get('taxIncluded'):
+                    tax = float(deposit['taxIncluded'])
+                else:
+                    tax = float(0)
                 btcp_id = str(deposit['id'])
                 if amount > 0:
                     qbo.post_deposit(
