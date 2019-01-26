@@ -178,7 +178,7 @@ def deposit_api():
         abort(400)
     forward_url = fetch('forward_url')
     if forward_url is not None and forward_url != '':
-        requests.post(forward_url, data=request.json)
+        requests.post(forward_url, data=request.get_json())
     btc_client = fetch('btc_client')
     deposit = btc_client.get_invoice(request.json['id'])
     if isinstance(deposit, dict):
