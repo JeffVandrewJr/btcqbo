@@ -1,3 +1,5 @@
+<h1>Invoice Mode Instructions</h1>
+
 <h2>Introduction</h2>
 
 In addition to its bookkeeping capabilities, Quickbooks Online (QBO) is currently the most popular small business online invoicing solution. When customers receive an online invoice from a business using QBO via email, they currently have the option to pay electronically using credit card or ACH (via integrated Intuit Payments) or Bitcoin (via Intuit PayByCoin, which unfortunately only supports Bitpay and Coinbase). This software extends Quickbooks Online to take payments through BTCPay server. It is self-hosted and does not rely on any third party.
