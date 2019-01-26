@@ -1,4 +1,4 @@
-btcpay==1.0.3
+btcpay-python==1.1.0
 click==7.0
 Flask==1.0.2
 Flask-Bootstrap==3.3.7.1

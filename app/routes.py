@@ -32,10 +32,7 @@ def index():
     status = login(request.cookies)
     if status is not None:
         return redirect(status)
-    if os.getenv('AUTH_ACCESS') == 'True':
-        return render_template('index.html')
-    else:
-        return "Access Denied"
+    return render_template('index.html')
 
 
 @app.route('/btcqbo/setkeys', methods=['GET', 'POST'])
@@ -43,20 +40,17 @@ def set_keys():
     status = login(request.cookies)
     if status is not None:
         return redirect(status)
-    if os.getenv('AUTH_ACCESS') == 'True':
-        form = KeysForm()
-        if form.validate_on_submit():
-            save('qb_id', form.qb_id.data)
-            save('qb_secret', form.qb_secret.data)
-            save('qb_sandbox', form.qb_sandbox.data)
-            return redirect(url_for('authqbo'))
-        return render_template(
-            'setkeys.html',
-            title='Set Intuit Keys',
-            form=form
-        )
-    else:
-        return "Access Denied."
+    form = KeysForm()
+    if form.validate_on_submit():
+        save('qb_id', form.qb_id.data)
+        save('qb_secret', form.qb_secret.data)
+        save('qb_sandbox', form.qb_sandbox.data)
+        return redirect(url_for('authqbo'))
+    return render_template(
+        'setkeys.html',
+        title='Set Intuit Keys',
+        form=form
+    )
 
 
 @app.route('/btcqbo/authqbo')
@@ -65,28 +59,22 @@ def authqbo():
     if status is not None:
         return redirect(status)
     # calls fn to grab qbo auth url and then redirects there
-    if os.getenv('AUTH_ACCESS') == 'True':
-        if fetch('qb_secret') is not None:
-            return redirect(qbo.get_auth_url())
-        else:
-            return redirect(url_for('set_keys'))
+    if fetch('qb_secret') is not None:
+        return redirect(qbo.get_auth_url())
     else:
-        return "Access Denied."
+        return redirect(url_for('set_keys'))
 
 
 @app.route('/btcqbo/qbologged')
 def qbologged():
     # user is redirected here after qbo authorizes
-    if os.getenv('AUTH_ACCESS') == 'True':
-        qbo.set_global_vars(
-            realmid=request.args.get('realmId'),
-            code=request.args.get('code'),
-        )
-        qbo.add_job()
-        flash('Sync to QBO Successful.')
-        return render_template('index.html')
-    else:
-        return "Access Denied"
+    qbo.set_global_vars(
+        realmid=request.args.get('realmId'),
+        code=request.args.get('code'),
+    )
+    qbo.add_job()
+    flash('Sync to QBO Successful.')
+    return render_template('index.html')
 
 
 @app.route('/btcqbo/authbtc', methods=['GET', 'POST'])
@@ -95,21 +83,18 @@ def authbtc():
     status = login(request.cookies)
     if status is not None:
         return redirect(status)
-    if os.getenv('AUTH_ACCESS') == 'True':
-        form = BTCCodeForm()
-        url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
-        if form.validate_on_submit():
-            btcp.pairing(str(form.code.data))
-            flash('Pairing to BTCPay Successful')
-            return render_template('index.html')
-        return render_template(
-            'authbtc.html',
-            title='Enter Code',
-            form=form,
-            url=url
-        )
-    else:
-        return "Access Denied"
+    form = BTCCodeForm()
+    url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
+    if form.validate_on_submit():
+        btcp.pairing(str(form.code.data))
+        flash('Pairing to BTCPay Successful')
+        return render_template('index.html')
+    return render_template(
+        'authbtc.html',
+        title='Enter Code',
+        form=form,
+        url=url
+    )
 
 
 @app.route('/btcqbo/mail', methods=['GET', 'POST'])
@@ -118,40 +103,36 @@ def setmail():
     status = login(request.cookies)
     if status is not None:
         return redirect(status)
-    if os.getenv('AUTH_ACCESS') == 'True':
-        form = MailForm()
-        if form.validate_on_submit():
-            save('mail_on', form.mail_on.data)
-            save('mail_user', str(form.mail_user.data))
-            save('mail_pswd', str(form.mail_pswd.data))
-            save('mail_host', str(form.mail_host.data))
-            save('mail_port', int(form.mail_port.data))
-            save('mail_from', str(form.mail_from.data))
-            save('merchant', str(form.merchant.data))
-            if form.recipient.data is not None and str(form.recipient.data) != "":
-                try:
-                    send(
-                        dest=form.recipient.data,
-                        qb_inv='test',
-                        btcp_inv='test',
-                        amt=0.00,
-                    )
-                except Exception as e:
-                    traceback.print_tb(e.__traceback__)
-                    sys.stdout.flush()
-                    flash('Connection to SMTP server failed.')
-                    return render_template('index.html')
-                flash('Test email sent.')
-            else:
-                flash('Email settings updated.')
-            return render_template('index.html')
-        return render_template(
-            'setmail.html',
-            title='Email Settings',
-            form=form,
-        )
-    else:
-        return "Access Denied"
+    form = MailForm()
+    if form.validate_on_submit():
+        save('mail_on', form.mail_on.data)
+        save('mail_user', str(form.mail_user.data))
+        save('mail_pswd', str(form.mail_pswd.data))
+        save('mail_host', str(form.mail_host.data))
+        save('mail_port', int(form.mail_port.data))
+        save('mail_from', str(form.mail_from.data))
+        save('merchant', str(form.merchant.data))
+        if form.recipient.data is not None and str(form.recipient.data) != "":
+            try:
+                send(
+                    dest=form.recipient.data,
+                    qb_inv='test',
+                    btcp_inv='test',
+                    amt=0.00,
+                )
+            except Exception as e:
+                app.logger.exception(e)
+                flash('Connection to SMTP server failed.')
+                return render_template('index.html')
+            flash('Test email sent.')
+        else:
+            flash('Email settings updated.')
+        return render_template('index.html')
+    return render_template(
+        'setmail.html',
+        title='Email Settings',
+        form=form,
+    )
 
 
 @app.route('/btcqbo/api/v1/payment', methods=['GET', 'POST'])
