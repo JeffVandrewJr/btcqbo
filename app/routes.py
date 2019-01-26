@@ -138,7 +138,7 @@ def setmail():
 
 @app.route('/btcqbo/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
-    # receives and processes pmt notifications from BTCPay
+    # receives and processes invoice notifications from BTCPay
     if not request.json or 'id' not in request.json:
         abort(400)
     btc_client = fetch('btc_client')
@@ -161,6 +161,38 @@ def paymentapi():
                 amt = float(invoice['price'])
                 send(dest, qb_inv, btcp_inv, amt)
                 return "Buyer email sent.", 200
+            else:
+                return "Payment not yet confirmed.", 200
+        else:
+            return "No payment status received.", 400
+    else:
+        return "Invalid transaction ID.", 400
+
+
+@app.route('/btcqbo/api/v1/salesreceipt', methods=['GET', 'POST'])
+def sales_receipt_api():
+    # receives and processes sales receipt notifications from BTCPay
+    if not request.json or 'id' not in request.json:
+        abort(400)
+    btc_client = fetch('btc_client')
+    receipt = btc_client.get_invoice(request.json['id'])
+    if isinstance(receipt, dict):
+        if 'status' in receipt:
+            if receipt['status'] == "confirmed":
+                amount = float(receipt['price'])
+                tax = float(receipt['taxIncluded'])
+                btcp_id = str(receipt['id'])
+                buyer = receipt['buyer']
+                if amount > 0:
+                    qbo.post_receipt(
+                            amount=amount,
+                            tax=tax,
+                            btcp_id=btcp_id,
+                            buyer=buyer,
+                    )
+                    return "Payment Accepted", 201
+                else:
+                    return "Payment was zero or invalid invoice #.", 200
             else:
                 return "Payment not yet confirmed.", 200
         else:
