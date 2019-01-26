@@ -20,7 +20,7 @@ If you collect sales tax, you must make use of the new `taxIncluded` invoice fie
 
 In BTCPay, `price` is inclusive of tax. So if you're creating an invoice for $100 in a jursidiction with 7% sales tax, you would pass BTCPay a `price` of $107 (not $100) and `taxIncluded` of $7.
 
-All payments made through BTCPay will be recorded in QBO in an "Other Current Asset" account called "Bitcoin." They are recorded at USD value as of the date the invoice was paid. This is not a bug; it is intentional behavior. The USD value on the payment date is the amount of taxable income recognized as well as the tax basis for a future sale of BTC under US Tax law, so the BTC is recorded in QBO accordingly. The information herein is educational only and is not tax advice; consult your tax professional.
+All payments made through BTCPay will be recorded in QBO in an "Other Current Asset" account called "BTCPay-Bitcoin." They are recorded at USD value as of the date the invoice was paid. This is not a bug; it is intentional behavior. The USD value on the payment date is the amount of taxable income recognized as well as the tax basis for a future sale of BTC under US Tax law, so the BTC is recorded in QBO accordingly. The information herein is educational only and is not tax advice; consult your tax professional.
 
 Payments will not record in QBO until the invoice status in BTCPay is "confirmed." Payments are considered "confirmed" based on your BTCPay settings. The default is one on-chain confirmation.
 
