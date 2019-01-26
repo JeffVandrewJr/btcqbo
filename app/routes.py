@@ -169,26 +169,24 @@ def paymentapi():
         return "Invalid transaction ID.", 400
 
 
-@app.route('/btcqbo/api/v1/salesreceipt', methods=['GET', 'POST'])
-def sales_receipt_api():
-    # receives and processes sales receipt notifications from BTCPay
+@app.route('/btcqbo/api/v1/deposit', methods=['GET', 'POST'])
+def deposit_api():
+    # receives and processes deposit notifications from BTCPay
     if not request.json or 'id' not in request.json:
         abort(400)
     btc_client = fetch('btc_client')
-    receipt = btc_client.get_invoice(request.json['id'])
-    if isinstance(receipt, dict):
-        if 'status' in receipt:
-            if receipt['status'] == "confirmed":
-                amount = float(receipt['price'])
-                tax = float(receipt['taxIncluded'])
-                btcp_id = str(receipt['id'])
-                buyer = receipt['buyer']
+    deposit = btc_client.get_invoice(request.json['id'])
+    if isinstance(deposit, dict):
+        if 'status' in deposit:
+            if deposit['status'] == "confirmed":
+                amount = float(deposit['price'])
+                tax = float(deposit['taxIncluded'])
+                btcp_id = str(deposit['id'])
                 if amount > 0:
-                    qbo.post_receipt(
+                    qbo.post_deposit(
                             amount=amount,
                             tax=tax,
                             btcp_id=btcp_id,
-                            buyer=buyer,
                     )
                     return "Payment Accepted", 201
                 else:
