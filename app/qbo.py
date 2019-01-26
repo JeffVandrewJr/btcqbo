@@ -1,6 +1,4 @@
 from app import app
-import os
-import time
 from app.utils import save, fetch
 from quickbooks import Oauth2SessionManager, QuickBooks
 from quickbooks.objects.account import Account
@@ -9,9 +7,7 @@ from quickbooks.objects.customer import Customer
 from quickbooks.objects.invoice import Invoice
 from quickbooks.objects.payment import Payment, PaymentLine
 from quickbooks.objects.paymentmethod import PaymentMethod
-
-# read QBO callback URL
-callback_url = os.getenv('CALLBACK_URL')
+import time
 
 
 def post_payment(doc_number="", amount=0):
@@ -92,6 +88,7 @@ def post_payment(doc_number="", amount=0):
 def get_auth_url():
     # asks Intuit server for a valid authorization URL
     # returns authorization URL
+    callback_url = app.config.get('CALLBACK_URL')
     session_manager = Oauth2SessionManager(
         client_id=fetch('qb_id'),
         client_secret=fetch('qb_secret'),
@@ -105,6 +102,7 @@ def set_global_vars(realmid, code):
     # stores Intuit tokens
     # stores QBO client object
     # stores session manager object for future token refreshes
+    callback_url = app.config.get('CALLBACK_URL')
     session_manager = Oauth2SessionManager(
         client_id=fetch('qb_id'),
         client_secret=fetch('qb_secret'),
@@ -143,6 +141,7 @@ def set_global_vars(realmid, code):
 
 def refresh_stored_tokens():
     # refresh stored QBO tokens
+    callback_url = app.config.get('CALLBACK_URL')
     realm_id = fetch('realm_id')
     session_manager = Oauth2SessionManager(
         client_id=fetch('qb_id'),
@@ -199,4 +198,7 @@ def add_job():
     # check if repeat_refresh() is in RQ
     # if not in RQ, adds the job to RQ
     if '1' not in app.task_queue.job_ids:
-        app.task_queue.enqueue_call(func=repeat_refresh, timeout=-1, job_id='1')
+        app.task_queue.enqueue_call(
+                func=repeat_refresh,
+                timeout=-1, job_id='1'
+                )

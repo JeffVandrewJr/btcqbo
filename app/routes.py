@@ -1,14 +1,12 @@
-import os
-import sys
-import traceback
-from urllib.parse import urljoin
-from flask import render_template, redirect, request, abort, url_for, flash
 from app import app
 import app.qbo as qbo
-import app.btcp as btcp
 from app.utils import fetch, save, login, send
 from app.forms import BTCCodeForm, KeysForm, MailForm
+from btcpay import BTCPayClient
+from flask import render_template, redirect, request, abort, url_for, flash
+import os
 from rq_dashboard import blueprint
+from urllib.parse import urljoin
 
 
 if os.getenv('RQ_ACCESS') == 'True':
@@ -72,7 +70,6 @@ def qbologged():
         realmid=request.args.get('realmId'),
         code=request.args.get('code'),
     )
-    qbo.add_job()
     flash('Sync to QBO Successful.')
     return render_template('index.html')
 
@@ -86,7 +83,11 @@ def authbtc():
     form = BTCCodeForm()
     url = urljoin(str(os.getenv('BTCPAY_HOST')), 'api-tokens')
     if form.validate_on_submit():
-        btcp.pairing(str(form.code.data))
+        client = BTCPayClient.create_client(
+                host=app.config.get('BTCPAY_HOST'),
+                code=form.code.data,
+        )
+        save('btc_client', client)
         flash('Pairing to BTCPay Successful')
         return render_template('index.html')
     return render_template(
