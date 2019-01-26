@@ -3,7 +3,7 @@ from app.utils import save, fetch
 from quickbooks import Oauth2SessionManager, QuickBooks
 from quickbooks.objects.account import Account
 from quickbooks.objects.base import Ref
-from quickbooks.objects.desosit import Deposit, DepositLine, DepositLineDetail
+from quickbooks.objects.deposit import Deposit, DepositLine, DepositLineDetail
 from quickbooks.objects.customer import Customer
 from quickbooks.objects.invoice import Invoice
 from quickbooks.objects.payment import Payment, PaymentLine
