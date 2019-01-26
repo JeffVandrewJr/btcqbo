@@ -26,7 +26,11 @@ Payments will not record in QBO until the invoice status in BTCPay is "confirmed
 
 <h2>Activation</h2>
 
-SSH into your BTCPay server, and then run the following commands:
+Instructions assume that you are using the Dockerized BTCPay Server, which would be the case if you originally used the one-click install through LunaNode.
+
+You only need to activate the plugin once, as going forward after activation the plugin should update automatically when you update BTCPay.
+
+To activate, log into your LunaNode or other VPS via SSH [(click here if you forgot how)](https://github.com/JeffVandrewJr/btcqbo/blob/master/ssh.md) and run the commands below. Don't forget the trailing hyphen in the first command, as it's important.
 
 ```bash
 # Log in as root and load environment variables of BTCPayServer
