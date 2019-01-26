@@ -5,6 +5,7 @@ from app.forms import BTCCodeForm, KeysForm, MailForm
 from btcpay import BTCPayClient
 from flask import render_template, redirect, request, abort, url_for, flash
 import os
+import requests
 from rq_dashboard import blueprint
 from urllib.parse import urljoin
 
@@ -88,6 +89,7 @@ def authbtc():
                 code=form.code.data,
         )
         save('btc_client', client)
+        save('forward_url', form.forward_url.data)
         flash('Pairing to BTCPay Successful')
         return render_template('index.html')
     return render_template(
@@ -174,6 +176,9 @@ def deposit_api():
     # receives and processes deposit notifications from BTCPay
     if not request.json or 'id' not in request.json:
         abort(400)
+    forward_url = fetch('forward_url')
+    if forward_url is not None and forward_url != '':
+        requests.post(forward_url, data=request.json)
     btc_client = fetch('btc_client')
     deposit = btc_client.get_invoice(request.json['id'])
     if isinstance(deposit, dict):

@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired
 
 class BTCCodeForm(FlaskForm):
     code = StringField('Pairing Code', validators=[DataRequired()])
+    forward_url = StringField('IPN Forwarding URL (only for Deposit Mode)')
     submit = SubmitField('Submit')
 
 
