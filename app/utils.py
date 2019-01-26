@@ -1,12 +1,10 @@
+from app import app
+from email.message import Message
+import os
 import pickle
 import requests
-import os
 import smtplib
-import sys
-import traceback
 from urllib.parse import urljoin
-from email.message import Message
-from app import app
 
 
 def save(key, object):
@@ -23,8 +21,7 @@ def fetch(key):
         unpacked_object = pickle.loads(app.redis.get(key))
         return unpacked_object
     except Exception as e:
-        traceback.print_tb(e.__traceback__)
-        sys.stdout.flush()
+        app.logger.exception(e)
         return None
 
 
