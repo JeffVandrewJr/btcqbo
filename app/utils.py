@@ -4,6 +4,7 @@ import os
 import pickle
 import requests
 import smtplib
+import time
 from urllib.parse import urljoin
 
 
@@ -47,6 +48,17 @@ def login(cookies):
         initial_url = urljoin(str(os.getenv('BTCPAY_HOST')), 'Account/Login')
         full_url = initial_url + '?ReturnUrl=%2Fbtcqbo%2Findex'
         return full_url
+
+
+def forward_ipn(forward_url, json):
+    r = requests.post(forward_url, json=json)
+    counter = 0
+    while not r.ok:
+        r = requests.post(forward_url, json=json)
+        counter += 1
+        if counter > 3:
+            break
+        time.sleep(300)
 
 
 def send(dest, qb_inv, btcp_inv, amt):

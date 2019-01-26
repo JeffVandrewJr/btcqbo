@@ -1,12 +1,13 @@
 from app import app
 import app.qbo as qbo
-from app.utils import fetch, save, login, send
+from app.utils import fetch, save, login, send, repeat_ipn
 from app.forms import BTCCodeForm, KeysForm, MailForm
 from btcpay import BTCPayClient
 from flask import render_template, redirect, request, abort, url_for, flash
 import os
 import requests
 from rq_dashboard import blueprint
+from threading import Thread
 from urllib.parse import urljoin
 
 
@@ -179,7 +180,13 @@ def deposit_api():
         abort(400)
     forward_url = fetch('forward_url')
     if forward_url is not None and forward_url != '':
-        requests.post(forward_url, json=request.get_json())
+        r = requests.post(forward_url, json=request.get_json())
+        if not r.ok:
+            app.logger.error(f'IPN Rejected by Forwarding URL: {r}')
+            Thread(
+                    target=repeat_ipn,
+                    args=(forward_url, request.get_json())
+                    ).start()
     btc_client = fetch('btc_client')
     deposit = btc_client.get_invoice(request.json['id'])
     if isinstance(deposit, dict):
