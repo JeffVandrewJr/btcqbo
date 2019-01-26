@@ -54,6 +54,8 @@ def repeat_ipn(forward_url, json):
     r = requests.post(forward_url, json=json)
     counter = 0
     while not r.ok:
+        app.logger.error(f'IPN Rejected by Forwarding URL: \
+                {r.status_code}, {r.url}, {r.reason}, {r.text}')
         r = requests.post(forward_url, json=json)
         counter += 1
         if counter > 3:

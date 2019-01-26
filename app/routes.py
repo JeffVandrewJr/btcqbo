@@ -182,7 +182,8 @@ def deposit_api():
     if forward_url is not None and forward_url != '':
         r = requests.post(forward_url, json=request.get_json())
         if not r.ok:
-            app.logger.error(f'IPN Rejected by Forwarding URL: {r}')
+            app.logger.error(f'IPN Rejected by Forwarding URL: \
+                    {r.status_code}, {r.url}, {r.reason}, {r.text}')
             Thread(
                     target=repeat_ipn,
                     args=(forward_url, request.get_json())
