@@ -104,7 +104,7 @@ def post_deposit(amount, tax, btcp_id):
         # if income acct is not in QBO, create it
         new_acct = Account()
         new_acct.Name = "BTCPay Sales"
-        new_acct.AccountSubType = "SalesRetail"
+        new_acct.AccountType = "Income"
         new_acct.save(qb=qb)
         # set newly created acct as income acct
         income_acct_list = Account.filter(
