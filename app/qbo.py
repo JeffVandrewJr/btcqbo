@@ -146,39 +146,39 @@ def post_deposit(amount, tax, btcp_id):
         new_acct.Name = "Bitcoin-BTCPay"
         new_acct.AccountSubType = "OtherCurrentAssets"
         new_acct.save(qb=qb)
-        # set newly created Bitcoin-BTCPay acct as deposit acct
-        deposit_acct_list = Account.filter(
-            Name="Bitcoin-BTCPay",
-            qb=qb
-        )
-        deposit_acct = deposit_acct_list[0]
-        # create deposit
-        description = 'BTCPay: ' + btcp_id
-        income_acct_ref = Ref()
-        income_acct_ref.value = income_acct.Id
-        detail = DepositLineDetail()
-        detail.AccountRef = income_acct_ref
-        line = DepositLine()
-        line.DepositLineDetail = detail
-        deposit_account_ref = Ref()
-        deposit_account_ref.value = deposit_acct.Id
-        line.Amount = amount - tax
-        line.Description = description
-        # create sales tax line
-        sales_tax_acct_ref = Ref()
-        sales_tax_acct_ref.value = sales_tax_acct.Id
-        line2 = DepositLine()
-        detail2 = DepositLineDetail()
-        detail2.AccountRef = sales_tax_acct_ref
-        line2.DepositLineDetail = detail2
-        line2.Description = description
-        line2.Amount = tax
-        deposit = Deposit()
-        deposit.Line.append(line)
-        deposit.Line.append(line2)
-        deposit.DepositToAccountRef = deposit_account_ref
-        deposit.save(qb=qb)
-        return 'Deposit Made: ' + str(deposit)
+    # set newly created Bitcoin-BTCPay acct as deposit acct
+    deposit_acct_list = Account.filter(
+        Name="Bitcoin-BTCPay",
+        qb=qb
+    )
+    deposit_acct = deposit_acct_list[0]
+    # create deposit
+    description = 'BTCPay: ' + btcp_id
+    income_acct_ref = Ref()
+    income_acct_ref.value = income_acct.Id
+    detail = DepositLineDetail()
+    detail.AccountRef = income_acct_ref
+    line = DepositLine()
+    line.DepositLineDetail = detail
+    deposit_account_ref = Ref()
+    deposit_account_ref.value = deposit_acct.Id
+    line.Amount = amount - tax
+    line.Description = description
+    # create sales tax line
+    sales_tax_acct_ref = Ref()
+    sales_tax_acct_ref.value = sales_tax_acct.Id
+    line2 = DepositLine()
+    detail2 = DepositLineDetail()
+    detail2.AccountRef = sales_tax_acct_ref
+    line2.DepositLineDetail = detail2
+    line2.Description = description
+    line2.Amount = tax
+    deposit = Deposit()
+    deposit.Line.append(line)
+    deposit.Line.append(line2)
+    deposit.DepositToAccountRef = deposit_account_ref
+    deposit.save(qb=qb)
+    return 'Deposit Made: ' + str(deposit)
 
 
 def get_auth_url():
