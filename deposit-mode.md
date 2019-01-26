@@ -24,7 +24,7 @@ All payments made through BTCPay will be recorded in QBO in an "Other Current As
 
 Payments will not record in QBO until the invoice status in BTCPay is "confirmed." Payments are considered "confirmed" based on your BTCPay settings. The default is one on-chain confirmation.
 
-<h2>Setup</h2>
+<h2>Activation</h2>
 
 SSH into your BTCPay server, and then run the following commands:
 
