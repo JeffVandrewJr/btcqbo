@@ -175,10 +175,11 @@ def paymentapi():
 def deposit_api():
     # receives and processes deposit notifications from BTCPay
     if not request.json or 'id' not in request.json:
+        app.logger.error('No JSON in POST.')
         abort(400)
     forward_url = fetch('forward_url')
     if forward_url is not None and forward_url != '':
-        requests.post(forward_url, data=request.get_json())
+        requests.post(forward_url, json=request.get_json())
     btc_client = fetch('btc_client')
     deposit = btc_client.get_invoice(request.json['id'])
     if isinstance(deposit, dict):
@@ -187,7 +188,7 @@ def deposit_api():
                 if deposit.get('price'):
                     amount = float(deposit['price'])
                 else:
-                    price = float(0)
+                    amount = float(0)
                 if deposit.get('taxIncluded'):
                     tax = float(deposit['taxIncluded'])
                 else:
