@@ -57,7 +57,7 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 3. After the "app" is created, click "Keys". There will be sandbox and production keys. To obtain the production keys, Intuit will require you to fully fill out your developer profile. Intuit will also require links to your privacy policy and EULA; these are largely irrelevant since your own business will the only "user" of your app. If you don't have links to a EULA and privacy policy, you may choose to use these links https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/privacy-sample and https://raw.githubusercontent.com/JeffVandrewJr/btcqbo/master/eula-sample. These are provided for educational purposes, and consult with your own attorney if you have questions. 
 
-4. On the Intuit Developer site, underneath your Intuit "production" keys, add "https://btcpay.example.com/btcqbo/qbologged" as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted. Ensure you're doing this in the "production" (not sandbox) area of the page.
+4. On the Intuit Developer site, underneath your Intuit "production" keys, add `https://btcpay.example.com/btcqbo/qbologged` as a redirect URI, replacing btcpay.example.com with the domain where your BTCPay instance is hosted. Ensure you're doing this in the "production" (not sandbox) area of the page.
 
 5. From the plugin welcome screen, click the button to enter your Intuit API Keys. Enter your Quickbooks Client ID and Quickbooks Client Secret obtained from the Intuit Developer site above. Be sure to use the "Production" rather than "Sandbox" keys (unless you are in fact running on a sandbox test company).
 
@@ -95,7 +95,7 @@ If you'd like to pay in US Dollars, click the "Review & Pay" button below, where
 
 Thanks!
 ```
-You'll need to change the "example.com/pay" to the URL you're using in Step 3 below. Leave `[Invoice No.]` alone, as that is a Quickbooks placeholder that will auto-insert the appropriate data when the email is sent. Quickbooks automatically generates the "Review & Pay" button for fiat payments.
+You'll need to change the `example.com/pay` to the URL you're using in Step 3 below. Leave `[Invoice No.]` alone, as that is a Quickbooks placeholder that will auto-insert the appropriate data when the email is sent. Quickbooks automatically generates the "Review & Pay" button for fiat payments.
 
 2. In addition to editing the email template, also edit your Quickbooks Online invoice template. To get there, in Quickbooks Online, click the gear icon, then Custom Form Styles, then hit "Edit" next your current form style. Then click the block that says "Content". The sample invoice will then become clickable. Click on the bottom content block (where it says "Total Due"). A "Message to Customer" field will then appear. In that field, type:
 ```
