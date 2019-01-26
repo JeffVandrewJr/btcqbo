@@ -22,7 +22,7 @@ Instructions assume that you are using the Dockerized BTCPay Server, which would
 
 You only need to activate the plugin once, as going forward after activation the plugin should update automatically when you update BTCPay.
 
-To activate, log into your LunaNode or other VPS via SSH and run the commands below. Don't forget the trailing hyphen in the first command, as it's important.
+To activate, log into your LunaNode or other VPS via SSH [(click here if you forgot how)](https://github.com/JeffVandrewJr/btcqbo/blob/master/ssh.md) and run the commands below. Don't forget the trailing hyphen in the first command, as it's important.
 
 ```bash
 # Log in as root and load environment variables of BTCPayServer
