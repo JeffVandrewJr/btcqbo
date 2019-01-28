@@ -89,7 +89,8 @@ def post_payment(doc_number="", amount=0, btcp_id=''):
         payment.PaymentMethodRef = pmt_method_ref
         payment.DepositToAccountRef = deposit_account_ref
         payment.Line.append(payment_line)
-        payment.Id = btcp_id
+        # assign unique identifier by converting btcp_id into integer for QBO
+        payment.Id = int(btcp_id, 36)
         payment.save(qb=qb)
         return "Payment Made: " + str(payment)
 
@@ -185,7 +186,8 @@ def post_deposit(amount, tax, btcp_id):
     deposit.Line.append(line)
     deposit.Line.append(line2)
     deposit.DepositToAccountRef = deposit_account_ref
-    deposit.Id = btcp_id
+    # assign unique identifier by converting btcp_id into integer for QBO
+    deposit.Id = int(btcp_id, 36)
     deposit.save(qb=qb)
     return 'Deposit Made: ' + str(deposit)
 
