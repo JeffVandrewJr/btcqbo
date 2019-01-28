@@ -24,7 +24,7 @@ All payments made through BTCPay will be recorded in QBO in an "Other Current As
 
 Payments will not record in QBO until the invoice status in BTCPay is "confirmed." Payments are considered "confirmed" based on your BTCPay settings. The default is one on-chain confirmation.
 
-You MUST set the notificationUrl on all invoices you create to `https://btcpay.example.com/btcqbo/api/v1/deposit` (replacing `btcpay.example.com` with the domain where your BTCPay is hosted) in order for this plugin to record payments. If you need the IPN to be forwarded from the plugin to another merchant solution, during IPN setup you can select a forwarding URL.
+You MUST set the notificationUrl on all invoices you create to `https://btcpay.example.com/btcqbo/api/v1/deposit` (replacing `btcpay.example.com` with the domain where your BTCPay is hosted) in order for this plugin to record payments. If you need the IPN to be forwarded from the plugin to another merchant solution, during the plugin setup you can select a forwarding URL.
 
 <h2>Activation</h2>
 
@@ -74,7 +74,7 @@ You need API keys from Intuit to sync to Quickbooks Online.
 
 After entering your Intuit API keys into the plugin, you'll be automatically redirected to sync the plugin to QBO. (If you need to resync later without updating your API keys, from the plugin welcome screen, you can hit the button to sync QBO.) Follow the on-screen instructions to sync to Inuit; you'll need your QBO username and password. You can repeat this step at any time in the future if you become unsynced from Intuit for any reason.
 
-On this screen you can also set a forwarding URL for IPN payment notifications.
+On this screen you can also set a forwarding URL for IPN payment notifications. All IPNs must come to the plugin first, so be sure to set the `notificationUrl` on all invoices to `https://btcpay.example.com/btcqbo/api/v1/deposit` (replacing `btcpay.example.com` with the domain where your BTCPay is hosted). The URL you enter on this screen will receive IPNs after the BTC-QBO plugin records the payments in Quickbooks.
 
 <h3>Syncing BTCPay</h3>
 
@@ -83,4 +83,4 @@ From the plugin welcome screen, hit the button to sync BTCPay. Click on the link
 
 <h4>Troubleshooting (only for technical users!)</h4>
 
-If you are a more technical user, there are some advanced troubleshooting and testing tools explained in the advanced_troubleshooting.md file.
+If you are a more technical user, there are some advanced troubleshooting and testing tools explained in the `advanced_troubleshooting.md` file.

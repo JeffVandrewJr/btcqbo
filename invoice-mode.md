@@ -123,4 +123,4 @@ If you're using the "new" Wordpress 5.0, you'll need to first click the three do
 
 <h4>Troubleshooting (only for technical users!)</h4>
 
-If you are a more technical user, there are some advanced troubleshooting and testing tools explained in the advanced_troubleshooting.md file.
+If you are a more technical user, there are some advanced troubleshooting and testing tools explained in the `advanced_troubleshooting.md` file.
