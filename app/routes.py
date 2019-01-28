@@ -142,10 +142,13 @@ def setmail():
 @app.route('/btcqbo/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
     # receives and processes invoice notifications from BTCPay
+    if not request.json or 'id' not in request.json:
+        return "Ignore.", 200
     btc_client = fetch('btc_client')
     invoice = btc_client.get_invoice(request.json['id'])
     if isinstance(invoice, dict):
         if 'status' in invoice:
+            app.logger.info(f'IPN: {invoice["status"]} {invoice["id"]}')
             if invoice['status'] == "confirmed" or \
                     invoice['status'] == "complete":
                 if app.redis.get(invoice['id']) is not None:
@@ -188,6 +191,8 @@ def paymentapi():
 @app.route('/btcqbo/api/v1/deposit', methods=['GET', 'POST'])
 def deposit_api():
     # receives and processes deposit notifications from BTCPay
+    if not request.json or 'id' not in request.json:
+        return "Ignore.", 200
     forward_url = fetch('forward_url')
     if forward_url is not None and forward_url != '':
         r = requests.post(forward_url, json=request.get_json())
@@ -202,6 +207,7 @@ def deposit_api():
     deposit = btc_client.get_invoice(request.json['id'])
     if isinstance(deposit, dict):
         if 'status' in deposit:
+            app.logger.info(f'IPN: {deposit["status"]} {deposit["id"]}')
             if deposit['status'] == "confirmed" or \
                     deposit['status'] == "complete":
                 if app.redis.get(deposit['id']) is not None:
