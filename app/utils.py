@@ -21,8 +21,8 @@ def fetch(key):
     try:
         unpacked_object = pickle.loads(app.redis.get(key))
         return unpacked_object
-    except Exception as e:
-        app.logger.exception(e)
+    except Exception:
+        app.logger.exception(f'Key: {key}')
         return None
 
 
