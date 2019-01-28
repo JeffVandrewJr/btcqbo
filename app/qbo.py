@@ -11,9 +11,15 @@ from quickbooks.objects.paymentmethod import PaymentMethod
 import time
 
 
-def post_payment(doc_number="", amount=0):
+def post_payment(doc_number="", amount=0, btcp_id=''):
     # post payment to QBO
-    # requires passing invoice number and pmt amt as arguments
+    '''
+    doc_number: QBO invoice number
+    amount: payment amount
+    btcp_id: BTCPay invoice number
+    returns None if IPN is a duplicate
+    returns string if payment posted
+    '''
     refresh_stored_tokens()
     qb = fetch('qbclient')
     # check if BTCPay is already in QBO as a pmt method
@@ -61,8 +67,13 @@ def post_payment(doc_number="", amount=0):
         # only one invoice can match the inv #, so pull it from list
         invoice = invoice_list[0]
     except IndexError:
-        return "No Such Invoice"
+        app.logger.warning(f'No such invoice exists: {doc_number}')
+        return None
     else:
+        # check for duplicates
+        payment_list = Payment.filter(PrivateNote=str(btcp_id), qb=qb)
+        if payment_list:
+            return None
         # convert invoice object to linked invoice object
         linked_invoice = invoice.to_linked_txn()
         payment_line = PaymentLine()
@@ -82,6 +93,7 @@ def post_payment(doc_number="", amount=0):
         payment.PaymentMethodRef = pmt_method_ref
         payment.DepositToAccountRef = deposit_account_ref
         payment.Line.append(payment_line)
+        payment.PrivateNote = str(btcp_id)
         payment.save(qb=qb)
         return "Payment Made: " + str(payment)
 
@@ -152,6 +164,10 @@ def post_deposit(amount, tax, btcp_id):
         qb=qb
     )
     deposit_acct = deposit_acct_list[0]
+    # check for duplicates
+    deposit_list = Deposit.filter(PrivateNote=str(btcp_id), qb=qb)
+    if deposit_list:
+        return None
     # create deposit
     description = 'BTCPay: ' + btcp_id
     income_acct_ref = Ref()
@@ -177,6 +193,7 @@ def post_deposit(amount, tax, btcp_id):
     deposit.Line.append(line)
     deposit.Line.append(line2)
     deposit.DepositToAccountRef = deposit_account_ref
+    deposit.PrivateNote = str(btcp_id)
     deposit.save(qb=qb)
     return 'Deposit Made: ' + str(deposit)
 
@@ -275,9 +292,16 @@ def verify_invoice(doc_number="", email=""):
     refresh_stored_tokens()
     qb = fetch('qbclient')
     invoice_list = Invoice.filter(DocNumber=doc_number, qb=qb)
-    customers = Customer.filter(id=invoice_list[0].CustomerRef.value, qb=qb)
-    if customers[0].PrimaryEmailAddr.Address.lower() == email.lower():
-        return customers[0]
+    if invoice_list:
+        customers = Customer.filter(
+                id=invoice_list[0].CustomerRef.value, qb=qb)
+    else:
+        return None
+    if customers:
+        if customers[0].PrimaryEmailAddr.Address.lower() == email.lower():
+            return customers[0]
+        else:
+            return None
     else:
         return None
 

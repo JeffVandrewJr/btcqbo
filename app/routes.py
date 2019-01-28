@@ -143,16 +143,28 @@ def setmail():
 def paymentapi():
     # receives and processes invoice notifications from BTCPay
     if not request.json or 'id' not in request.json:
+        app.logger.error('No JSON in POST.')
         abort(400)
     btc_client = fetch('btc_client')
     invoice = btc_client.get_invoice(request.json['id'])
     if isinstance(invoice, dict):
         if 'status' in invoice:
-            if invoice['status'] == "confirmed":
+            if invoice['status'] == "confirmed" or \
+                    invoice['status'] == "complete":
                 doc_number = invoice['orderId']
                 amount = float(invoice['price'])
                 if amount > 0 and doc_number is not None:
-                    qbo.post_payment(doc_number=str(doc_number), amount=amount)
+                    result = qbo.post_payment(
+                            doc_number=str(doc_number),
+                            amount=amount,
+                            btcp_id=invoice['id']
+                            )
+                    if result and fetch('mail_on'):
+                        dest = invoice['buyer']['email']
+                        qb_inv = invoice['orderId']
+                        btcp_inv = invoice['id']
+                        amt = float(invoice['price'])
+                        send(dest, qb_inv, btcp_inv, amt)
                     return "Payment Accepted", 201
                 else:
                     return "Payment was zero or invalid invoice #.", 200
@@ -167,8 +179,10 @@ def paymentapi():
             else:
                 return "Payment not yet confirmed.", 200
         else:
+            app.logger.error(f'No payment status in POST: {invoice["id"]}')
             return "No payment status received.", 400
     else:
+        app.logger.error(f'Invalid transaction ID: {invoice["id"]}')
         return "Invalid transaction ID.", 400
 
 
@@ -192,7 +206,8 @@ def deposit_api():
     deposit = btc_client.get_invoice(request.json['id'])
     if isinstance(deposit, dict):
         if 'status' in deposit:
-            if deposit['status'] == "confirmed":
+            if deposit['status'] == "confirmed" or \
+                    deposit['status'] == "complete":
                 if deposit.get('price'):
                     amount = float(deposit['price'])
                 else:
@@ -214,8 +229,10 @@ def deposit_api():
             else:
                 return "Payment not yet confirmed.", 200
         else:
+            app.logger.error(f'No payment status in POST: {deposit["id"]}')
             return "No payment status received.", 400
     else:
+        app.logger.error(f'Invalid transaction ID: {deposit["id"]}')
         return "Invalid transaction ID.", 400
 
 
@@ -248,8 +265,8 @@ def verify():
         return redirect(inv_url)
     else:
         no_match = '''
-        The email and invoice number provided do not match. 
-        Please try again. If multiple emails are associated to 
-        the invoice, you must use the primary one.
+        The email and invoice number provided do not match.
+         Please try again. If multiple emails are associated to
+         the invoice, you must use the primary one.
         '''
         return no_match
