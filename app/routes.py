@@ -3,7 +3,7 @@ import app.qbo as qbo
 from app.utils import fetch, save, login, send, repeat_ipn
 from app.forms import BTCCodeForm, KeysForm, MailForm
 from btcpay import BTCPayClient
-from flask import render_template, redirect, request, abort, url_for, flash
+from flask import render_template, redirect, request, url_for, flash
 import os
 import requests
 from rq_dashboard import blueprint
@@ -144,7 +144,7 @@ def paymentapi():
     # receives and processes invoice notifications from BTCPay
     if not request.json or 'id' not in request.json:
         app.logger.error(f'No JSON in POST: {request.data}')
-        return 'No JSON in Post', 400
+        return 'No JSON in Post', 200
     btc_client = fetch('btc_client')
     invoice = btc_client.get_invoice(request.json['id'])
     if isinstance(invoice, dict):
@@ -182,10 +182,10 @@ def paymentapi():
                 return "Payment not yet confirmed.", 200
         else:
             app.logger.error(f'No payment status in POST: {invoice["id"]}')
-            return "No payment status received.", 400
+            return "No payment status received.", 200
     else:
         app.logger.error(f'Invalid transaction ID: {invoice["id"]}')
-        return "Invalid transaction ID.", 400
+        return "Invalid transaction ID.", 200
 
 
 @app.route('/btcqbo/api/v1/deposit', methods=['GET', 'POST'])
@@ -193,7 +193,7 @@ def deposit_api():
     # receives and processes deposit notifications from BTCPay
     if not request.json or 'id' not in request.json:
         app.logger.error(f'No JSON in POST: {request.data}')
-        return 'No JSON in Post', 400
+        return 'No JSON in Post', 200
     forward_url = fetch('forward_url')
     if forward_url is not None and forward_url != '':
         r = requests.post(forward_url, json=request.get_json())
@@ -234,10 +234,10 @@ def deposit_api():
                 return "Payment not yet confirmed.", 200
         else:
             app.logger.error(f'No payment status in POST: {deposit["id"]}')
-            return "No payment status received.", 400
+            return "No payment status received.", 200
     else:
         app.logger.error(f'Invalid transaction ID: {deposit["id"]}')
-        return "Invalid transaction ID.", 400
+        return "Invalid transaction ID.", 200
 
 
 @app.route('/btcqbo/verify', methods=['POST'])
