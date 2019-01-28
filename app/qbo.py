@@ -70,10 +70,6 @@ def post_payment(doc_number="", amount=0, btcp_id=''):
         app.logger.warning(f'No such invoice exists: {doc_number}')
         return None
     else:
-        # check for duplicates
-        payment_list = Payment.filter(PrivateNote=str(btcp_id), qb=qb)
-        if payment_list:
-            return None
         # convert invoice object to linked invoice object
         linked_invoice = invoice.to_linked_txn()
         payment_line = PaymentLine()
@@ -93,7 +89,7 @@ def post_payment(doc_number="", amount=0, btcp_id=''):
         payment.PaymentMethodRef = pmt_method_ref
         payment.DepositToAccountRef = deposit_account_ref
         payment.Line.append(payment_line)
-        payment.PrivateNote = str(btcp_id)
+        payment.Id = btcp_id
         payment.save(qb=qb)
         return "Payment Made: " + str(payment)
 
@@ -164,10 +160,6 @@ def post_deposit(amount, tax, btcp_id):
         qb=qb
     )
     deposit_acct = deposit_acct_list[0]
-    # check for duplicates
-    deposit_list = Deposit.filter(PrivateNote=str(btcp_id), qb=qb)
-    if deposit_list:
-        return None
     # create deposit
     description = 'BTCPay: ' + btcp_id
     income_acct_ref = Ref()
@@ -193,7 +185,7 @@ def post_deposit(amount, tax, btcp_id):
     deposit.Line.append(line)
     deposit.Line.append(line2)
     deposit.DepositToAccountRef = deposit_account_ref
-    deposit.PrivateNote = str(btcp_id)
+    deposit.Id = btcp_id
     deposit.save(qb=qb)
     return 'Deposit Made: ' + str(deposit)
 
