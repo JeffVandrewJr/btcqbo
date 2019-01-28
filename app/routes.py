@@ -142,9 +142,6 @@ def setmail():
 @app.route('/btcqbo/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
     # receives and processes invoice notifications from BTCPay
-    if not request.json or 'id' not in request.json:
-        app.logger.error(f'No JSON in POST: {request.data}')
-        return 'No JSON in Post', 200
     btc_client = fetch('btc_client')
     invoice = btc_client.get_invoice(request.json['id'])
     if isinstance(invoice, dict):
@@ -191,9 +188,6 @@ def paymentapi():
 @app.route('/btcqbo/api/v1/deposit', methods=['GET', 'POST'])
 def deposit_api():
     # receives and processes deposit notifications from BTCPay
-    if not request.json or 'id' not in request.json:
-        app.logger.error(f'No JSON in POST: {request.data}')
-        return 'No JSON in Post', 200
     forward_url = fetch('forward_url')
     if forward_url is not None and forward_url != '':
         r = requests.post(forward_url, json=request.get_json())
