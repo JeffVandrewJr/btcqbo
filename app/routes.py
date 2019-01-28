@@ -251,7 +251,6 @@ def verify():
             "buyer": {
                 "name": customer.DisplayName,
                 "email": data['email'],
-                "notify": True,
             },
             "orderId": data['orderId'],
             "extendedNotifications": True,
