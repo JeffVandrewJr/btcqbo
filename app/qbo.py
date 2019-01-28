@@ -186,8 +186,6 @@ def post_deposit(amount, tax, btcp_id):
     deposit.Line.append(line)
     deposit.Line.append(line2)
     deposit.DepositToAccountRef = deposit_account_ref
-    # assign unique identifier by converting btcp_id into integer for QBO
-    deposit.Id = int(btcp_id, 36)
     deposit.save(qb=qb)
     # save payment to temp redis store to fliter duplicates
     app.redis.set(btcp_id, 'deposit', ex=21600)
