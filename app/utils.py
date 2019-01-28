@@ -18,12 +18,11 @@ def fetch(key):
     # checks redis for picked object at key passed as argument
     # if finds object, unpickles and returns it
     # if no object at given key, returns None
-    try:
-        unpacked_object = pickle.loads(app.redis.get(key))
-        return unpacked_object
-    except Exception:
-        app.logger.exception(f'Key: {key}')
+    item = app.redis.get(key)
+    if item is None:
         return None
+    else:
+        return pickle.loads(item)
 
 
 def wipe(key):

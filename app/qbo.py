@@ -72,8 +72,10 @@ def post_payment(doc_number="", amount=0, btcp_id=''):
     else:
         # convert invoice object to linked invoice object
         linked_invoice = invoice.to_linked_txn()
+        description = 'BTCPay: ' + btcp_id
         payment_line = PaymentLine()
         payment_line.Amount = amount
+        payment_line.Description = description
         # attach linked invoice object to payment line object
         payment_line.LinkedTxn.append(linked_invoice)
         payment = Payment()
