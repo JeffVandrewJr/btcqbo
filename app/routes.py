@@ -151,6 +151,8 @@ def paymentapi():
         if 'status' in invoice:
             if invoice['status'] == "confirmed" or \
                     invoice['status'] == "complete":
+                if app.redis.get(invoice['id']) is not None:
+                    return "Duplicate IPN", 200
                 doc_number = invoice['orderId']
                 amount = float(invoice['price'])
                 if amount > 0 and doc_number is not None:
@@ -208,6 +210,8 @@ def deposit_api():
         if 'status' in deposit:
             if deposit['status'] == "confirmed" or \
                     deposit['status'] == "complete":
+                if app.redis.get(deposit['id']) is not None:
+                    return "Duplicate IPN", 200
                 if deposit.get('price'):
                     amount = float(deposit['price'])
                 else:
