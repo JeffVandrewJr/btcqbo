@@ -157,6 +157,7 @@ def paymentapi():
                 amt = float(invoice['price'])
                 send(dest, qb_inv, btcp_inv, amt)
                 return "Buyer email sent.", 200
+            return "IPN received", 200
         elif request.json['status'] == 'confirmed' or \
                 request.json['status'] == 'complete':
             # check for duplicates
