@@ -146,28 +146,24 @@ def paymentapi():
         return "No JSON Data.", 200
     elif 'status' in request.json:
         app.logger.info(f'IPN: {request.json["status"]} {request.json["id"]}')
-        if request.json['status'] == 'paid' and fetch('mail_on'):
-            btc_client = fetch('btc_client')
-            invoice = btc_client.get_invoice(request.json['id'])
-            if invoice['status'] == 'paid':
-                # emails buyer when invoice is "paid"
-                dest = invoice['buyer']['email']
-                qb_inv = invoice['orderId']
-                btcp_inv = invoice['id']
-                amt = float(invoice['price'])
-                send(dest, qb_inv, btcp_inv, amt)
-                return "Buyer email sent.", 200
-            return "IPN received", 200
-        elif request.json['status'] == 'confirmed' or \
-                request.json['status'] == 'complete':
-            # check for duplicates
-            if app.redis.get(request.json['id']) is not None:
-                return "Duplicate IPN", 200
+        # check for duplicates
+        if app.redis.get(request.json['id']) is not None:
+            return "Duplicate IPN", 200
+        btc_client = fetch('btc_client')
+        invoice = btc_client.get_invoice(request.json['id'])
+        if not isinstance(invoice, dict):
+            return "Spam IPN", 200
+        if invoice['status'] == 'paid' and fetch('mail_on'):
+            # emails buyer when invoice is "paid"
+            dest = invoice['buyer']['email']
+            qb_inv = invoice['orderId']
+            btcp_inv = invoice['id']
+            amt = float(invoice['price'])
+            send(dest, qb_inv, btcp_inv, amt)
+            return "Buyer email sent.", 200
+        elif invoice['status'] == 'confirmed' or \
+                invoice['status'] == 'complete':
             # ping BTCPay to confirm IPN real, then post payment
-            btc_client = fetch('btc_client')
-            invoice = btc_client.get_invoice(request.json['id'])
-            if not isinstance(invoice, dict):
-                return "Spam IPN", 200
             doc_number = invoice['orderId']
             amount = float(invoice['price'])
             if amount > 0 and doc_number is not None:
@@ -209,16 +205,16 @@ def deposit_api():
         return "No JSON Data.", 200
     elif 'status' in request.json:
         app.logger.info(f'IPN: {request.json["status"]} {request.json["id"]}')
-        if request.json['status'] == 'confirmed' or \
-                request.json['status'] == 'complete':
-            # check for duplicates
-            if app.redis.get(request.json['id']) is not None:
-                return "Duplicate IPN", 200
+        # check for duplicates
+        if app.redis.get(request.json['id']) is not None:
+            return "Duplicate IPN", 200
+        btc_client = fetch('btc_client')
+        deposit = btc_client.get_invoice(request.json['id'])
+        if not isinstance(deposit, dict):
+            return "Spam IPN", 200
+        if deposit['status'] == 'confirmed' or \
+                deposit['status'] == 'complete':
             # ping BTCPay to confirm IPN real, then post deposit
-            btc_client = fetch('btc_client')
-            deposit = btc_client.get_invoice(request.json['id'])
-            if not isinstance(deposit, dict):
-                return "Spam IPN", 200
             amount = deposit.get('price')
             tax = deposit.get('taxIncluded')
             if amount is None:
