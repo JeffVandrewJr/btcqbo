@@ -2,7 +2,7 @@
 
 Copyright (C) 2018-2019 Jeff Vandrew Jr
 
-Note that at the current time, this plugin can only process on-chain payments, not lightning payments. This is a limitation imposed by the way BTCPay handles payment notifications for lightning payments. [See this GitHub issue for details.](https://github.com/btcpayserver/btcpayserver/issues/564). If the issue is resolved in BTCPay, I will update the plugin to properly process lightning payments.
+Versions prior to 0.3.13 do not handle lightning payments correctly, so be sure you have installed viersion 0.3.13 or higher if you have lightning active. You can check your version by running `docker ps`.
 
 This plugin for BTCPay Server has two modes of operation:
 
