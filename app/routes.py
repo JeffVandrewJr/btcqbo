@@ -142,40 +142,14 @@ def setmail():
 @app.route('/btcqbo/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
     # receives and processes invoice notifications from BTCPay
-    btc_client = fetch('btc_client')
     if not request.json:
         return "No JSON Data.", 200
-    elif 'id' in request.json:
-        invoice = btc_client.get_invoice(request.json['id'])
-    elif 'data' in request.json:
-        invoice = btc_client.get_invoice(request.json['data']['id'])
-    else:
-        return "Ignore.", 200
-    if isinstance(invoice, dict):
-        if 'status' in invoice:
-            app.logger.info(f'IPN: {invoice["status"]} {invoice["id"]}')
-            if invoice['status'] == "confirmed" or \
-                    invoice['status'] == "complete":
-                if app.redis.get(invoice['id']) is not None:
-                    return "Duplicate IPN", 200
-                doc_number = invoice['orderId']
-                amount = float(invoice['price'])
-                if amount > 0 and doc_number is not None:
-                    qbo.post_payment(
-                            doc_number=str(doc_number),
-                            amount=amount,
-                            btcp_id=invoice['id']
-                            )
-                    if fetch('mail_on'):
-                        dest = invoice['buyer']['email']
-                        qb_inv = invoice['orderId']
-                        btcp_inv = invoice['id']
-                        amt = float(invoice['price'])
-                        send(dest, qb_inv, btcp_inv, amt)
-                    return "Payment Accepted", 201
-                else:
-                    return "Payment was zero or invalid invoice #.", 200
-            elif invoice['status'] == "paid" and fetch('mail_on'):
+    elif 'status' in request.json:
+        app.logger.info(f'IPN: {request.json["status"]} {request.json["id"]}')
+        if request.json['status'] == 'paid' and fetch('mail_on'):
+            btc_client = fetch('btc_client')
+            invoice = btc_client.get_invoice(request.json['id'])
+            if invoice['status'] == 'paid':
                 # emails buyer when invoice is "paid"
                 dest = invoice['buyer']['email']
                 qb_inv = invoice['orderId']
@@ -183,28 +157,41 @@ def paymentapi():
                 amt = float(invoice['price'])
                 send(dest, qb_inv, btcp_inv, amt)
                 return "Buyer email sent.", 200
+        elif request.json['status'] == 'confirmed' or \
+                request.json['status'] == 'complete':
+            # check for duplicates
+            if app.redis.get(request.json['id']) is not None:
+                return "Duplicate IPN", 200
+            # ping BTCPay to confirm IPN real, then post payment
+            btc_client = fetch('btc_client')
+            invoice = btc_client.get_invoice(request.json['id'])
+            if not isinstance(invoice, dict):
+                return "Spam IPN", 200
+            doc_number = invoice['orderId']
+            amount = float(invoice['price'])
+            if amount > 0 and doc_number is not None:
+                qbo.post_payment(
+                        doc_number=str(doc_number),
+                        amount=amount,
+                        btcp_id=invoice['id']
+                        )
+                if fetch('mail_on'):
+                    dest = invoice['buyer']['email']
+                    qb_inv = invoice['orderId']
+                    btcp_inv = invoice['id']
+                    amt = float(invoice['price'])
+                    send(dest, qb_inv, btcp_inv, amt)
+                return "Payment Accepted", 201
             else:
-                return "Payment not yet confirmed.", 200
-        else:
-            app.logger.error(f'No payment status in POST: {invoice["id"]}')
-            return "No payment status received.", 200
+                return "Payment was zero or invalid invoice #.", 200
     else:
-        app.logger.error(f'Invalid transaction ID: {invoice["id"]}')
-        return "Invalid transaction ID.", 200
+        return "Ignore.", 200
 
 
 @app.route('/btcqbo/api/v1/deposit', methods=['GET', 'POST'])
 def deposit_api():
     # receives and processes deposit notifications from BTCPay
-    btc_client = fetch('btc_client')
-    if not request.json:
-        return "No JSON Data.", 200
-    elif 'id' in request.json:
-        deposit = btc_client.get_invoice(request.json['id'])
-    elif 'data' in request.json:
-        deposit = btc_client.get_invoice(request.json['data']['id'])
-    else:
-        return "Ignore.", 200
+    # forward all IPNs
     forward_url = fetch('forward_url')
     if forward_url is not None and forward_url != '':
         r = requests.post(forward_url, json=request.get_json())
@@ -215,41 +202,35 @@ def deposit_api():
                     target=repeat_ipn,
                     args=(forward_url, request.get_json())
                     ).start()
-    btc_client = fetch('btc_client')
-    deposit = btc_client.get_invoice(request.json['id'])
-    if isinstance(deposit, dict):
-        if 'status' in deposit:
-            app.logger.info(f'IPN: {deposit["status"]} {deposit["id"]}')
-            if deposit['status'] == "confirmed" or \
-                    deposit['status'] == "complete":
-                if app.redis.get(deposit['id']) is not None:
-                    return "Duplicate IPN", 200
-                if deposit.get('price'):
-                    amount = float(deposit['price'])
-                else:
-                    amount = float(0)
-                if deposit.get('taxIncluded'):
-                    tax = float(deposit['taxIncluded'])
-                else:
-                    tax = float(0)
-                btcp_id = str(deposit['id'])
-                if amount > 0:
-                    qbo.post_deposit(
-                            amount=amount,
-                            tax=tax,
-                            btcp_id=btcp_id,
-                    )
-                    return "Payment Accepted", 201
-                else:
-                    return "Payment was zero or invalid invoice #.", 200
-            else:
-                return "Payment not yet confirmed.", 200
-        else:
-            app.logger.error(f'No payment status in POST: {deposit["id"]}')
-            return "No payment status received.", 200
+    if not request.json:
+        return "No JSON Data.", 200
+    elif 'status' in request.json:
+        app.logger.info(f'IPN: {request.json["status"]} {request.json["id"]}')
+        if request.json['status'] == 'confirmed' or \
+                request.json['status'] == 'complete':
+            # check for duplicates
+            if app.redis.get(request.json['id']) is not None:
+                return "Duplicate IPN", 200
+            # ping BTCPay to confirm IPN real, then post deposit
+            btc_client = fetch('btc_client')
+            deposit = btc_client.get_invoice(request.json['id'])
+            if not isinstance(deposit, dict):
+                return "Spam IPN", 200
+            amount = deposit.get('price')
+            tax = deposit.get('taxIncluded')
+            if amount is None:
+                return "No Payment to Record.", 200
+            if tax is None:
+                tax = 0
+            btcp_id = str(deposit.get('id'))
+            qbo.post_deposit(
+                    amount=float(amount),
+                    tax=float(tax),
+                    btcp_id=btcp_id,
+                )
+            return "Payment Accepted", 201
     else:
-        app.logger.error(f'Invalid transaction ID: {deposit["id"]}')
-        return "Invalid transaction ID.", 200
+        return "Ignore.", 200
 
 
 @app.route('/btcqbo/verify', methods=['POST'])
@@ -271,7 +252,6 @@ def verify():
                 "email": data['email'],
             },
             "orderId": data['orderId'],
-            "extendedNotifications": True,
             "fullNotifications": True,
             "notificationURL": data['notificationUrl'],
             "redirectURL": data['redirectUrl']
