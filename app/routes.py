@@ -185,6 +185,8 @@ def paymentapi():
                 return "Payment Accepted", 201
             else:
                 return "Payment was zero or invalid invoice #.", 200
+        else:
+            return "IPN received.", 200
     else:
         return "Ignore.", 200
 
@@ -230,6 +232,8 @@ def deposit_api():
                     btcp_id=btcp_id,
                 )
             return "Payment Accepted", 201
+        else:
+            return "IPN received.", 200
     else:
         return "Ignore.", 200
 
