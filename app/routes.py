@@ -214,7 +214,7 @@ def deposit_api():
             return "Spam IPN", 200
         if deposit['status'] == 'confirmed' or \
                 deposit['status'] == 'complete':
-            # ping BTCPay to confirm IPN real, then post deposit
+            # then post deposit
             amount = deposit.get('price')
             tax = deposit.get('taxIncluded')
             if amount is None:
