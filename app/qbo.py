@@ -17,8 +17,6 @@ def post_payment(doc_number="", amount=0, btcp_id=''):
     doc_number: QBO invoice number
     amount: payment amount
     btcp_id: BTCPay invoice number
-    returns None if IPN is a duplicate
-    returns string if payment posted
     '''
     refresh_stored_tokens()
     qb = fetch('qbclient')

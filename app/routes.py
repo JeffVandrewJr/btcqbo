@@ -142,10 +142,15 @@ def setmail():
 @app.route('/btcqbo/api/v1/payment', methods=['GET', 'POST'])
 def paymentapi():
     # receives and processes invoice notifications from BTCPay
-    if not request.json or 'id' not in request.json:
-        return "Ignore.", 200
     btc_client = fetch('btc_client')
-    invoice = btc_client.get_invoice(request.json['id'])
+    if not request.json:
+        return "No JSON Data.", 200
+    elif 'id' in request.json:
+        invoice = btc_client.get_invoice(request.json['id'])
+    elif 'data' in request.json:
+        invoice = btc_client.get_invoice(request.json['data']['id'])
+    else:
+        return "Ignore.", 200
     if isinstance(invoice, dict):
         if 'status' in invoice:
             app.logger.info(f'IPN: {invoice["status"]} {invoice["id"]}')
@@ -156,12 +161,12 @@ def paymentapi():
                 doc_number = invoice['orderId']
                 amount = float(invoice['price'])
                 if amount > 0 and doc_number is not None:
-                    result = qbo.post_payment(
+                    qbo.post_payment(
                             doc_number=str(doc_number),
                             amount=amount,
                             btcp_id=invoice['id']
                             )
-                    if result and fetch('mail_on'):
+                    if fetch('mail_on'):
                         dest = invoice['buyer']['email']
                         qb_inv = invoice['orderId']
                         btcp_inv = invoice['id']
@@ -191,7 +196,14 @@ def paymentapi():
 @app.route('/btcqbo/api/v1/deposit', methods=['GET', 'POST'])
 def deposit_api():
     # receives and processes deposit notifications from BTCPay
-    if not request.json or 'id' not in request.json:
+    btc_client = fetch('btc_client')
+    if not request.json:
+        return "No JSON Data.", 200
+    elif 'id' in request.json:
+        deposit = btc_client.get_invoice(request.json['id'])
+    elif 'data' in request.json:
+        deposit = btc_client.get_invoice(request.json['data']['id'])
+    else:
         return "Ignore.", 200
     forward_url = fetch('forward_url')
     if forward_url is not None and forward_url != '':
