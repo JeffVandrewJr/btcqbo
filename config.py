@@ -15,3 +15,4 @@ class Config(object):
     SCHEDULER_JOBSTORES = {
             'default': RedisJobStore(host=REDIS_HOST)
         }
+    REFRESH_MINS = os.environ.get('REFRESH_MINS') or 50

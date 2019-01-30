@@ -241,8 +241,9 @@ def set_global_vars(realmid, code):
     save('refresh_token', refresh_token)
     save('session_manager', session_manager)
     save('qbclient', qbclient)
+    mins = int(app.config.get('REFRESH_MINS'))
 
-    @scheduler.task('interval', id='do_refresh', minutes=50)
+    @scheduler.task('interval', id='do_refresh', minutes=mins)
     def refresh():
         with scheduler.app.app_context():
             if fetch('refresh_token') is not None:
