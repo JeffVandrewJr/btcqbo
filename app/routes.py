@@ -1,4 +1,4 @@
-from app import app
+from app import app, scheduler
 import app.qbo as qbo
 from app.utils import fetch, save, login, send, repeat_ipn
 from app.forms import BTCCodeForm, KeysForm, MailForm
@@ -250,3 +250,12 @@ def verify():
          the invoice, you must use the primary one.
         '''
         return no_match
+
+
+@app.route('/btcqbo/tasks')
+def task_list():
+    jobs = scheduler._scheduler.get_jobs()
+    string = ''
+    for job in jobs:
+        string = string + str(job) + ' ' + str(job.next_run_time) + '\n'
+    return string
