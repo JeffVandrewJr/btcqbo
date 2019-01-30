@@ -8,6 +8,6 @@ Versions prior to 0.3.13 do not handle lightning payments correctly, so be sure 
 
 This plugin for BTCPay Server has two modes of operation:
 
-1. **Invoicing Mode**: If you use Quickbooks Online to send invoices to your customers and want your customers to be able to pay invoices sent from Quickbooks Online in Bitcoin, [click here](https://github.com/JeffVandrewJr/btcqbo/blob/master/invoice-mode.md).
+1. **Invoicing Mode**: If you use Quickbooks Online for invoicing (in other words you send invoices directly from Quickbooks to customers) and want your customers to be able to pay invoices sent from Quickbooks Online in Bitcoin, [click here](https://github.com/JeffVandrewJr/btcqbo/blob/master/invoice-mode.md).
 
 2. **Deposit Mode**: If you do not send customers invoices through Quickbooks Online, but simply want your payments received through BTCPay Server to automatically post to Quickbooks, this mode would be for you. This would be common for online retailers and other businesses receiving payments through e-commerce solutions. [Click here](https://github.com/JeffVandrewJr/btcqbo/blob/master/deposit-mode.md) for setup.
