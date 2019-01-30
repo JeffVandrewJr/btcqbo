@@ -254,6 +254,9 @@ def verify():
 
 @app.route('/btcqbo/tasks')
 def task_list():
+    status = login(request.cookies)
+    if status is not None:
+        return redirect(status)
     jobs = scheduler._scheduler.get_jobs()
     string = ''
     for job in jobs:
