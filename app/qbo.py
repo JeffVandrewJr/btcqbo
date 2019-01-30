@@ -1,4 +1,4 @@
-from app import app
+from app import app, scheduler
 from app.utils import save, fetch
 from quickbooks import Oauth2SessionManager, QuickBooks
 from quickbooks.objects.account import Account
@@ -8,7 +8,6 @@ from quickbooks.objects.customer import Customer
 from quickbooks.objects.invoice import Invoice
 from quickbooks.objects.payment import Payment, PaymentLine
 from quickbooks.objects.paymentmethod import PaymentMethod
-import time
 
 
 def post_payment(doc_number="", amount=0, btcp_id=''):
@@ -242,8 +241,15 @@ def set_global_vars(realmid, code):
     save('refresh_token', refresh_token)
     save('session_manager', session_manager)
     save('qbclient', qbclient)
-    # add refresh job to RQ
-    add_job()
+
+    @scheduler.task('interval', id='do_refresh', minutes=50)
+    def refresh():
+        if fetch('refresh_token') is not None:
+            refresh_stored_tokens()
+            app.logger.info('Scheduled QBO token refresh.')
+        else:
+            app.logger.info('QBO tokens not refreshed because no \
+                    token stored.')
 
 
 def refresh_stored_tokens():
@@ -274,8 +280,6 @@ def refresh_stored_tokens():
     QuickBooks.enable_global()
     save('session_manager', session_manager)
     save('qbclient', qbclient)
-    # add refresh job to RQ if not already there
-    add_job()
     return str(result)
 
 
@@ -298,21 +302,3 @@ def verify_invoice(doc_number="", email=""):
             return None
     else:
         return None
-
-
-def repeat_refresh():
-    # repeatedly refresh QBO tokens every 50 minutes
-    # necessary bc Intuit is vague about token expirations
-    while True:
-        time.sleep(3000)
-        refresh_stored_tokens()
-
-
-def add_job():
-    # check if repeat_refresh() is in RQ
-    # if not in RQ, adds the job to RQ
-    if '1' not in app.task_queue.job_ids:
-        app.task_queue.enqueue_call(
-                func=repeat_refresh,
-                timeout=-1, job_id='1'
-                )

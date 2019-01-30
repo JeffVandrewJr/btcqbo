@@ -6,24 +6,8 @@ from btcpay import BTCPayClient
 from flask import render_template, redirect, request, url_for, flash
 import os
 import requests
-from rq_dashboard import blueprint
 from threading import Thread
 from urllib.parse import urljoin
-
-
-if os.getenv('RQ_ACCESS') == 'True':
-    @blueprint.before_request
-    # decorator modifies the blueprint imported from rq_dashboard
-    # modification is that before a request, this authorization fn is run
-    def rq_login():
-        status = login(request.cookies)
-        if status is not None:
-            return redirect(status)
-    # after adding before_request to preset blueprint, register the blueprint
-    app.register_blueprint(
-        blueprint,
-        url_prefix="/btcqbo/rq",
-    )
 
 
 @app.route('/btcqbo/')
