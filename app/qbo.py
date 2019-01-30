@@ -244,12 +244,13 @@ def set_global_vars(realmid, code):
 
     @scheduler.task('interval', id='do_refresh', minutes=50)
     def refresh():
-        if fetch('refresh_token') is not None:
-            refresh_stored_tokens()
-            app.logger.info('Scheduled QBO token refresh.')
-        else:
-            app.logger.info('QBO tokens not refreshed because no \
-                    token stored.')
+        with scheduler.app.app_context():
+            if fetch('refresh_token') is not None:
+                refresh_stored_tokens()
+                app.logger.info('Scheduled QBO token refresh.')
+            else:
+                app.logger.info('QBO tokens not refreshed because no \
+                        token stored.')
 
 
 def refresh_stored_tokens():
