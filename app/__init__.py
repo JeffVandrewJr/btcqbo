@@ -18,4 +18,6 @@ stream_handler.setLevel(logging.INFO)
 app.logger.addHandler(stream_handler)
 app.logger.setLevel(logging.INFO)
 
+MINS = int(app.config['REFRESH_MINS'])
+
 from app import routes
