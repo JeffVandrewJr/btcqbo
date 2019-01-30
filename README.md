@@ -2,7 +2,9 @@
 
 Copyright (C) 2018-2019 Jeff Vandrew Jr
 
-Versions prior to 0.3.13 do not handle lightning payments correctly, so be sure you have installed viersion 0.3.13 or higher if you have lightning active. You can check your version by running `docker ps`.
+Latest Stable Version: 0.3.18
+
+Versions prior to 0.3.13 do not handle lightning payments correctly, so be sure you have installed version 0.3.13 or higher if you have lightning active. You can check your version by running `docker ps`.
 
 This plugin for BTCPay Server has two modes of operation:
 
