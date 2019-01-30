@@ -12,7 +12,4 @@ class Config(object):
     REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'
     REDIS_HOST = os.environ.get('REDIS_HOST') or 'localhost'
     SECRET_KEY = '00000000000'
-    SCHEDULER_JOBSTORES = {
-            'default': RedisJobStore(host=REDIS_HOST)
-        }
     REFRESH_MINS = os.environ.get('REFRESH_MINS') or 50

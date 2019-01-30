@@ -11,6 +11,7 @@ app.config.from_object(Config)
 app.redis = Redis.from_url(app.config['REDIS_URL'])
 scheduler = APScheduler()
 scheduler.init_app(app)
+scheduler.redis = app.redis
 scheduler.start()
 bootstrap = Bootstrap(app)
 stream_handler = logging.StreamHandler()
