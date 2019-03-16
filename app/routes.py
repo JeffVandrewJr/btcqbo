@@ -131,19 +131,26 @@ def paymentapi():
     elif 'status' in request.json:
         app.logger.info(f'IPN: {request.json["status"]} {request.json["id"]}')
         # check for duplicates
-        if app.redis.get(request.json['id']) is not None:
-            return "Duplicate IPN", 200
+        cache_status = app.redis.get(request.json['id'])
+        if cache_status == 'payment':
+            return "IPN Already Recorded", 200
         btc_client = fetch('btc_client')
         invoice = btc_client.get_invoice(request.json['id'])
         if not isinstance(invoice, dict):
             return "Spam IPN", 200
-        if invoice['status'] == 'paid' and fetch('mail_on'):
+        if invoice['status'] == 'paid' and cache_status != 'paid' \
+                and fetch('mail_on'):
             # emails buyer when invoice is "paid"
             dest = invoice['buyer']['email']
             qb_inv = invoice['orderId']
             btcp_inv = invoice['id']
             amt = float(invoice['price'])
-            send(dest, qb_inv, btcp_inv, amt)
+            Thread(
+                    target=send,
+                    args=(dest, qb_inv, btcp_inv, amt)
+                    ).start()
+            # update cache so we don't send customer multiple emails
+            app.redis.set(btcp_inv, 'paid', ex=21600)
             return "Buyer email sent.", 200
         elif invoice['status'] == 'confirmed' or \
                 invoice['status'] == 'complete':
@@ -156,12 +163,17 @@ def paymentapi():
                         amount=amount,
                         btcp_id=invoice['id']
                         )
-                if fetch('mail_on'):
+                if fetch('mail_on') and cache_status != 'paid':
+                    # no cache means email never sent on 'paid' status
+                    # this happens with lightning pmts, which confirm instantly
                     dest = invoice['buyer']['email']
                     qb_inv = invoice['orderId']
                     btcp_inv = invoice['id']
                     amt = float(invoice['price'])
-                    send(dest, qb_inv, btcp_inv, amt)
+                    Thread(
+                            target=send,
+                            args=(dest, qb_inv, btcp_inv, amt)
+                            ).start()
                 return "Payment Accepted", 201
             else:
                 return "Payment was zero or invalid invoice #.", 200
