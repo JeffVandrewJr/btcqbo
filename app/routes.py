@@ -133,10 +133,12 @@ def paymentapi():
         # check for duplicates
         cache_status = app.redis.get(request.json['id'])
         if cache_status == 'payment':
+            app.logger.info(f'IPN: {request.json["id"]} already recorded')
             return "IPN Already Recorded", 200
         btc_client = fetch('btc_client')
         invoice = btc_client.get_invoice(request.json['id'])
         if not isinstance(invoice, dict):
+            app.logger.info(f'IPN: {request.json["id"]} is spam')
             return "Spam IPN", 200
         if invoice['status'] == 'paid' and cache_status != 'paid' \
                 and fetch('mail_on'):
@@ -176,10 +178,12 @@ def paymentapi():
                             ).start()
                 return "Payment Accepted", 201
             else:
+                app.logger.info(f'IPN: {request.json["id"]} was invalid inv')
                 return "Payment was zero or invalid invoice #.", 200
         else:
             return "IPN received.", 200
     else:
+        app.logger.info(f'IPN: {request.json["id"]} contains no status field')
         return "Ignore.", 200
 
 
