@@ -160,11 +160,6 @@ def paymentapi():
             doc_number = invoice['orderId']
             amount = float(invoice['price'])
             if amount > 0 and doc_number is not None:
-                qbo.post_payment(
-                        doc_number=str(doc_number),
-                        amount=amount,
-                        btcp_id=invoice['id']
-                        )
                 if fetch('mail_on') and cache_status != 'paid':
                     # no cache means email never sent on 'paid' status
                     # this happens with lightning pmts, which confirm instantly
@@ -176,6 +171,11 @@ def paymentapi():
                             target=send,
                             args=(dest, qb_inv, btcp_inv, amt)
                             ).start()
+                qbo.post_payment(
+                        doc_number=str(doc_number),
+                        amount=amount,
+                        btcp_id=invoice['id']
+                        )
                 return "Payment Accepted", 201
             else:
                 app.logger.info(f'IPN: {request.json["id"]} was invalid inv')
