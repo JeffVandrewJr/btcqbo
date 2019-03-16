@@ -140,7 +140,8 @@ def paymentapi():
         if not isinstance(invoice, dict):
             app.logger.info(f'IPN: {request.json["id"]} is spam')
             return "Spam IPN", 200
-        if invoice['status'] == 'paid' and cache_status != 'paid' \
+        if request.json['status'] == 'paid' and (invoice['status'] == 'paid' or
+                invoice['status'] == 'confirmed' or invoice['status'] == 'complete') \
                 and fetch('mail_on'):
             # emails buyer when invoice is "paid"
             dest = invoice['buyer']['email']
@@ -165,17 +166,6 @@ def paymentapi():
             doc_number = invoice['orderId']
             amount = float(invoice['price'])
             if amount > 0 and doc_number is not None:
-                if fetch('mail_on') and cache_status != 'paid':
-                    # no cache means email never sent on 'paid' status
-                    # this happens with lightning pmts, which confirm instantly
-                    dest = invoice['buyer']['email']
-                    qb_inv = invoice['orderId']
-                    btcp_inv = invoice['id']
-                    amt = float(invoice['price'])
-                    Thread(
-                            target=send,
-                            args=(dest, qb_inv, btcp_inv, amt)
-                            ).start()
                 qbo.post_payment(
                         doc_number=str(doc_number),
                         amount=amount,
