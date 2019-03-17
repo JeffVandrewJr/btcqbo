@@ -89,7 +89,7 @@ def send(dest, qb_inv, btcp_inv, amt):
     smtp = smtplib.SMTP(
         host=fetch('mail_host'),
         port=fetch('mail_port'),
-        timeout=7,
+        timeout=20,
     )
     smtp.ehlo()
     if fetch('mail_port') == 587:
