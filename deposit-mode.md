@@ -90,6 +90,8 @@ Googling your email provider and "SMTP" will likely show you the settings. For e
 
 Your "send from" address is the address you want receipts to be sent from, and may be the same as your username. "Business Name" is your business name as you want it to appear on receipts. You may also choose a custom message to display at the bottom of each receipt.
 
+For invoices created via API, receipts only work if `fullNotifications` is set to `true`.
+
 
 <h4>Troubleshooting (only for technical users!)</h4>
 
