@@ -25,13 +25,17 @@
         <p>
             {{ form.mail_from(size=32) }}
         </p>
-        <p>If you wish to send a test email, enter recipient below:</p>
-        <p>
-            {{ form.recipient(size=32) }}
-        </p>
         <p>Business Name to Show on Receipts:</p>
         <p>
             {{ form.merchant(size=32) }}
+        </p>
+        <p>Custom Receipt Message (optional):</p>
+        <p>
+            {{ form.mail_custom }}
+        </p>
+        <p>If you wish to send a test email, enter recipient below:</p>
+        <p>
+            {{ form.recipient(size=32) }}
         </p>
         <p>{{ form.submit() }}</p>
     </form>

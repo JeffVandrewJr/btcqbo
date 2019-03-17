@@ -69,11 +69,22 @@ def send(dest, qb_inv, btcp_inv, amt):
     msg['subject'] = f'Receipt from {merchant}'
     msg['to'] = dest
     msg['from'] = fetch('mail_from')
-    body = f'''
-    Amount Paid: ${amt}\n
-    Invoice Number: {qb_inv}\n
-    Confirmation ID: {btcp_inv}
-    '''
+    footer = fetch('mail_custom')
+    if footer is None:
+        footer = ''
+    if qb_inv is not None:
+        body = f'''
+        Amount Paid: ${amt}\n
+        Invoice Number: {qb_inv}\n
+        Confirmation ID: {btcp_inv}\n
+        {footer}
+        '''
+    else:
+        body = f'''
+        Amount Paid: ${amt}\n
+        Confirmation ID: {btcp_inv}
+        {footer}
+        '''
     msg.set_payload(body)
     smtp = smtplib.SMTP(
         host=fetch('mail_host'),

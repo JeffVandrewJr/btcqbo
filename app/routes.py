@@ -100,6 +100,7 @@ def setmail():
         save('mail_port', int(form.mail_port.data))
         save('mail_from', str(form.mail_from.data))
         save('merchant', str(form.merchant.data))
+        save('mail_custom', form.mail_custom.data))
         if form.recipient.data is not None and str(form.recipient.data) != "":
             try:
                 send(
@@ -207,6 +208,19 @@ def deposit_api():
         deposit = btc_client.get_invoice(request.json['id'])
         if not isinstance(deposit, dict):
             return "Spam IPN", 200
+        if request.json['status'] == 'paid' and (deposit['status'] == 'paid' or
+                deposit['status'] == 'confirmed' or deposit['status'] == 'complete') \
+                and fetch('mail_on'):
+            # emails buyer when invoice is "paid"
+            dest = deposit['buyer']['email']
+            qb_inv = None
+            btcp_inv = deposit['id']
+            amt = float(deposit['price'])
+            Thread(
+                    target=send,
+                    args=(dest, qb_inv, btcp_inv, amt)
+                    ).start()
+            return "Buyer email sent.", 200
         if deposit['status'] == 'confirmed' or \
                 deposit['status'] == 'complete':
             # then post deposit

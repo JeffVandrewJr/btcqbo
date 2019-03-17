@@ -24,5 +24,6 @@ class MailForm(FlaskForm):
     mail_port = StringField('Email Port', validators=[DataRequired()])
     mail_from = StringField('Sender Email', validators=[DataRequired()])
     merchant = StringField('Merchant Name', validators=[DataRequired()])
+    mail_custom = TextAreaField('Enter a custom message for email receipts (optional):')
     recipient = StringField('Test Recipient')
     submit = SubmitField('Submit')
