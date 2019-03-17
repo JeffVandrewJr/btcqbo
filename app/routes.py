@@ -100,7 +100,7 @@ def setmail():
         save('mail_port', int(form.mail_port.data))
         save('mail_from', str(form.mail_from.data))
         save('merchant', str(form.merchant.data))
-        save('mail_custom', form.mail_custom.data))
+        save('mail_custom', form.mail_custom.data)
         if form.recipient.data is not None and str(form.recipient.data) != "":
             try:
                 send(

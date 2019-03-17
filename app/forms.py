@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, PasswordField
+from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired
 
 
@@ -24,6 +24,6 @@ class MailForm(FlaskForm):
     mail_port = StringField('Email Port', validators=[DataRequired()])
     mail_from = StringField('Sender Email', validators=[DataRequired()])
     merchant = StringField('Merchant Name', validators=[DataRequired()])
-    mail_custom = TextAreaField('Enter a custom message for email receipts (optional):')
+    mail_custom = TextAreaField('Enter a custom message for email receipts:')
     recipient = StringField('Test Recipient')
     submit = SubmitField('Submit')
