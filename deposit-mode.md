@@ -8,6 +8,8 @@
 
 * Separates revenue from sales tax, and records revenue separately from sales tax
 
+* Optionally emails very simple text receipts to the customer. If you want a fancy receipt, you should send from your merchant software or CMS instead.
+
 **What it does not do:**
 
 * Automatically calculate sales tax. There are hundreds of different sales tax jurisdictions in the USA alone, each with its own rates and definitions. BTCPay is not sales tax software. It simply takes the revenue/sales tax breakdown from your e-commerce solution and accepts it as correct. If you need a software solution that automatically tracks rates for all of the US jursdictions, you need to integrate a solution like TaxJar of Avalara into your e-commerce site. If Avalara or TaxJar are calculating your sales tax on your e-commerce site, you can then pass the revenue/sales tax breakdown to this plugin and it will work correctly.
