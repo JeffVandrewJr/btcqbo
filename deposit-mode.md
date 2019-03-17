@@ -80,6 +80,16 @@ On this screen you can also set a forwarding URL for IPN payment notifications. 
 
 From the plugin welcome screen, hit the button to sync BTCPay. Click on the link provided to obtain a pairing code from your BTCPay Server instance. Then enter the pairing code in the plugin, and submit.
 
+<h3>Email Setup</h3>
+
+Versions 0.3.30 and higher of the plugin allow automatic emailing of customer receipts. To set this up, click the email setup button on the plugin welcome screen. You'll need to enter your SMTP server settings. If you enter a test email recipient, it will test the connection and send a test email.
+
+If you don't know what an SMTP server is, that's OK! Your email provider almost definitely provides SMTP access for free. If it doesn't, you can always sign up for a free account with a provider that does (Gmail, Yahoo, Outlook.com, etc).
+
+Googling your email provider and "SMTP" will likely show you the settings. For example G-Suite (and Gmail) use smtp.gmail.com as host, and use port 587. With Google (and most providers), your email is your username. Your password is your normal password, unless you use Two Factor Authentication. If you use 2FA, you'll need to generate an application-specific password (example instructions for Google are here).
+
+Your "send from" address is the address you want receipts to be sent from, and may be the same as your username. "Business Name" is your business name as you want it to appear on receipts. You may also choose a custom message to display at the bottom of each receipt.
+
 
 <h4>Troubleshooting (only for technical users!)</h4>
 
