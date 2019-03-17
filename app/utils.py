@@ -82,7 +82,7 @@ def send(dest, qb_inv, btcp_inv, amt):
     else:
         body = f'''
         Amount Paid: ${amt}\n
-        Confirmation ID: {btcp_inv}
+        Confirmation ID: {btcp_inv}\n
         {footer}
         '''
     msg.set_payload(body)
