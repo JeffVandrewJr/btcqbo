@@ -25,5 +25,3 @@ $ sudo docker exec -it generated_btcqbo_1 /bin/sh
 # python3 cli.py deletekeys
 # exit
 ```
-
-Lastly, if you are familiar with RQ, you can view the RQ dashboard at https://btcpay.example.com/btcqbo/rq (replacing with your own domain). Assuming you have paired with QBO, there should always be a task running on the BTCQBO queue.
