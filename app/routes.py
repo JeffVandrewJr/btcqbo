@@ -156,9 +156,9 @@ def paymentapi():
             # update cache so we don't send customer multiple emails
             app.redis.set(btcp_inv, 'paid', ex=21600)
             return "Buyer email sent.", 200
-        elif (invoice['status'] == 'confirmed') and \
-                (request.json['status'] == 'confirmed' or
-                    request.json['status'] == 'complete'):
+        elif (request.json['status'] == 'confirmed') and \
+                (invoice['status'] == 'confirmed' or
+                    invoice['status'] == 'complete'):
             '''
             Lightning payments will send 3 IPNs simultaneously, so we must
             that that only one is processed.
