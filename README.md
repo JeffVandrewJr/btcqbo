@@ -2,7 +2,7 @@
 
 Copyright (C) 2018-2019 Jeff Vandrew Jr
 
-Latest Stable Version: 0.3.32
+Latest Stable Version: 0.3.36
 
 Versions prior to 0.3.13 do not handle lightning payments correctly, so be sure you have installed version 0.3.13 or higher if you have lightning active. You can check your version by running `docker ps`.
 
