@@ -3,6 +3,9 @@ from app.qbo import refresh_stored_tokens
 from app.utils import fetch
 
 
+scheduler.remove_all_jobs()
+
+
 @scheduler.task('interval', id='do_refresh', minutes=MINS)
 def refresh():
     with scheduler.app.app_context():
