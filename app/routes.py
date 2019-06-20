@@ -141,7 +141,7 @@ def paymentapi():
         if not isinstance(invoice, dict):
             app.logger.info(f'IPN: {request.json["id"]} is spam')
             return "Spam IPN", 200
-        if request.json['status'] == 'paid' and (invoice['status'] == 'paid' or
+        if request.json['status'] == 'paid' and (invoice['status'] == 'paid' or 
                 invoice['status'] == 'confirmed' or invoice['status'] == 'complete') \
                 and fetch('mail_on'):
             # emails buyer when invoice is "paid"
@@ -156,13 +156,12 @@ def paymentapi():
             # update cache so we don't send customer multiple emails
             app.redis.set(btcp_inv, 'paid', ex=21600)
             return "Buyer email sent.", 200
-        elif (invoice['status'] == 'confirmed' or
-                invoice['status'] == 'complete') and \
-                (request.json['status'] == invoice['status']):
+        elif (invoice['status'] == 'confirmed') and \
+                (request.json['status'] == 'confirmed' or
+                    request.json['status'] == 'complete'):
             '''
-            Lightning payments will send 3 IPNs simultaneously.
-            Comparing IPN status to status pulled from BTCPay ensures only
-            one of the three is processed.
+            Lightning payments will send 3 IPNs simultaneously, so we must
+            that that only one is processed.
             '''
             doc_number = invoice['orderId']
             amount = float(invoice['price'])
