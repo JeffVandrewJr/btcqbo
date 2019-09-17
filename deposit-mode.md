@@ -41,7 +41,7 @@ To activate, log into your LunaNode or other VPS via SSH [(click here if you for
 sudo su -
 
 # go into the BTCPay-Docker directory
-cd btcpay-docker
+cd btcpayserver-docker
 
 # Add this plugin docker fragment
 export BTCPAYGEN_ADDITIONAL_FRAGMENTS="$BTCPAYGEN_ADDITIONAL_FRAGMENTS;opt-add-btcqbo"
