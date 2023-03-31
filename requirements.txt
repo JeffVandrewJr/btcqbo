@@ -7,5 +7,5 @@ Flask-WTF==0.14.2
 gunicorn==19.9.0
 python-dotenv==0.9.1
 python-quickbooks==0.7.5
-redis==3.2.1
+redis==4.4.4
 WTForms==2.2.1
